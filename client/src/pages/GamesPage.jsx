@@ -9,7 +9,7 @@ const GamesPage = () => {
   const [decks, setDecks] = useState([]);
   const [selectedDeck, setSelectedDeck] = useState(null);
   const [cards, setCards] = useState([]);
-  const [activeGame, setActiveGame] = useState(null); // null | 'match' | 'scramble' | 'memory'
+  const [activeGame, setActiveGame] = useState(null); // null | 'match' | 'scramble' | 'memory' | 'penalty'
   const [loading, setLoading] = useState(true);
   const [gameLoading, setGameLoading] = useState(false);
   const { addToast, ToastContainer } = useToast();
@@ -153,9 +153,26 @@ const GamesPage = () => {
           </div>
 
           {/* Games Selection List */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem' }}>
+            {/* Game 4: Penalty Shootout SIUUU */}
+            <div className="glass-card" style={{ padding: '1.5rem', borderRadius: '16px', border: '2px solid #22c55e', background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚽</div>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '0.5rem', color: '#4ade80' }}>Penalty SIUUU ⚽</h2>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem', minHeight: '40px' }}>
+                Đánh trắc nghiệm 4 góc sút phạt đền! Chọn đúng để sút tung lưới và ăn mừng SIUUU!
+              </p>
+              <button
+                className="btn"
+                style={{ width: '100%', background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)', color: '#ffffff', fontWeight: 'bold' }}
+                onClick={() => startNewGame('penalty')}
+                disabled={gameLoading || !selectedDeck}
+              >
+                ⚽ Sút Pen SIUUU!
+              </button>
+            </div>
+
             {/* Game 1: Word Match */}
-            <div className="glass-card" style={{ padding: '1.5rem', borderRadius: '16px', position: 'relative', overflow: 'hidden' }}>
+            <div className="glass-card" style={{ padding: '1.5rem', borderRadius: '16px' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🧩</div>
               <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>Word Match (Nối Từ)</h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem', minHeight: '40px' }}>
@@ -172,7 +189,7 @@ const GamesPage = () => {
             </div>
 
             {/* Game 2: Word Scramble */}
-            <div className="glass-card" style={{ padding: '1.5rem', borderRadius: '16px', position: 'relative', overflow: 'hidden' }}>
+            <div className="glass-card" style={{ padding: '1.5rem', borderRadius: '16px' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔤</div>
               <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>Word Scramble (Gỡ Rối Chữ)</h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem', minHeight: '40px' }}>
@@ -189,9 +206,9 @@ const GamesPage = () => {
             </div>
 
             {/* Game 3: Memory Flip */}
-            <div className="glass-card" style={{ padding: '1.5rem', borderRadius: '16px', position: 'relative', overflow: 'hidden' }}>
+            <div className="glass-card" style={{ padding: '1.5rem', borderRadius: '16px' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🃏</div>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>Memory Flip (Lật Bài Ghi Nhớ)</h2>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>Memory Flip (Lật Bài)</h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem', minHeight: '40px' }}>
                 Lật thẻ bài 3D và ghi nhớ vị trí cặp từ - nghĩa để mở toàn bộ bộ bài!
               </p>
@@ -209,9 +226,220 @@ const GamesPage = () => {
       ) : (
         /* Game Arena Render */
         <div>
+          {activeGame === 'penalty' && <PenaltyShootoutGame cards={cards} deck={selectedDeck} speak={speak} onRestart={() => startNewGame('penalty')} />}
           {activeGame === 'match' && <WordMatchGame cards={cards} deck={selectedDeck} speak={speak} onRestart={() => startNewGame('match')} />}
           {activeGame === 'scramble' && <WordScrambleGame cards={cards} deck={selectedDeck} speak={speak} onRestart={() => startNewGame('scramble')} />}
           {activeGame === 'memory' && <MemoryFlipGame cards={cards} deck={selectedDeck} speak={speak} onRestart={() => startNewGame('memory')} />}
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* -------------------------------------------------------------------------
+   GAME 4: PENALTY SHOOTOUT SIUUU (SÚT PENALTY ĂN MỪNG SIUUU)
+   ------------------------------------------------------------------------- */
+const PenaltyShootoutGame = ({ cards, deck, speak, onRestart }) => {
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [options, setOptions] = useState([]);
+  const [goals, setGoals] = useState(0);
+  const [misses, setMisses] = useState(0);
+  const [score, setScore] = useState(0);
+  const [kickStatus, setKickStatus] = useState(null); // null | 'goal' | 'miss'
+  const [keeperPos, setKeeperPos] = useState('center'); // 'left' | 'center' | 'right'
+  const [ballPos, setBallPos] = useState({ top: '80%', left: '50%' });
+  const [gameOver, setGameOver] = useState(false);
+
+  const currentCard = cards[currentIdx];
+
+  const prepareQuestion = useCallback(() => {
+    if (!currentCard) return;
+    const correct = currentCard.back || currentCard.front;
+    const otherCards = cards.filter(c => (c.id || c._id) !== (currentCard.id || currentCard._id) && c.back);
+    const shuffledOthers = [...otherCards].sort(() => 0.5 - Math.random()).map(c => c.back).slice(0, 3);
+
+    while (shuffledOthers.length < 3) {
+      shuffledOthers.push(`Lựa chọn ${shuffledOthers.length + 1}`);
+    }
+
+    const allOptions = [...shuffledOthers, correct].sort(() => 0.5 - Math.random());
+    setOptions(allOptions);
+    setKickStatus(null);
+    setKeeperPos('center');
+    setBallPos({ top: '80%', left: '50%' });
+  }, [currentCard, cards]);
+
+  useEffect(() => {
+    prepareQuestion();
+  }, [currentIdx, prepareQuestion]);
+
+  const handleShoot = (selectedOption, cornerIndex) => {
+    if (kickStatus !== null || !currentCard) return;
+
+    const isCorrect = selectedOption === (currentCard.back || currentCard.front);
+
+    // Corner positions: 0: top-left, 1: top-right, 2: bottom-left, 3: bottom-right
+    const ballTargets = [
+      { top: '25%', left: '20%' },
+      { top: '25%', left: '80%' },
+      { top: '45%', left: '25%' },
+      { top: '45%', left: '75%' }
+    ];
+
+    const keeperDives = isCorrect
+      ? (cornerIndex <= 1 ? 'right' : 'left') // Goalkeeper dives wrong way
+      : (cornerIndex <= 1 ? 'left' : 'right'); // Goalkeeper saves
+
+    setBallPos(ballTargets[cornerIndex] || { top: '30%', left: '50%' });
+    setKeeperPos(keeperDives);
+
+    setTimeout(() => {
+      if (isCorrect) {
+        setKickStatus('goal');
+        setGoals(g => g + 1);
+        setScore(s => s + 200);
+        speak(currentCard.front, deck?.language);
+      } else {
+        setKickStatus('miss');
+        setMisses(m => m + 1);
+      }
+
+      // Next turn
+      setTimeout(() => {
+        if (currentIdx < cards.length - 1) {
+          setCurrentIdx(i => i + 1);
+        } else {
+          setGameOver(true);
+        }
+      }, 2000);
+    }, 400);
+  };
+
+  if (!currentCard) return null;
+
+  return (
+    <div className="glass-card" style={{ padding: '1.5rem', textAlign: 'center', maxWidth: '750px', margin: '0 auto', background: 'radial-gradient(circle, #0f172a 0%, #020617 100%)', borderRadius: '24px', border: '2px solid #22c55e', boxShadow: '0 10px 30px rgba(34, 197, 94, 0.2)' }}>
+      {/* Score Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', background: 'rgba(0, 0, 0, 0.4)', padding: '0.75rem 1.25rem', borderRadius: '12px' }}>
+        <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
+          ⚽ Sút Pen: <span style={{ color: '#4ade80' }}>{goals} VÀO</span> | <span style={{ color: '#ef4444' }}>{misses} HỎNG</span>
+        </div>
+        <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--accent-yellow)' }}>
+          ⭐ {score} Điểm
+        </div>
+      </div>
+
+      {!gameOver ? (
+        <div>
+          {/* Target Word Banner */}
+          <div style={{ background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%)', padding: '1rem', borderRadius: '16px', marginBottom: '1.25rem', border: '1px solid rgba(74, 222, 128, 0.3)' }}>
+            <div style={{ fontSize: '0.85rem', color: '#86efac' }}>Từ vựng cần ghi bàn #{currentIdx + 1}:</div>
+            <div style={{ fontSize: '2rem', fontWeight: '800', fontFamily: deck?.language === 'ja' ? 'var(--font-japanese)' : 'inherit', marginTop: '0.25rem' }}>
+              {currentCard.front}
+            </div>
+            {currentCard.reading && <div style={{ color: '#38bdf8', fontSize: '0.9rem' }}>{currentCard.reading}</div>}
+          </div>
+
+          {/* Goal Net Arena */}
+          <div style={{ position: 'relative', height: '240px', background: 'linear-gradient(180deg, #15803d 0%, #166534 100%)', borderRadius: '16px', overflow: 'hidden', border: '4px solid #ffffff', boxShadow: 'inset 0 0 20px rgba(0,0,0,0.5)', marginBottom: '1.25rem' }}>
+            {/* Goal Net lines */}
+            <div style={{ position: 'absolute', top: '10px', left: '10%', right: '10%', height: '140px', border: '3px solid #ffffff', background: 'repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(255,255,255,0.15) 10px, rgba(255,255,255,0.15) 11deg), repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(255,255,255,0.15) 10px, rgba(255,255,255,0.15) 11deg)' }}></div>
+
+            {/* Goalkeeper */}
+            <div style={{
+              position: 'absolute',
+              top: '65px',
+              left: keeperPos === 'left' ? '25%' : keeperPos === 'right' ? '70%' : '46%',
+              fontSize: '3.5rem',
+              transition: 'all 0.3s ease-out',
+              transform: keeperPos === 'left' ? 'rotate(-25deg)' : keeperPos === 'right' ? 'rotate(25deg)' : 'none',
+              filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))'
+            }}>
+              🧤
+            </div>
+
+            {/* Football */}
+            <div style={{
+              position: 'absolute',
+              top: ballPos.top,
+              left: ballPos.left,
+              fontSize: '2.2rem',
+              transition: 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)',
+              transform: 'translate(-50%, -50%)',
+              filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.5))'
+            }}>
+              ⚽
+            </div>
+
+            {/* Goal SIUUU Celebration Banner */}
+            {kickStatus === 'goal' && (
+              <div style={{ position: 'absolute', inset: 0, background: 'rgba(34, 197, 94, 0.85)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', animation: 'popIn 0.3s ease' }}>
+                <div style={{ fontSize: '3rem', fontWeight: '900', textShadow: '0 4px 10px rgba(0,0,0,0.4)', color: '#ffffff' }}>
+                  ⚽ GOALLL! SIUUUUU! 🔥
+                </div>
+                <div style={{ fontSize: '1.2rem', marginTop: '0.5rem', color: '#fef08a' }}>
+                  +200 Điểm Thưởng!
+                </div>
+              </div>
+            )}
+
+            {/* Missed Banner */}
+            {kickStatus === 'miss' && (
+              <div style={{ position: 'absolute', inset: 0, background: 'rgba(239, 68, 68, 0.85)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', animation: 'popIn 0.3s ease' }}>
+                <div style={{ fontSize: '2.5rem', fontWeight: '900', color: '#ffffff' }}>
+                  ❌ THỦ MÔN CẢN PHÁ!
+                </div>
+                <div style={{ fontSize: '1rem', marginTop: '0.5rem', color: '#ffffff' }}>
+                  Nghĩa đúng: {currentCard.back || currentCard.front}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 4 Penalty Kick Corners (Options) */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            {options.map((opt, idx) => (
+              <button
+                key={idx}
+                className="btn"
+                onClick={() => handleShoot(opt, idx)}
+                disabled={kickStatus !== null}
+                style={{
+                  padding: '0.875rem 1rem',
+                  borderRadius: '14px',
+                  background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  color: '#ffffff',
+                  fontWeight: '600',
+                  fontSize: '1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  cursor: kickStatus !== null ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.2s ease',
+                  textAlign: 'left'
+                }}
+              >
+                <span style={{ background: '#22c55e', width: '26px', height: '26px', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 'bold', color: '#000' }}>
+                  {idx === 0 ? '↖️' : idx === 1 ? '↗️' : idx === 2 ? '↙️' : '↘️'}
+                </span>
+                <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{opt}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        /* Victory SIUUU Screen */
+        <div style={{ padding: '2rem 0' }}>
+          <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>🕺⚽</div>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: '900', color: '#4ade80' }}>SIUUUUUUUU! 🔥</h1>
+          <h2>Hoàn Thành Trận Đấu Sút Penalty!</h2>
+          <p style={{ fontSize: '1.25rem', marginTop: '0.75rem', color: 'var(--text-secondary)' }}>
+            Ghi bàn: <strong style={{ color: '#4ade80' }}>{goals}/{cards.length}</strong> | Tổng điểm: <strong style={{ color: 'var(--accent-yellow)' }}>{score}</strong>
+          </p>
+          <button className="btn btn-primary" onClick={onRestart} style={{ marginTop: '1.5rem', padding: '0.875rem 2.5rem', fontSize: '1.1rem' }}>
+            🔄 Sút Trận Tiếp Theo
+          </button>
         </div>
       )}
     </div>
@@ -231,7 +459,6 @@ const WordMatchGame = ({ cards, deck, speak, onRestart }) => {
   const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
-    // Pick 6 random cards
     const shuffled = [...cards].sort(() => 0.5 - Math.random()).slice(0, 6);
     const gameItems = [];
 
@@ -276,9 +503,7 @@ const WordMatchGame = ({ cards, deck, speak, onRestart }) => {
       return;
     }
 
-    // Check match
     if (selectedFirst.cardId === item.cardId && selectedFirst.type !== item.type) {
-      // Correct Match!
       const newMatched = [...matchedIds, selectedFirst.id, item.id];
       setMatchedIds(newMatched);
       setCombo(c => c + 1);
@@ -293,7 +518,6 @@ const WordMatchGame = ({ cards, deck, speak, onRestart }) => {
         setGameOver(true);
       }
     } else {
-      // Wrong Match
       setCombo(0);
       setSelectedFirst(null);
     }
@@ -441,14 +665,12 @@ const WordScrambleGame = ({ cards, deck, speak, onRestart }) => {
 
       {!gameOver ? (
         <div>
-          {/* Hint */}
           <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '1rem', borderRadius: '12px', marginBottom: '1.5rem' }}>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Gợi ý nghĩa:</div>
             <div style={{ fontSize: '1.2rem', fontWeight: 'bold', marginTop: '0.25rem' }}>{targetCard.back}</div>
             {targetCard.reading && <div style={{ color: 'var(--accent-purple-light)', marginTop: '0.25rem' }}>{targetCard.reading}</div>}
           </div>
 
-          {/* User Guess Slots */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginBottom: '1.5rem', minHeight: '50px' }}>
             {userGuess.map(item => (
               <div
@@ -473,7 +695,6 @@ const WordScrambleGame = ({ cards, deck, speak, onRestart }) => {
             ))}
           </div>
 
-          {/* Scrambled Letters Pool */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
             {scrambled.map(item => (
               <button
