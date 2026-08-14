@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import { supabase } from '../services/supabase';
 import { useToast } from '../hooks/useToast';
 import { useTranslation } from '../hooks/useTranslation';
 import { useSpeech } from '../hooks/useSpeech';
@@ -33,17 +33,27 @@ const FlashcardPage = () => {
 
   const toggleMastered = useCallback(async (cardId) => {
     try {
-      const res = await api.put(`/cards/${cardId}/toggle-mastered`);
-      setCards(prev => prev.map(c => c._id === cardId ? { ...c, mastered: res.data.mastered } : c));
-      addToast(res.data.mastered 
+      const targetCard = cards.find(c => (c.id || c._id) === cardId);
+      const newMastered = !targetCard?.mastered;
+
+      const { error } = await supabase
+        .from('cards')
+        .update({ mastered: newMastered })
+        .eq('id', cardId);
+
+      if (error) throw error;
+
+      setCards(prev => prev.map(c => (c.id || c._id) === cardId ? { ...c, mastered: newMastered } : c));
+      addToast(newMastered 
         ? (currentLang === 'vi' ? '✅ Đã đánh dấu thuộc!' : currentLang === 'en' ? '✅ Marked as Mastered!' : '✅ 習得済みに設定しました！') 
         : (currentLang === 'vi' ? '↩️ Đã bỏ đánh dấu thuộc' : currentLang === 'en' ? '↩️ Unmarked Mastered' : '↩️ 習得済みを解除しました'), 
         'success'
       );
-    } catch {
+    } catch (err) {
+      console.error('Error toggling mastered:', err);
       addToast(currentLang === 'vi' ? 'Lỗi khi cập nhật trạng thái' : currentLang === 'en' ? 'Failed to update status' : '状態の更新に失敗しました', 'error');
     }
-  }, [currentLang, addToast]);
+  }, [cards, currentLang, addToast]);
 
   const handleFlip = () => setIsFlipped(!isFlipped);
 
@@ -76,7 +86,7 @@ const FlashcardPage = () => {
       }
     }
     if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); setIsFlipped(prev => !prev); }
-    if (e.key === 'm' && currentCard) { toggleMastered(currentCard._id); }
+    if (e.key === 'm' && currentCard) { toggleMastered(currentCard.id || currentCard._id); }
   }, [currentIndex, filteredCards.length, showAddCard, currentCard, toggleMastered]);
 
   useEffect(() => {
@@ -84,59 +94,119 @@ const FlashcardPage = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  useEffect(() => {
-    const loadDeck = async () => {
-      try {
-        const res = await api.get(`/decks/${deckId}`);
-        setDeck(res.data.deck);
-        setCards(res.data.cards);
-      } catch {
-        addToast('Failed to load deck', 'error');
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadDeck();
+  const loadDeckAndCards = useCallback(async () => {
+    try {
+      setLoading(true);
+      const { data: deckData, error: deckErr } = await supabase
+        .from('decks')
+        .select('*')
+        .eq('id', deckId)
+        .single();
+
+      if (deckErr) throw deckErr;
+      setDeck(deckData);
+
+      const { data: cardsData, error: cardsErr } = await supabase
+        .from('cards')
+        .select('*')
+        .eq('deck_id', deckId)
+        .order('created_at', { ascending: true });
+
+      if (cardsErr) throw cardsErr;
+      setCards(cardsData || []);
+    } catch (err) {
+      console.error('Error loading deck & cards:', err);
+      addToast('Failed to load deck', 'error');
+    } finally {
+      setLoading(false);
+    }
   }, [deckId, addToast]);
+
+  useEffect(() => {
+    loadDeckAndCards();
+  }, [loadDeckAndCards]);
 
   const saveCard = async (e) => {
     e.preventDefault();
     try {
-      if (cardForm._id) {
-        // Update existing
-        const res = await api.put(`/cards/${cardForm._id}`, cardForm);
-        setCards(prev => prev.map(c => c._id === res.data._id ? res.data : c));
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      const cardId = cardForm.id || cardForm._id;
+
+      if (cardId) {
+        // Update existing card
+        const { data, error } = await supabase
+          .from('cards')
+          .update({
+            front: cardForm.front,
+            back: cardForm.back,
+            reading: cardForm.reading,
+            example: cardForm.example
+          })
+          .eq('id', cardId)
+          .select();
+
+        if (error) throw error;
+        setCards(prev => prev.map(c => (c.id || c._id) === cardId ? data[0] : c));
         addToast('Card updated!', 'success');
       } else {
-        // Create new
-        const res = await api.post('/cards', { deckId, ...cardForm });
-        setCards(prev => [...prev, res.data]);
+        // Create new card
+        const { data, error } = await supabase
+          .from('cards')
+          .insert([{
+            deck_id: deckId,
+            user_id: currentUser?.id,
+            front: cardForm.front,
+            back: cardForm.back,
+            reading: cardForm.reading,
+            example: cardForm.example,
+            mastered: false
+          }])
+          .select();
+
+        if (error) throw error;
+        setCards(prev => [...prev, data[0]]);
+
+        // Update deck card_count
+        const newCount = cards.length + 1;
+        await supabase.from('decks').update({ card_count: newCount }).eq('id', deckId);
+
         addToast('Card added!', 'success');
       }
       setCardForm({ front: '', back: '', reading: '', example: '' });
       setShowAddCard(false);
-    } catch {
+    } catch (err) {
+      console.error('Error saving card:', err);
       addToast('Failed to save card', 'error');
     }
   };
 
   const deleteCard = async (cardId) => {
     try {
-      await api.delete(`/cards/${cardId}`);
-      const updatedCards = cards.filter(c => c._id !== cardId);
+      const { error } = await supabase
+        .from('cards')
+        .delete()
+        .eq('id', cardId);
+
+      if (error) throw error;
+
+      const updatedCards = cards.filter(c => (c.id || c._id) !== cardId);
+      setCards(updatedCards);
+
+      // Update deck card_count
+      await supabase.from('decks').update({ card_count: updatedCards.length }).eq('id', deckId);
+
       const updatedFilteredCards = updatedCards.filter(c => {
         if (filter === 'mastered') return c.mastered;
         if (filter === 'not-mastered') return !c.mastered;
         return true;
       });
 
-      setCards(updatedCards);
-
       if (currentIndex >= updatedFilteredCards.length && currentIndex > 0) {
         setCurrentIndex(Math.max(0, updatedFilteredCards.length - 1));
       }
       addToast('Card deleted', 'success');
-    } catch {
+    } catch (err) {
+      console.error('Error deleting card:', err);
       addToast('Failed to delete card', 'error');
     }
   };
@@ -314,7 +384,7 @@ const FlashcardPage = () => {
           <div style={{ display: 'flex', justifyContent: 'center', margin: 'var(--space-md) 0' }}>
             <button
               className={`btn mastered-toggle-btn ${currentCard?.mastered ? 'mastered-active' : ''}`}
-              onClick={() => toggleMastered(currentCard._id)}
+              onClick={() => toggleMastered(currentCard?.id || currentCard?._id)}
             >
               {currentCard?.mastered 
                 ? `✅ ${currentLang === 'vi' ? 'Đã thuộc' : currentLang === 'en' ? 'Mastered' : '習得済み'}` 
@@ -352,7 +422,7 @@ const FlashcardPage = () => {
             <button 
               className="btn btn-ghost btn-sm" 
               style={{ color: 'var(--accent-red)' }}
-              onClick={(e) => { e.stopPropagation(); setCardToDelete(currentCard._id); }}
+              onClick={(e) => { e.stopPropagation(); setCardToDelete(currentCard?.id || currentCard?._id); }}
             >
               {t('flashcards.deleteCard')}
             </button>
@@ -366,9 +436,10 @@ const FlashcardPage = () => {
         /* Browse Mode - Card List */
         <div className="deck-grid">
           {filteredCards.map((card, idx) => {
-            const originalIndex = cards.findIndex(c => c._id === card._id);
+            const cardId = card.id || card._id;
+            const originalIndex = cards.findIndex(c => (c.id || c._id) === cardId);
             return (
-              <div key={card._id} className={`glass-card ${card.mastered ? 'card-mastered' : ''}`} style={{ cursor: 'pointer', position: 'relative' }}
+              <div key={cardId} className={`glass-card ${card.mastered ? 'card-mastered' : ''}`} style={{ cursor: 'pointer', position: 'relative' }}
                 onClick={() => { setCurrentIndex(idx); setMode('study'); }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>#{originalIndex + 1}</span>
@@ -378,7 +449,7 @@ const FlashcardPage = () => {
                     )}
                     <button
                       className="btn btn-ghost btn-sm"
-                      onClick={(e) => { e.stopPropagation(); toggleMastered(card._id); }}
+                      onClick={(e) => { e.stopPropagation(); toggleMastered(cardId); }}
                       title={card.mastered 
                         ? (currentLang === 'vi' ? 'Bỏ đánh dấu thuộc' : currentLang === 'en' ? 'Unmark Mastered' : '習得済みを解除')
                         : (currentLang === 'vi' ? 'Đánh dấu đã thuộc' : currentLang === 'en' ? 'Mark as Mastered' : '習得済みに設定')}
@@ -388,7 +459,7 @@ const FlashcardPage = () => {
                     </button>
                     <button
                       className="btn btn-ghost btn-sm"
-                      onClick={(e) => { e.stopPropagation(); setCardToDelete(card._id); }}
+                      onClick={(e) => { e.stopPropagation(); setCardToDelete(cardId); }}
                       style={{ color: 'var(--accent-red)', padding: '0.25rem' }}
                     >
                       ✕
@@ -437,7 +508,7 @@ const FlashcardPage = () => {
         <div className="modal-overlay" onClick={() => setShowAddCard(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="glass-card">
-              <h2 style={{ marginBottom: 'var(--space-xl)' }}>{cardForm._id ? t('flashcards.editModalTitle') : t('flashcards.addModalTitle')}</h2>
+              <h2 style={{ marginBottom: 'var(--space-xl)' }}>{(cardForm.id || cardForm._id) ? t('flashcards.editModalTitle') : t('flashcards.addModalTitle')}</h2>
               <form onSubmit={saveCard} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)' }}>
                 <div className="form-group">
                   <label className="form-label">{t('flashcards.frontLabel')}</label>
@@ -482,7 +553,7 @@ const FlashcardPage = () => {
                 </div>
                 <div style={{ display: 'flex', gap: 'var(--space-md)' }}>
                   <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>
-                    {cardForm._id ? t('flashcards.updateBtn') : t('flashcards.addBtn')}
+                    {(cardForm.id || cardForm._id) ? t('flashcards.updateBtn') : t('flashcards.addBtn')}
                   </button>
                   <button type="button" className="btn btn-secondary" onClick={() => { setShowAddCard(false); setCardForm({ front: '', back: '', reading: '', example: '' }); }}>
                     {t('decks.cancelBtn')}

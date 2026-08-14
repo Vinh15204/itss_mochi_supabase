@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import { supabase } from '../services/supabase';
+import { useAuth } from '../context/AuthContext';
 import { useToast } from '../hooks/useToast';
 import { useTranslation } from '../hooks/useTranslation';
 
@@ -11,6 +12,7 @@ const DecksPage = () => {
   const [form, setForm] = useState({ title: '', description: '', language: 'ja' });
   const [langFilter, setLangFilter] = useState('all'); // all | ja | en
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { addToast, ToastContainer } = useToast();
   const { t, currentLang } = useTranslation();
 
@@ -22,9 +24,16 @@ const DecksPage = () => {
 
   const loadDecks = useCallback(async () => {
     try {
-      const res = await api.get('/decks');
-      setDecks(res.data);
-    } catch {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('decks')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setDecks(data || []);
+    } catch (err) {
+      console.error('Error loading decks:', err);
       addToast(currentLang === 'vi' ? 'Lỗi khi tải bộ thẻ' : currentLang === 'en' ? 'Failed to load decks' : 'デッキの読み込みに失敗しました', 'error');
     } finally {
       setLoading(false);
@@ -32,18 +41,34 @@ const DecksPage = () => {
   }, [currentLang, addToast]);
 
   useEffect(() => {
-    Promise.resolve().then(() => loadDecks());
+    loadDecks();
   }, [loadDecks]);
 
   const createDeck = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post('/decks', form);
-      setDecks(prev => [res.data, ...prev]);
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      const { data, error } = await supabase
+        .from('decks')
+        .insert([{
+          title: form.title,
+          description: form.description,
+          language: form.language,
+          user_id: currentUser?.id,
+          card_count: 0
+        }])
+        .select();
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        setDecks(prev => [data[0], ...prev]);
+      }
       setShowCreate(false);
       setForm({ title: '', description: '', language: 'ja' });
       addToast(currentLang === 'vi' ? 'Đã tạo bộ thẻ thành công!' : currentLang === 'en' ? 'Deck created!' : 'デッキを作成しました！', 'success');
-    } catch {
+    } catch (err) {
+      console.error('Error creating deck:', err);
       addToast(currentLang === 'vi' ? 'Lỗi khi tạo bộ thẻ' : currentLang === 'en' ? 'Failed to create deck' : 'デッキの作成に失敗しました', 'error');
     }
   };
@@ -52,10 +77,17 @@ const DecksPage = () => {
     e.stopPropagation();
     if (!confirm(t('decks.deleteConfirm'))) return;
     try {
-      await api.delete(`/decks/${id}`);
-      setDecks(prev => prev.filter(d => d._id !== id));
+      const { error } = await supabase
+        .from('decks')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setDecks(prev => prev.filter(d => (d.id || d._id) !== id));
       addToast(currentLang === 'vi' ? 'Đã xóa bộ thẻ' : currentLang === 'en' ? 'Deck deleted' : 'デッキを削除しました', 'success');
-    } catch {
+    } catch (err) {
+      console.error('Error deleting deck:', err);
       addToast(currentLang === 'vi' ? 'Lỗi khi xóa bộ thẻ' : currentLang === 'en' ? 'Failed to delete deck' : 'デッキの削除に失敗しました', 'error');
     }
   };
@@ -176,29 +208,32 @@ const DecksPage = () => {
         </div>
       ) : (
         <div className="deck-grid">
-          {filteredDecks.map(deck => (
-            <div
-              key={deck._id}
-              className="glass-card deck-card"
-              onClick={() => navigate(`/decks/${deck._id}`)}
-            >
-              <span className="deck-lang">
-                {deck.language === 'ja' ? t('decks.langJa') : t('decks.langEn')}
-              </span>
-              <h3 className="deck-title">{deck.title}</h3>
-              <p className="deck-desc">{deck.description || (currentLang === 'vi' ? 'Chưa có mô tả' : currentLang === 'en' ? 'No description' : '説明なし')}</p>
-              <div className="deck-meta">
-                <span>{t('decks.totalCards', { count: deck.cardCount || 0 })}</span>
-                <button
-                  className="btn btn-ghost btn-sm"
-                  onClick={(e) => deleteDeck(deck._id, e)}
-                  style={{ color: 'var(--accent-red)' }}
-                >
-                  🗑️
-                </button>
+          {filteredDecks.map(deck => {
+            const deckId = deck.id || deck._id;
+            return (
+              <div
+                key={deckId}
+                className="glass-card deck-card"
+                onClick={() => navigate(`/decks/${deckId}`)}
+              >
+                <span className="deck-lang">
+                  {deck.language === 'ja' ? t('decks.langJa') : t('decks.langEn')}
+                </span>
+                <h3 className="deck-title">{deck.title}</h3>
+                <p className="deck-desc">{deck.description || (currentLang === 'vi' ? 'Chưa có mô tả' : currentLang === 'en' ? 'No description' : '説明なし')}</p>
+                <div className="deck-meta">
+                  <span>{t('decks.totalCards', { count: deck.card_count || deck.cardCount || 0 })}</span>
+                  <button
+                    className="btn btn-ghost btn-sm"
+                    onClick={(e) => deleteDeck(deckId, e)}
+                    style={{ color: 'var(--accent-red)' }}
+                  >
+                    🗑️
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
