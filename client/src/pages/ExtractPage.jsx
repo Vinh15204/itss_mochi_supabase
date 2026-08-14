@@ -5,6 +5,17 @@ import { useToast } from '../hooks/useToast';
 import { fetchEnglishDefinition, translateToVietnamese } from '../services/dictionaryService';
 import { useTranslation } from '../hooks/useTranslation';
 
+const ENGLISH_STOP_WORDS = new Set([
+  'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i', 'it', 'for', 'not', 'on', 'with', 'he',
+  'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she', 'or',
+  'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what', 'so', 'up', 'out', 'if', 'about',
+  'who', 'get', 'which', 'go', 'me', 'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know',
+  'take', 'them', 'people', 'into', 'year', 'your', 'good', 'some', 'could', 'them', 'see', 'other', 'than',
+  'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also', 'back', 'after', 'use', 'two',
+  'how', 'our', 'work', 'first', 'well', 'way', 'even', 'new', 'want', 'because', 'any', 'these', 'give',
+  'day', 'most', 'us', 'is', 'are', 'was', 'were', 'has', 'had', 'been'
+]);
+
 const ExtractPage = () => {
   const [text, setText] = useState('');
   const [language, setLanguage] = useState('ja');
@@ -27,7 +38,8 @@ const ExtractPage = () => {
       return unique.slice(0, 25).map(w => ({ front: w, back: '', reading: '', type: 'word' }));
     } else {
       const matches = rawText.match(/\b[A-Za-z]{3,}\b/g) || [];
-      const unique = Array.from(new Set(matches.map(w => w.toLowerCase())));
+      const filtered = matches.map(w => w.toLowerCase()).filter(w => !ENGLISH_STOP_WORDS.has(w));
+      const unique = Array.from(new Set(filtered));
       return unique.slice(0, 25).map(w => ({ front: w, back: '', reading: '', type: 'word' }));
     }
   };
@@ -48,7 +60,7 @@ const ExtractPage = () => {
 
       setWords(extractedWords);
       setExtracted(true);
-      addToast(currentLang === 'vi' ? `Tìm thấy ${extractedWords.length} từ! Đang tra nghĩa từ vựng...` : currentLang === 'en' ? `Found ${extractedWords.length} words! Fetching meanings...` : `${extractedWords.length} 語検出しました！意味を検索中...`, 'info');
+      addToast(currentLang === 'vi' ? `Tìm thấy ${extractedWords.length} từ vựng quan trọng! Đang tra nghĩa...` : currentLang === 'en' ? `Found ${extractedWords.length} key words! Fetching meanings...` : `${extractedWords.length} 語検出しました！意味を検索中...`, 'info');
 
       await fetchDefinitionsSequentially(extractedWords, language);
     } catch (err) {
@@ -60,7 +72,6 @@ const ExtractPage = () => {
   const fetchDefinitionsSequentially = async (wordsToDefine, lang) => {
     const currentId = extractRequestId.current;
     setDefining(true);
-
     const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
     for (let i = 0; i < wordsToDefine.length; i++) {
@@ -70,14 +81,16 @@ const ExtractPage = () => {
       try {
         if (lang === 'en') {
           let meaning = await translateToVietnamese(word.front, 'en');
-          if (!meaning) {
+
+          // If translation is empty or same as input, try dictionary definition + translation
+          if (!meaning || meaning.toLowerCase() === word.front.toLowerCase()) {
             const def = await fetchEnglishDefinition(word.front);
             if (def) {
               meaning = await translateToVietnamese(def, 'en') || def;
             }
           }
 
-          if (currentId === extractRequestId.current && meaning) {
+          if (currentId === extractRequestId.current && meaning && meaning.toLowerCase() !== word.front.toLowerCase()) {
             setWords(prevWords => {
               const newWords = [...prevWords];
               if (newWords[i]) {
@@ -88,12 +101,11 @@ const ExtractPage = () => {
           }
         }
       } catch {
-        // Ignore single word failure silently
+        // Silent catch for single word
       }
 
-      // Small delay between requests to avoid API 429 rate limit
       if (i % 3 === 0) {
-        await delay(120);
+        await delay(100);
       }
     }
 

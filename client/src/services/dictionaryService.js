@@ -5,10 +5,18 @@ import axios from 'axios';
  */
 export const translateToVietnamese = async (text, sourceLang = 'en') => {
   if (!text) return '';
+  const cleaned = text.trim();
   try {
-    const res = await axios.get(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.trim())}&langpair=${sourceLang}|vi`);
-    if (res.data?.responseData?.translatedText && !res.data.responseData.translatedText.includes('MYMEMORY WARNING')) {
-      return res.data.responseData.translatedText;
+    const res = await axios.get(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleaned)}&langpair=${sourceLang}|vi`, {
+      timeout: 3500
+    });
+    let translated = res.data?.responseData?.translatedText;
+    if (translated && !translated.includes('MYMEMORY WARNING')) {
+      // Clean trailing period or garbage punctuation
+      translated = translated.replace(/^[\s.,;:]+|[\s.,;:]+$/g, '');
+      if (translated.toLowerCase() !== cleaned.toLowerCase()) {
+        return translated;
+      }
     }
     return '';
   } catch {
@@ -30,7 +38,6 @@ export const fetchEnglishDefinition = async (word) => {
     }
     return '';
   } catch {
-    // Graceful fallback on rate limit (429) or missing word
     return '';
   }
 };
