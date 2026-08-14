@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect } from 'react';
-import api from '../services/api';
+import { supabase } from '../services/supabase';
 
 const AuthContext = createContext(null);
 
@@ -10,51 +10,51 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchUser = async () => {
-    try {
-      const res = await api.get('/auth/me');
-      setUser(res.data);
-    } catch {
-      localStorage.removeItem('token');
-      delete api.defaults.headers.common['Authorization'];
-    } finally {
-      setLoading(false);
-    }
+  const formatUserData = (supabaseUser) => {
+    if (!supabaseUser) return null;
+    const metadata = supabaseUser.user_metadata || {};
+    return {
+      id: supabaseUser.id,
+      email: supabaseUser.email,
+      username: metadata.full_name || metadata.name || supabaseUser.email?.split('@')[0] || 'User',
+      avatar_url: metadata.avatar_url || metadata.picture || null,
+      raw: supabaseUser
+    };
   };
 
   useEffect(() => {
-    const savedToken = localStorage.getItem('token');
-    if (savedToken) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
-      fetchUser();
-    } else {
-      // Fallback: BYPASS AUTH FOR TESTING if no saved session exists
-      api.defaults.headers.common['Authorization'] = `Bearer dummy-token-for-test`;
-      fetchUser();
-    }
+    // 1. Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(formatUserData(session?.user));
+      setLoading(false);
+    }).catch(() => {
+      setLoading(false);
+    });
+
+    // 2. Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(formatUserData(session?.user));
+      setLoading(false);
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
   }, []);
 
-  const login = async (email, password) => {
-    const res = await api.post('/auth/login', { email, password });
-    const { token, ...userData } = res.data;
-    localStorage.setItem('token', token);
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    setUser(userData);
-    return userData;
+  const loginWithGoogle = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`
+      }
+    });
+    if (error) throw error;
+    return data;
   };
 
-  const register = async (username, email, password, preferredLanguage) => {
-    const res = await api.post('/auth/register', { username, email, password, preferredLanguage });
-    const { token, ...userData } = res.data;
-    localStorage.setItem('token', token);
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    setUser(userData);
-    return userData;
-  };
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    delete api.defaults.headers.common['Authorization'];
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
   };
 
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser, fetchUser }}>
+    <AuthContext.Provider value={{ user, loading, loginWithGoogle, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

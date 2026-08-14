@@ -7,8 +7,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
   };
 
@@ -50,11 +50,23 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
         <div className="sidebar-footer">
           <div className="user-info">
-            <div className="user-avatar">
-              {user?.username?.charAt(0).toUpperCase()}
-            </div>
+            {user?.avatar_url ? (
+              <img
+                src={user.avatar_url}
+                alt="Avatar"
+                className="user-avatar"
+                style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }}
+              />
+            ) : (
+              <div className="user-avatar">
+                {user?.username?.charAt(0).toUpperCase() || 'U'}
+              </div>
+            )}
             <div className="user-details">
               <div className="user-name">{user?.username}</div>
+              <div style={{ fontSize: '0.75rem', opacity: 0.7, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {user?.email}
+              </div>
             </div>
           </div>
           <button
