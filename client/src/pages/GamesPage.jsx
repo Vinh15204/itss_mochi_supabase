@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
+import { useAuth } from '../context/AuthContext';
 import { useToast } from '../hooks/useToast';
 import { useTranslation } from '../hooks/useTranslation';
 import { useSpeech } from '../hooks/useSpeech';
@@ -9,11 +10,12 @@ const GamesPage = () => {
   const [decks, setDecks] = useState([]);
   const [selectedDeck, setSelectedDeck] = useState(null);
   const [cards, setCards] = useState([]);
-  const [activeGame, setActiveGame] = useState(null); // null | 'match' | 'scramble' | 'memory' | 'penalty'
+  const [activeGame, setActiveGame] = useState(null); // null | 'penalty' | 'match' | 'scramble' | 'memory'
   const [loading, setLoading] = useState(true);
   const [gameLoading, setGameLoading] = useState(false);
+  const { user } = useAuth();
   const { addToast, ToastContainer } = useToast();
-  const { t, currentLang } = useTranslation();
+  const { currentLang } = useTranslation();
   const { speak } = useSpeech();
   const navigate = useNavigate();
 
@@ -94,7 +96,7 @@ const GamesPage = () => {
       <ToastContainer />
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h1 className="page-title">🎮 <span className="text-gradient">Games Học Từ Vựng</span></h1>
+          <h1 className="page-title">🎮 <span className="text-gradient">Games Học Từ Vựng IOE</span></h1>
           <p className="page-subtitle">Vừa chơi vừa nhớ từ vựng cực nhanh cùng các Mini-Game hấp dẫn!</p>
         </div>
         {activeGame && (
@@ -154,20 +156,20 @@ const GamesPage = () => {
 
           {/* Games Selection List */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem' }}>
-            {/* Game 4: Penalty Shootout SIUUU */}
-            <div className="glass-card" style={{ padding: '1.5rem', borderRadius: '16px', border: '2px solid #22c55e', background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)' }}>
+            {/* Game IOE Penalty Shootout */}
+            <div className="glass-card" style={{ padding: '1.5rem', borderRadius: '16px', border: '2px solid #0099ff', background: 'linear-gradient(135deg, rgba(0, 153, 255, 0.15) 0%, rgba(0, 102, 204, 0.05) 100%)' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚽</div>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '0.5rem', color: '#4ade80' }}>Penalty SIUUU ⚽</h2>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '0.5rem', color: '#38bdf8' }}>Sút Phạt IOE ⚽</h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem', minHeight: '40px' }}>
-                Đánh trắc nghiệm 4 góc sút phạt đền! Chọn đúng để sút tung lưới và ăn mừng SIUUU!
+                Game bóng đá sút penalty trắc nghiệm phong cách IOE huyền thoại! 4 đáp án A-B-C-D sút tung lưới ăn mừng SIUUU!
               </p>
               <button
                 className="btn"
-                style={{ width: '100%', background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)', color: '#ffffff', fontWeight: 'bold' }}
+                style={{ width: '100%', background: 'linear-gradient(135deg, #0099ff 0%, #0066cc 100%)', color: '#ffffff', fontWeight: 'bold' }}
                 onClick={() => startNewGame('penalty')}
                 disabled={gameLoading || !selectedDeck}
               >
-                ⚽ Sút Pen SIUUU!
+                ⚽ Chơi Sút Phạt IOE
               </button>
             </div>
 
@@ -226,7 +228,7 @@ const GamesPage = () => {
       ) : (
         /* Game Arena Render */
         <div>
-          {activeGame === 'penalty' && <PenaltyShootoutGame cards={cards} deck={selectedDeck} speak={speak} onRestart={() => startNewGame('penalty')} />}
+          {activeGame === 'penalty' && <IOEPenaltyGame cards={cards} deck={selectedDeck} user={user} speak={speak} onRestart={() => startNewGame('penalty')} />}
           {activeGame === 'match' && <WordMatchGame cards={cards} deck={selectedDeck} speak={speak} onRestart={() => startNewGame('match')} />}
           {activeGame === 'scramble' && <WordScrambleGame cards={cards} deck={selectedDeck} speak={speak} onRestart={() => startNewGame('scramble')} />}
           {activeGame === 'memory' && <MemoryFlipGame cards={cards} deck={selectedDeck} speak={speak} onRestart={() => startNewGame('memory')} />}
@@ -237,21 +239,44 @@ const GamesPage = () => {
 };
 
 /* -------------------------------------------------------------------------
-   GAME 4: PENALTY SHOOTOUT SIUUU (SÚT PENALTY ĂN MỪNG SIUUU)
+   EXACT IOE-STYLE PENALTY SHOOTOUT GAME (SÚT PHẠT TRẮC NGHIỆM IOE)
    ------------------------------------------------------------------------- */
-const PenaltyShootoutGame = ({ cards, deck, speak, onRestart }) => {
+const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [options, setOptions] = useState([]);
-  const [goals, setGoals] = useState(0);
-  const [misses, setMisses] = useState(0);
   const [score, setScore] = useState(0);
+  const [secondsLeft, setSecondsLeft] = useState(120); // 2:00 timer like IOE
   const [kickStatus, setKickStatus] = useState(null); // null | 'goal' | 'miss'
   const [keeperPos, setKeeperPos] = useState('center'); // 'left' | 'center' | 'right'
-  const [ballPos, setBallPos] = useState({ top: '80%', left: '50%' });
+  const [ballPos, setBallPos] = useState({ top: '82%', left: '50%' });
   const [gameOver, setGameOver] = useState(false);
 
   const currentCard = cards[currentIdx];
+  const userName = user?.username || 'hocsinh123';
 
+  // Format seconds to MM:SS
+  const formatTime = (secs) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  };
+
+  // Timer effect
+  useEffect(() => {
+    if (gameOver || secondsLeft <= 0) return;
+    const interval = setInterval(() => {
+      setSecondsLeft(prev => {
+        if (prev <= 1) {
+          setGameOver(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [secondsLeft, gameOver]);
+
+  // Setup options for current question
   const prepareQuestion = useCallback(() => {
     if (!currentCard) return;
     const correct = currentCard.back || currentCard.front;
@@ -266,179 +291,355 @@ const PenaltyShootoutGame = ({ cards, deck, speak, onRestart }) => {
     setOptions(allOptions);
     setKickStatus(null);
     setKeeperPos('center');
-    setBallPos({ top: '80%', left: '50%' });
+    setBallPos({ top: '82%', left: '50%' });
   }, [currentCard, cards]);
 
   useEffect(() => {
     prepareQuestion();
   }, [currentIdx, prepareQuestion]);
 
-  const handleShoot = (selectedOption, cornerIndex) => {
+  const handleSelectOption = (selectedOption, optionIdx) => {
     if (kickStatus !== null || !currentCard) return;
 
     const isCorrect = selectedOption === (currentCard.back || currentCard.front);
 
-    // Corner positions: 0: top-left, 1: top-right, 2: bottom-left, 3: bottom-right
+    // Ball flight target positions
     const ballTargets = [
-      { top: '25%', left: '20%' },
-      { top: '25%', left: '80%' },
-      { top: '45%', left: '25%' },
-      { top: '45%', left: '75%' }
+      { top: '35%', left: '22%' }, // A (top-left)
+      { top: '35%', left: '78%' }, // B (top-right)
+      { top: '48%', left: '26%' }, // C (bottom-left)
+      { top: '48%', left: '74%' }  // D (bottom-right)
     ];
 
     const keeperDives = isCorrect
-      ? (cornerIndex <= 1 ? 'right' : 'left') // Goalkeeper dives wrong way
-      : (cornerIndex <= 1 ? 'left' : 'right'); // Goalkeeper saves
+      ? (optionIdx % 2 === 0 ? 'right' : 'left')  // Keeper dives WRONG way
+      : (optionIdx % 2 === 0 ? 'left' : 'right');  // Keeper SAVES
 
-    setBallPos(ballTargets[cornerIndex] || { top: '30%', left: '50%' });
+    setBallPos(ballTargets[optionIdx] || { top: '35%', left: '50%' });
     setKeeperPos(keeperDives);
 
     setTimeout(() => {
       if (isCorrect) {
         setKickStatus('goal');
-        setGoals(g => g + 1);
-        setScore(s => s + 200);
+        setScore(s => s + 10);
         speak(currentCard.front, deck?.language);
       } else {
         setKickStatus('miss');
-        setMisses(m => m + 1);
       }
 
-      // Next turn
+      // Next question delay
       setTimeout(() => {
         if (currentIdx < cards.length - 1) {
           setCurrentIdx(i => i + 1);
         } else {
           setGameOver(true);
         }
-      }, 2000);
-    }, 400);
+      }, 1800);
+    }, 450);
   };
 
   if (!currentCard) return null;
 
   return (
-    <div className="glass-card" style={{ padding: '1.5rem', textAlign: 'center', maxWidth: '750px', margin: '0 auto', background: 'radial-gradient(circle, #0f172a 0%, #020617 100%)', borderRadius: '24px', border: '2px solid #22c55e', boxShadow: '0 10px 30px rgba(34, 197, 94, 0.2)' }}>
-      {/* Score Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', background: 'rgba(0, 0, 0, 0.4)', padding: '0.75rem 1.25rem', borderRadius: '12px' }}>
-        <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
-          ⚽ Sút Pen: <span style={{ color: '#4ade80' }}>{goals} VÀO</span> | <span style={{ color: '#ef4444' }}>{misses} HỎNG</span>
+    <div style={{
+      maxWidth: '850px',
+      margin: '0 auto',
+      borderRadius: '20px',
+      overflow: 'hidden',
+      boxShadow: '0 12px 40px rgba(0, 0, 0, 0.6)',
+      border: '4px solid #0099ff',
+      background: '#0a0f1d',
+      position: 'relative'
+    }}>
+      {/* 1. TOP QUESTION BANNER (Exact IOE Blue Banner with dashed border) */}
+      <div style={{
+        background: 'linear-gradient(180deg, #00bfff 0%, #0088ff 100%)',
+        border: '3px dashed #ffffff',
+        margin: '10px 10px 0 10px',
+        borderRadius: '12px',
+        padding: '12px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        boxShadow: '0 4px 10px rgba(0,136,255,0.4)'
+      }}>
+        <div style={{
+          position: 'absolute',
+          left: '15px',
+          background: '#ffffff',
+          width: '36px',
+          height: '36px',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '1.4rem'
+        }}>
+          ⚽
         </div>
-        <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--accent-yellow)' }}>
-          ⭐ {score} Điểm
+        <div style={{
+          color: '#ffffff',
+          fontSize: '1.4rem',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          fontFamily: deck?.language === 'ja' ? 'var(--font-japanese)' : 'sans-serif',
+          textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+        }}>
+          {deck?.language === 'ja' ? `Nghĩa của từ "${currentCard.front}" là gì?` : `What is the meaning of "${currentCard.front}"?`}
         </div>
       </div>
 
-      {!gameOver ? (
-        <div>
-          {/* Target Word Banner */}
-          <div style={{ background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%)', padding: '1rem', borderRadius: '16px', marginBottom: '1.25rem', border: '1px solid rgba(74, 222, 128, 0.3)' }}>
-            <div style={{ fontSize: '0.85rem', color: '#86efac' }}>Từ vựng cần ghi bàn #{currentIdx + 1}:</div>
-            <div style={{ fontSize: '2rem', fontWeight: '800', fontFamily: deck?.language === 'ja' ? 'var(--font-japanese)' : 'inherit', marginTop: '0.25rem' }}>
-              {currentCard.front}
-            </div>
-            {currentCard.reading && <div style={{ color: '#38bdf8', fontSize: '0.9rem' }}>{currentCard.reading}</div>}
-          </div>
+      {/* 2. STADIUM FIELD ARENA */}
+      <div style={{
+        position: 'relative',
+        height: '340px',
+        background: 'linear-gradient(180deg, #050a14 0%, #0c1829 25%, #00b000 25%, #008a00 100%)',
+        overflow: 'hidden'
+      }}>
+        {/* Crowd Spectators & Flags Silhouette at top */}
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '85px',
+          background: 'radial-gradient(ellipse at top, #1e293b 0%, #090d16 100%)',
+          display: 'flex',
+          justifyContent: 'space-around',
+          alignItems: 'flex-end',
+          paddingBottom: '5px',
+          opacity: 0.9
+        }}>
+          <div style={{ fontSize: '1.5rem' }}>🚩👥👥🚩👥👥🚩</div>
+          <div style={{ fontSize: '1.5rem' }}>👥👥🚩👥👥🚩👥</div>
+          <div style={{ fontSize: '1.5rem' }}>🚩👥👥🚩👥👥🚩</div>
+        </div>
 
-          {/* Goal Net Arena */}
-          <div style={{ position: 'relative', height: '240px', background: 'linear-gradient(180deg, #15803d 0%, #166534 100%)', borderRadius: '16px', overflow: 'hidden', border: '4px solid #ffffff', boxShadow: 'inset 0 0 20px rgba(0,0,0,0.5)', marginBottom: '1.25rem' }}>
-            {/* Goal Net lines */}
-            <div style={{ position: 'absolute', top: '10px', left: '10%', right: '10%', height: '140px', border: '3px solid #ffffff', background: 'repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(255,255,255,0.15) 10px, rgba(255,255,255,0.15) 11deg), repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(255,255,255,0.15) 10px, rgba(255,255,255,0.15) 11deg)' }}></div>
-
-            {/* Goalkeeper */}
+        {/* Top-Left IOE User & Score Badge */}
+        <div style={{
+          position: 'absolute',
+          top: '95px',
+          left: '15px',
+          zIndex: 10,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: 'rgba(0,0,0,0.6)',
+            padding: '6px 12px',
+            borderRadius: '8px',
+            border: '2px solid #ff9900'
+          }}>
             <div style={{
-              position: 'absolute',
-              top: '65px',
-              left: keeperPos === 'left' ? '25%' : keeperPos === 'right' ? '70%' : '46%',
-              fontSize: '3.5rem',
-              transition: 'all 0.3s ease-out',
-              transform: keeperPos === 'left' ? 'rotate(-25deg)' : keeperPos === 'right' ? 'rotate(25deg)' : 'none',
-              filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))'
+              background: '#ff9900',
+              padding: '4px',
+              borderRadius: '6px',
+              color: '#ffffff',
+              fontSize: '1.2rem'
             }}>
-              🧤
+              👤
             </div>
-
-            {/* Football */}
-            <div style={{
-              position: 'absolute',
-              top: ballPos.top,
-              left: ballPos.left,
-              fontSize: '2.2rem',
-              transition: 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)',
-              transform: 'translate(-50%, -50%)',
-              filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.5))'
-            }}>
-              ⚽
+            <div>
+              <div style={{ color: '#ffff00', fontWeight: 'bold', fontSize: '0.9rem' }}>
+                Score: <span style={{ color: '#ffffff' }}>{score}</span>
+              </div>
+              <div style={{ color: '#ffff00', fontWeight: 'bold', fontSize: '0.85rem' }}>
+                Question: <span style={{ color: '#ffffff' }}>{currentIdx + 1}/{cards.length}</span>
+              </div>
             </div>
-
-            {/* Goal SIUUU Celebration Banner */}
-            {kickStatus === 'goal' && (
-              <div style={{ position: 'absolute', inset: 0, background: 'rgba(34, 197, 94, 0.85)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', animation: 'popIn 0.3s ease' }}>
-                <div style={{ fontSize: '3rem', fontWeight: '900', textShadow: '0 4px 10px rgba(0,0,0,0.4)', color: '#ffffff' }}>
-                  ⚽ GOALLL! SIUUUUU! 🔥
-                </div>
-                <div style={{ fontSize: '1.2rem', marginTop: '0.5rem', color: '#fef08a' }}>
-                  +200 Điểm Thưởng!
-                </div>
-              </div>
-            )}
-
-            {/* Missed Banner */}
-            {kickStatus === 'miss' && (
-              <div style={{ position: 'absolute', inset: 0, background: 'rgba(239, 68, 68, 0.85)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', animation: 'popIn 0.3s ease' }}>
-                <div style={{ fontSize: '2.5rem', fontWeight: '900', color: '#ffffff' }}>
-                  ❌ THỦ MÔN CẢN PHÁ!
-                </div>
-                <div style={{ fontSize: '1rem', marginTop: '0.5rem', color: '#ffffff' }}>
-                  Nghĩa đúng: {currentCard.back || currentCard.front}
-                </div>
-              </div>
-            )}
           </div>
-
-          {/* 4 Penalty Kick Corners (Options) */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-            {options.map((opt, idx) => (
-              <button
-                key={idx}
-                className="btn"
-                onClick={() => handleShoot(opt, idx)}
-                disabled={kickStatus !== null}
-                style={{
-                  padding: '0.875rem 1rem',
-                  borderRadius: '14px',
-                  background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  color: '#ffffff',
-                  fontWeight: '600',
-                  fontSize: '1rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  cursor: kickStatus !== null ? 'not-allowed' : 'pointer',
-                  transition: 'all 0.2s ease',
-                  textAlign: 'left'
-                }}
-              >
-                <span style={{ background: '#22c55e', width: '26px', height: '26px', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 'bold', color: '#000' }}>
-                  {idx === 0 ? '↖️' : idx === 1 ? '↗️' : idx === 2 ? '↙️' : '↘️'}
-                </span>
-                <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{opt}</span>
-              </button>
-            ))}
+          <div style={{ color: '#a3e635', fontWeight: 'bold', fontSize: '0.9rem', marginTop: '4px', textShadow: '0 1px 2px #000' }}>
+            {userName}
           </div>
         </div>
+
+        {/* Top-Right Big Timer */}
+        <div style={{
+          position: 'absolute',
+          top: '95px',
+          right: '20px',
+          zIndex: 10,
+          color: '#ffffff',
+          fontSize: '2rem',
+          fontWeight: '900',
+          fontFamily: 'monospace',
+          textShadow: '0 2px 8px rgba(0,0,0,0.8)'
+        }}>
+          {formatTime(secondsLeft)}
+        </div>
+
+        {/* Goal Post Frame Structure (White net) */}
+        <div style={{
+          position: 'absolute',
+          top: '90px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '320px',
+          height: '140px',
+          border: '6px solid #ffffff',
+          borderBottom: 'none',
+          borderRadius: '12px 12px 0 0',
+          background: 'repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(255,255,255,0.2) 8px, rgba(255,255,255,0.2) 9px), repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.2) 8px, rgba(255,255,255,0.2) 9px)',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.5)'
+        }}></div>
+
+        {/* Pitch Lines (Penalty Line & Goal Area) */}
+        <div style={{
+          position: 'absolute',
+          top: '230px',
+          left: 0,
+          right: 0,
+          height: '4px',
+          background: '#ffffff'
+        }}></div>
+        <div style={{
+          position: 'absolute',
+          top: '230px',
+          left: '20%',
+          right: '20%',
+          height: '100px',
+          border: '4px solid #ffffff',
+          borderTop: 'none'
+        }}></div>
+
+        {/* Animated IOE Goalkeeper Character */}
+        <div style={{
+          position: 'absolute',
+          top: '120px',
+          left: keeperPos === 'left' ? '32%' : keeperPos === 'right' ? '65%' : '48%',
+          transform: keeperPos === 'left' ? 'rotate(-25deg) scale(1.1)' : keeperPos === 'right' ? 'rotate(25deg) scale(1.1)' : 'translateX(-50%)',
+          transition: 'all 0.35s ease-out',
+          fontSize: '4.5rem',
+          filter: 'drop-shadow(0 6px 8px rgba(0,0,0,0.5))',
+          zIndex: 5
+        }}>
+          🤾‍♂️
+        </div>
+
+        {/* Football Ball (Penalty spot flight animation) */}
+        <div style={{
+          position: 'absolute',
+          top: ballPos.top,
+          left: ballPos.left,
+          fontSize: '2.4rem',
+          transition: 'all 0.45s cubic-bezier(0.2, 0.8, 0.4, 1)',
+          transform: 'translate(-50%, -50%)',
+          filter: 'drop-shadow(0 6px 10px rgba(0,0,0,0.6))',
+          zIndex: 6
+        }}>
+          ⚽
+        </div>
+
+        {/* GOAL Celebration Banner */}
+        {kickStatus === 'goal' && (
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(0, 180, 0, 0.85)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 20,
+            animation: 'popIn 0.3s ease'
+          }}>
+            <div style={{ fontSize: '3.5rem', fontWeight: '900', color: '#ffffff', textShadow: '0 4px 10px #000' }}>
+              ⚽ GOALLL! SIUUUUU! 🔥
+            </div>
+            <div style={{ fontSize: '1.4rem', color: '#ffff00', marginTop: '0.5rem', fontWeight: 'bold' }}>
+              +10 ĐIỂM THƯỞNG!
+            </div>
+          </div>
+        )}
+
+        {/* Missed Banner */}
+        {kickStatus === 'miss' && (
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(220, 38, 38, 0.85)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 20,
+            animation: 'popIn 0.3s ease'
+          }}>
+            <div style={{ fontSize: '3rem', fontWeight: '900', color: '#ffffff' }}>
+              ❌ THỦ MÔN BẮT BÓNG!
+            </div>
+            <div style={{ fontSize: '1.2rem', color: '#ffffff', marginTop: '0.5rem' }}>
+              Đáp án đúng: <strong style={{ color: '#ffff00' }}>{currentCard.back || currentCard.front}</strong>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* 3. BOTTOM IOE HEXAGONAL ANSWER BUTTONS (A, B, C, D) */}
+      {!gameOver ? (
+        <div style={{
+          background: '#040914',
+          padding: '20px 25px',
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '15px 25px',
+          position: 'relative'
+        }}>
+          {options.map((opt, idx) => {
+            const letter = String.fromCharCode(65 + idx); // A, B, C, D
+            return (
+              <button
+                key={idx}
+                onClick={() => handleSelectOption(opt, idx)}
+                disabled={kickStatus !== null}
+                style={{
+                  background: 'linear-gradient(180deg, #00aaff 0%, #0077ee 100%)',
+                  border: '3px dashed #ffffff',
+                  borderRadius: '16px',
+                  padding: '14px 20px',
+                  color: '#ffffff',
+                  fontWeight: 'bold',
+                  fontSize: '1.15rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  cursor: kickStatus !== null ? 'not-allowed' : 'pointer',
+                  boxShadow: '0 6px 12px rgba(0,119,238,0.4)',
+                  transition: 'all 0.2s ease',
+                  textAlign: 'left',
+                  clipPath: 'polygon(6% 0%, 94% 0%, 100% 50%, 94% 100%, 6% 100%, 0% 50%)' // IOE Hexagonal shape
+                }}
+                onMouseOver={(e) => {
+                  if (kickStatus === null) e.currentTarget.style.transform = 'scale(1.03)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                <span style={{ fontSize: '1.4rem', color: '#ffffff', marginRight: '10px' }}>
+                  {letter} :
+                </span>
+                <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {opt}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       ) : (
-        /* Victory SIUUU Screen */
-        <div style={{ padding: '2rem 0' }}>
-          <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>🕺⚽</div>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: '900', color: '#4ade80' }}>SIUUUUUUUU! 🔥</h1>
-          <h2>Hoàn Thành Trận Đấu Sút Penalty!</h2>
-          <p style={{ fontSize: '1.25rem', marginTop: '0.75rem', color: 'var(--text-secondary)' }}>
-            Ghi bàn: <strong style={{ color: '#4ade80' }}>{goals}/{cards.length}</strong> | Tổng điểm: <strong style={{ color: 'var(--accent-yellow)' }}>{score}</strong>
+        /* Victory Screen */
+        <div style={{ padding: '3rem 2rem', textAlign: 'center', background: '#0a0f1d' }}>
+          <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>🏆⚽</div>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: '900', color: '#38bdf8' }}>HOÀN THÀNH TRẬN ĐẤU IOE!</h1>
+          <p style={{ fontSize: '1.3rem', marginTop: '0.75rem', color: '#ffffff' }}>
+            Tổng số điểm đạt được: <strong style={{ color: '#ffff00', fontSize: '1.8rem' }}>{score} Điểm</strong>
           </p>
-          <button className="btn btn-primary" onClick={onRestart} style={{ marginTop: '1.5rem', padding: '0.875rem 2.5rem', fontSize: '1.1rem' }}>
-            🔄 Sút Trận Tiếp Theo
+          <button className="btn btn-primary" onClick={onRestart} style={{ marginTop: '2rem', padding: '0.875rem 2.5rem', fontSize: '1.1rem' }}>
+            🔄 Chơi Trận Tiếp Theo
           </button>
         </div>
       )}
