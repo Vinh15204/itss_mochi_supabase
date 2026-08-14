@@ -17,6 +17,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     { path: '/decks', icon: '📚', label: t('sidebar.flashcards') },
     { path: '/extract', icon: '✨', label: t('sidebar.extract') },
     { path: '/test', icon: '📝', label: t('sidebar.test') },
+    { path: '/games', icon: '🎮', label: 'Games' },
     { path: '/profile', icon: '⚙️', label: t('sidebar.settings') },
   ];
 

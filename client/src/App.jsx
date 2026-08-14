@@ -10,6 +10,7 @@ import DecksPage from './pages/DecksPage';
 import FlashcardPage from './pages/FlashcardPage';
 import ExtractPage from './pages/ExtractPage';
 import MiniTestPage from './pages/MiniTestPage';
+import GamesPage from './pages/GamesPage';
 import ProfilePage from './pages/ProfilePage';
 
 const ProtectedRoute = ({ children }) => {
@@ -82,6 +83,11 @@ const App = () => {
           <Route path="/test/:deckId" element={
             <ProtectedRoute>
               <AppLayout><MiniTestPage /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/games" element={
+            <ProtectedRoute>
+              <AppLayout><GamesPage /></AppLayout>
             </ProtectedRoute>
           } />
 
