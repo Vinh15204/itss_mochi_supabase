@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import { supabase } from '../services/supabase';
 import { useToast } from '../hooks/useToast';
 import { fetchEnglishDefinition, translateToVietnamese } from '../services/dictionaryService';
 import { useTranslation } from '../hooks/useTranslation';
@@ -19,36 +19,42 @@ const ExtractPage = () => {
   const { addToast, ToastContainer } = useToast();
   const { t, currentLang } = useTranslation();
 
+  const extractWordsFromText = (rawText, lang) => {
+    if (!rawText) return [];
+    if (lang === 'ja') {
+      // Extract Japanese Kanji & Kana words
+      const matches = rawText.match(/[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]+/g) || [];
+      const unique = Array.from(new Set(matches)).filter(w => w.length >= 1);
+      return unique.slice(0, 30).map(w => ({ front: w, back: '', reading: '', type: 'word' }));
+    } else {
+      // Extract English words
+      const matches = rawText.match(/\b[A-Za-z]{3,}\b/g) || [];
+      const unique = Array.from(new Set(matches.map(w => w.toLowerCase())));
+      return unique.slice(0, 30).map(w => ({ front: w, back: '', reading: '', type: 'word' }));
+    }
+  };
+
   const extractWords = async () => {
     if (!text.trim()) {
       addToast(currentLang === 'vi' ? 'Vui lòng nhập văn bản' : currentLang === 'en' ? 'Please enter some text' : 'テキストを入力してください', 'error');
       return;
     }
-    
-    // Clear previous results immediately to prevent flickering
+
     setWords([]);
     setExtracted(false);
-    
-    // Increment request ID to ignore previous async tasks
     const currentId = ++extractRequestId.current;
-    
+
     try {
-      const res = await api.post('/extract', { text, language });
-      
-      // If a newer request has started, ignore this one
+      const extractedWords = extractWordsFromText(text, language);
       if (currentId !== extractRequestId.current) return;
-      const extractedWords = res.data && Array.isArray(res.data.words) ? res.data.words : null;
-      if (!extractedWords) {
-        throw new Error('Invalid server response');
-      }
+
       setWords(extractedWords);
       setExtracted(true);
-      addToast(currentLang === 'vi' ? `Tìm thấy ${res.data.count || extractedWords.length} từ! Đang tra nghĩa từ vựng...` : currentLang === 'en' ? `Found ${res.data.count || extractedWords.length} words! Fetching meanings in parallel...` : `${res.data.count || extractedWords.length} 語検出しました！意味を検索中...`, 'info');
-      
-      // Automatically fetch definitions in parallel
+      addToast(currentLang === 'vi' ? `Tìm thấy ${extractedWords.length} từ! Đang tra nghĩa từ vựng...` : currentLang === 'en' ? `Found ${extractedWords.length} words! Fetching meanings...` : `${extractedWords.length} 語検出しました！意味を検索中...`, 'info');
+
       await fetchDefinitionsParallel(extractedWords, language);
-      
-    } catch {
+    } catch (err) {
+      console.error('Extraction error:', err);
       addToast(currentLang === 'vi' ? 'Trích xuất thất bại' : currentLang === 'en' ? 'Extraction failed' : '抽出に失敗しました', 'error');
     }
   };
@@ -56,44 +62,24 @@ const ExtractPage = () => {
   const fetchDefinitionsParallel = async (wordsToDefine, lang) => {
     const currentId = extractRequestId.current;
     setDefining(true);
-    
-    // Process in chunks of 5 to avoid rate limiting
+
     const chunkSize = 5;
     for (let i = 0; i < wordsToDefine.length; i += chunkSize) {
       if (currentId !== extractRequestId.current) break;
-      
       const chunk = wordsToDefine.slice(i, i + chunkSize);
-      
+
       await Promise.all(chunk.map(async (word) => {
         const index = wordsToDefine.indexOf(word);
         try {
-          if (lang === 'ja') {
-            const res = await api.get(`/dictionary/define?word=${encodeURIComponent(word.front)}&lang=ja`);
-            const { definition: def, reading: rd } = res.data;
-            
-            if (currentId === extractRequestId.current) {
-              setWords(prevWords => {
-                const newWords = [...prevWords];
-                if (newWords[index]) {
-                  newWords[index] = { 
-                    ...newWords[index], 
-                    back: def || newWords[index].back,
-                    reading: rd || newWords[index].reading 
-                  };
-                }
-                return newWords;
-              });
-            }
-          } else {
+          if (lang === 'en') {
             const definition = await fetchEnglishDefinition(word.front);
             if (definition) {
               const viMeaning = await translateToVietnamese(definition, 'en');
-              
               if (currentId === extractRequestId.current) {
                 setWords(prevWords => {
                   const newWords = [...prevWords];
                   if (newWords[index]) {
-                    newWords[index] = { ...newWords[index], back: viMeaning };
+                    newWords[index] = { ...newWords[index], back: viMeaning || definition };
                   }
                   return newWords;
                 });
@@ -105,7 +91,7 @@ const ExtractPage = () => {
         }
       }));
     }
-    
+
     setDefining(false);
     if (currentId === extractRequestId.current) {
       addToast(currentLang === 'vi' ? 'Đã hoàn tất tra cứu nghĩa từ vựng!' : currentLang === 'en' ? 'Finished fetching meanings!' : '意味の検索が完了しました！', 'success');
@@ -136,16 +122,39 @@ const ExtractPage = () => {
 
     setSaving(true);
     try {
-      const res = await api.post('/extract/to-deck', {
-        text,
-        language,
-        title: deckTitle,
-        description: `Extracted ${words.length} words from pasted text`,
-        words: words // Pass the modified words with meanings
-      });
-      addToast(currentLang === 'vi' ? `Đã tạo bộ thẻ với ${res.data.wordCount} từ!` : currentLang === 'en' ? `Deck created with ${res.data.wordCount} words!` : `デッキを作成し、${res.data.wordCount} 語を保存しました！`, 'success');
-      navigate(`/decks/${res.data.deck._id}`);
-    } catch {
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+
+      const { data: deckData, error: deckErr } = await supabase
+        .from('decks')
+        .insert([{
+          user_id: currentUser?.id,
+          title: deckTitle,
+          description: `Extracted ${words.length} words from pasted text`,
+          language: language,
+          card_count: words.length
+        }])
+        .select()
+        .single();
+
+      if (deckErr) throw deckErr;
+
+      const cardsToInsert = words.map(w => ({
+        deck_id: deckData.id,
+        user_id: currentUser?.id,
+        front: w.front,
+        back: w.back || '',
+        reading: w.reading || '',
+        example: '',
+        mastered: false
+      }));
+
+      const { error: cardsErr } = await supabase.from('cards').insert(cardsToInsert);
+      if (cardsErr) throw cardsErr;
+
+      addToast(currentLang === 'vi' ? `Đã tạo bộ thẻ với ${words.length} từ!` : currentLang === 'en' ? `Deck created with ${words.length} words!` : `デッキを作成し、${words.length} 語を保存しました！`, 'success');
+      navigate(`/decks/${deckData.id}`);
+    } catch (err) {
+      console.error('Error saving deck to Supabase:', err);
       addToast(currentLang === 'vi' ? 'Lỗi khi lưu bộ thẻ' : currentLang === 'en' ? 'Failed to save deck' : 'デッキの保存に失敗しました', 'error');
     } finally {
       setSaving(false);

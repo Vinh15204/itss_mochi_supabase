@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import { supabase } from '../services/supabase';
 import { useToast } from '../hooks/useToast';
 import { useTranslation } from '../hooks/useTranslation';
 import { useSpeech } from '../hooks/useSpeech';
@@ -42,20 +42,47 @@ const MiniTestPage = () => {
 
   // Setup modal state
   const [showSetupModal, setShowSetupModal] = useState(false);
-  const [pendingDeck, setPendingDeck] = useState(null);   // { _id, title, cardCount }
+  const [pendingDeck, setPendingDeck] = useState(null);   // { id, title, cardCount }
   const [questionCount, setQuestionCount] = useState(10);
   const [activePreset, setActivePreset] = useState(10);   // tracks which quick-btn is active
 
-  // Determine deck language for TTS (from pendingDeck or loaded decks)
   const activeDeckLang = pendingDeck?.language
-    || decks.find(d => d._id === (selectedDeck || deckId))?.language
+    || decks.find(d => (d.id || d._id) === (selectedDeck || deckId))?.language
     || 'ja';
 
   const startTest = useCallback(async (id, count = 10) => {
     setLoading(true);
     try {
-      const res = await api.post(`/test/generate/${id}`, { count });
-      setQuestions(res.data.questions);
+      const { data: cards, error } = await supabase
+        .from('cards')
+        .select('*')
+        .eq('deck_id', id);
+
+      if (error) throw error;
+      if (!cards || cards.length < 4) {
+        throw new Error(currentLang === 'vi' ? 'Cần ít nhất 4 thẻ để tạo bài test' : 'Need at least 4 cards');
+      }
+
+      const shuffle = arr => [...arr].sort(() => 0.5 - Math.random());
+      const selectedCards = shuffle(cards).slice(0, count);
+
+      const generatedQuestions = selectedCards.map(card => {
+        const otherBacks = cards.filter(c => c.id !== card.id && c.back).map(c => c.back);
+        const shuffledOthers = shuffle(otherBacks).slice(0, 3);
+        while (shuffledOthers.length < 3) {
+          shuffledOthers.push(`Lựa chọn ${shuffledOthers.length + 1}`);
+        }
+        const options = shuffle([card.back || card.front, ...shuffledOthers]);
+        return {
+          cardId: card.id,
+          question: card.front,
+          reading: card.reading,
+          correctAnswer: card.back || card.front,
+          options
+        };
+      });
+
+      setQuestions(generatedQuestions);
       setCurrentQ(0);
       setAnswers([]);
       setSelectedAnswer(null);
@@ -63,8 +90,9 @@ const MiniTestPage = () => {
       setShowResult(false);
       setAnswered(false);
     } catch (err) {
+      console.error('Test generation error:', err);
       addToast(
-        err.response?.data?.message || (
+        err.message || (
           currentLang === 'vi' ? 'Lỗi khi tạo bài test'
           : currentLang === 'en' ? 'Failed to generate test'
           : 'テストの作成に失敗しました'
@@ -79,12 +107,13 @@ const MiniTestPage = () => {
   const confirmAndStart = () => {
     if (!pendingDeck) return;
     setShowSetupModal(false);
-    setSelectedDeck(pendingDeck._id);
-    startTest(pendingDeck._id, questionCount);
+    const targetId = pendingDeck.id || pendingDeck._id;
+    setSelectedDeck(targetId);
+    startTest(targetId, questionCount);
   };
 
   const handleTryAgainClick = () => {
-    const currentDeck = decks.find(d => d._id === (selectedDeck || deckId));
+    const currentDeck = decks.find(d => (d.id || d._id) === (selectedDeck || deckId));
     if (currentDeck) {
       openSetupModal(currentDeck);
     } else {
@@ -95,52 +124,59 @@ const MiniTestPage = () => {
     }
   };
 
-  useEffect(() => {
-    const loadDecks = async () => {
-      try {
-        const res = await api.get('/decks');
-        setDecks(res.data);
-      } catch {
-        addToast(
-          currentLang === 'vi' ? 'Lỗi khi tải bộ thẻ từ'
-          : currentLang === 'en' ? 'Failed to load decks'
-          : 'デッキの読み込みに失敗しました',
-          'error'
-        );
-      }
-    };
-    Promise.resolve().then(() => loadDecks());
+  const loadDecks = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('decks')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setDecks(data || []);
+    } catch (err) {
+      console.error('Error loading decks for test:', err);
+      addToast(
+        currentLang === 'vi' ? 'Lỗi khi tải bộ thẻ từ'
+        : currentLang === 'en' ? 'Failed to load decks'
+        : 'デッキの読み込みに失敗しました',
+        'error'
+      );
+    }
   }, [currentLang, addToast]);
 
   useEffect(() => {
+    loadDecks();
+  }, [loadDecks]);
+
+  useEffect(() => {
     if (deckId) {
-      Promise.resolve().then(() => startTest(deckId, 10));
+      startTest(deckId, 10);
     }
   }, [deckId, startTest]);
 
-  // Open the setup modal for a chosen deck
   const openSetupModal = (deck) => {
     setPendingDeck(deck);
-    const defaultCount = Math.min(10, deck.cardCount);
+    const count = deck.card_count || deck.cardCount || 10;
+    const defaultCount = Math.min(10, count);
     setQuestionCount(defaultCount);
     setActivePreset(defaultCount);
     setShowSetupModal(true);
   };
 
   const handlePresetSelect = (deck, presetValue) => {
-    const max = deck?.cardCount ?? pendingDeck?.cardCount ?? 999;
+    const max = deck?.card_count ?? deck?.cardCount ?? pendingDeck?.card_count ?? pendingDeck?.cardCount ?? 999;
     const resolved = presetValue === null ? max : Math.min(presetValue, max);
     setQuestionCount(resolved);
-    setActivePreset(presetValue); // keep null for "all"
+    setActivePreset(presetValue);
   };
 
   const handleCustomInput = (val) => {
-    const max = pendingDeck?.cardCount ?? 999;
+    const max = pendingDeck?.card_count ?? pendingDeck?.cardCount ?? 999;
     const parsed = parseInt(val, 10);
     if (!isNaN(parsed)) {
       const clamped = Math.max(4, Math.min(parsed, max));
       setQuestionCount(clamped);
-      setActivePreset(null); // deselect presets when user types custom
+      setActivePreset(null);
     }
   };
 
@@ -159,7 +195,6 @@ const MiniTestPage = () => {
       correct: isCorrect
     }]);
 
-    // Auto-advance after delay
     setTimeout(() => {
       if (currentQ < questions.length - 1) {
         setCurrentQ(prev => prev + 1);
@@ -184,30 +219,24 @@ const MiniTestPage = () => {
         });
       }
 
-      const res = await api.post('/test/submit', {
-        deckId: selectedDeck || deckId,
-        answers: updatedAnswers
-      });
+      const correctCount = updatedAnswers.filter(a => a.correct).length;
+      const total = questions.length;
+      const percentage = Math.round((correctCount / total) * 100);
 
-      setResult(res.data);
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+
+      await supabase.from('test_results').insert([{
+        user_id: currentUser?.id,
+        deck_id: selectedDeck || deckId,
+        score: correctCount,
+        total_questions: total
+      }]);
+
+      setResult({ score: correctCount, totalQuestions: total, percentage });
       setShowResult(true);
 
-      // Add pet EXP
-      try {
-        const action = res.data.percentage === 100 ? 'test_perfect' : 'test_pass';
-        await api.post('/pet/add-exp', { action });
-      } catch {
-        // Ignore error
-      }
-
-      // Log study time
-      try {
-        await api.post('/streak/log', { minutes: 3 });
-      } catch {
-        // Ignore error
-      }
-
-    } catch {
+    } catch (err) {
+      console.error('Error submitting test result:', err);
       addToast(
         currentLang === 'vi' ? 'Lỗi khi gửi kết quả kiểm tra'
         : currentLang === 'en' ? 'Failed to submit test'
@@ -225,12 +254,10 @@ const MiniTestPage = () => {
     return '';
   };
 
-  // ─── Setup Modal (inline JSX — NOT a nested component, avoids remount on state change) ───
-  const maxCards = pendingDeck?.cardCount ?? 999;
+  const maxCards = pendingDeck?.card_count ?? pendingDeck?.cardCount ?? 999;
   const setupModalJSX = showSetupModal && pendingDeck ? (
     <div className="test-setup-overlay" onClick={(e) => { if (e.target === e.currentTarget) setShowSetupModal(false); }}>
       <div className="test-setup-card">
-        {/* Header */}
         <div className="test-setup-header">
           <div className="test-setup-icon">⚙️</div>
           <h2>{t('test.setupTitle')}</h2>
@@ -240,7 +267,6 @@ const MiniTestPage = () => {
           </div>
         </div>
 
-        {/* Quick select */}
         <div className="setup-section-label">{t('test.quickSelect')}</div>
         <div className="question-count-options">
           {QUICK_OPTIONS.map((opt) => {
@@ -264,7 +290,6 @@ const MiniTestPage = () => {
           })}
         </div>
 
-        {/* Custom number input */}
         <div className="setup-section-label">{t('test.customCount')}</div>
         <div className="count-input-group">
           <label htmlFor="custom-count">{t('test.questionCountLabel')}</label>
@@ -279,7 +304,6 @@ const MiniTestPage = () => {
           <span className="count-hint">{t('test.maxCardsHint', { max: maxCards })}</span>
         </div>
 
-        {/* Actions */}
         <div className="test-setup-actions">
           <button className="btn btn-secondary" onClick={() => setShowSetupModal(false)}>
             {t('test.cancelSetup')}
@@ -292,7 +316,6 @@ const MiniTestPage = () => {
     </div>
   ) : null;
 
-  // ─── Deck selection view ───────────────────────────────────────────────────
   if (!testStarted && !deckId) {
     return (
       <div>
@@ -326,23 +349,27 @@ const MiniTestPage = () => {
           </div>
         ) : (
           <div className="deck-grid">
-            {decks.filter(d => d.cardCount >= 4).map(deck => (
-              <div
-                key={deck._id}
-                className="glass-card deck-card"
-                onClick={() => openSetupModal(deck)}
-              >
-                <span className="deck-lang">
-                  {deck.language === 'ja' ? t('decks.langJa') : t('decks.langEn')}
-                </span>
-                <h3 className="deck-title">{deck.title}</h3>
-                <p className="deck-desc">{t('decks.totalCards', { count: deck.cardCount })}</p>
-                <button className="btn btn-primary btn-sm" style={{ marginTop: 'var(--space-md)' }}>
-                  {t('test.startBtn')} →
-                </button>
-              </div>
-            ))}
-            {decks.filter(d => d.cardCount >= 4).length === 0 && (
+            {decks.filter(d => (d.card_count || d.cardCount || 0) >= 4).map(deck => {
+              const deckIdVal = deck.id || deck._id;
+              const cardCnt = deck.card_count || deck.cardCount || 0;
+              return (
+                <div
+                  key={deckIdVal}
+                  className="glass-card deck-card"
+                  onClick={() => openSetupModal(deck)}
+                >
+                  <span className="deck-lang">
+                    {deck.language === 'ja' ? t('decks.langJa') : t('decks.langEn')}
+                  </span>
+                  <h3 className="deck-title">{deck.title}</h3>
+                  <p className="deck-desc">{t('decks.totalCards', { count: cardCnt })}</p>
+                  <button className="btn btn-primary btn-sm" style={{ marginTop: 'var(--space-md)' }}>
+                    {t('test.startBtn')} →
+                  </button>
+                </div>
+              );
+            })}
+            {decks.filter(d => (d.card_count || d.cardCount || 0) >= 4).length === 0 && (
               <div className="empty-state">
                 <div className="empty-title">
                   {currentLang === 'vi' ? 'Không đủ số thẻ từ'
@@ -366,7 +393,6 @@ const MiniTestPage = () => {
     return <div className="loading-spinner"><div className="spinner"></div></div>;
   }
 
-  // ─── Result view ───────────────────────────────────────────────────────────
   if (showResult && result) {
     const isGood = result.percentage >= 80;
     const isPerfect = result.percentage === 100;
@@ -412,7 +438,6 @@ const MiniTestPage = () => {
     );
   }
 
-  // ─── Test questions view ───────────────────────────────────────────────────
   const question = questions[currentQ];
   if (!question) return null;
 

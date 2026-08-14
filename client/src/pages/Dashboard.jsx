@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import api from '../services/api';
+import { supabase } from '../services/supabase';
 import { useTranslation } from '../hooks/useTranslation';
 
 const Dashboard = () => {
@@ -13,17 +13,23 @@ const Dashboard = () => {
 
   const loadDashboardData = async () => {
     try {
-      const decksRes = await api.get('/decks').catch(() => ({ data: [] }));
-      setDecks(Array.isArray(decksRes.data) ? decksRes.data : []);
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('decks')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setDecks(data || []);
     } catch (err) {
-      console.error(err);
+      console.error('Error loading dashboard data:', err);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    Promise.resolve().then(() => loadDashboardData());
+    loadDashboardData();
   }, []);
 
   if (loading) {
@@ -78,30 +84,33 @@ const Dashboard = () => {
           {decks.length > 0 && (
             <div className="glass-card section-card" style={{ marginTop: '1.5rem' }}>
               <div className="section-title">📚 {t('dashboard.totalDecks')}</div>
-              {decks.slice(0, 3).map(deck => (
-                <div
-                  key={deck._id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '0.75rem',
-                    borderRadius: 'var(--radius-md)',
-                    background: 'var(--bg-glass)',
-                    marginBottom: '0.5rem',
-                    cursor: 'pointer'
-                  }}
-                  onClick={() => navigate(`/decks/${deck._id}`)}
-                >
-                  <div>
-                    <span style={{ marginRight: '0.5rem' }}>{deck.language === 'ja' ? '🇯🇵' : '🇬🇧'}</span>
-                    <strong>{deck.title}</strong>
+              {decks.slice(0, 3).map(deck => {
+                const deckId = deck.id || deck._id;
+                return (
+                  <div
+                    key={deckId}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '0.75rem',
+                      borderRadius: 'var(--radius-md)',
+                      background: 'var(--bg-glass)',
+                      marginBottom: '0.5rem',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => navigate(`/decks/${deckId}`)}
+                  >
+                    <div>
+                      <span style={{ marginRight: '0.5rem' }}>{deck.language === 'ja' ? '🇯🇵' : '🇬🇧'}</span>
+                      <strong>{deck.title}</strong>
+                    </div>
+                    <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+                      {t('decks.totalCards', { count: deck.card_count || deck.cardCount || 0 })}
+                    </span>
                   </div>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-                    {t('decks.totalCards', { count: deck.cardCount })}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
