@@ -77,8 +77,8 @@ const GamesPage = () => {
     const activeCards = await loadCardsForDeck(selectedDeck);
     if (activeCards.length < 4) {
       addToast(
-        currentLang === 'vi' 
-          ? 'Bộ thẻ này cần ít nhất 4 từ vựng để chơi game!' 
+        currentLang === 'vi'
+          ? 'Bộ thẻ này cần ít nhất 4 từ vựng để chơi game!'
           : 'This deck needs at least 4 words to play games!',
         'error'
       );
@@ -159,9 +159,9 @@ const GamesPage = () => {
             {/* Game IOE Penalty Shootout */}
             <div className="glass-card" style={{ padding: '1.5rem', borderRadius: '16px', border: '2px solid #0099ff', background: 'linear-gradient(135deg, rgba(0, 153, 255, 0.15) 0%, rgba(0, 102, 204, 0.05) 100%)' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚽</div>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '0.5rem', color: '#38bdf8' }}>Sút Phạt IOE ⚽</h2>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', marginBottom: '0.5rem', color: '#38bdf8' }}>Sút Phạt IOE Pro ⚽</h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem', minHeight: '40px' }}>
-                Game bóng đá sút penalty trắc nghiệm phong cách IOE huyền thoại! 4 đáp án A-B-C-D sút tung lưới ăn mừng SIUUU!
+                Game bóng đá sút penalty trắc nghiệm phong cách IOE chuyên nghiệp! Đồ họa 3D sân cỏ, đáp án A-B-C-D sút ăn mừng SIUUU!
               </p>
               <button
                 className="btn"
@@ -239,16 +239,16 @@ const GamesPage = () => {
 };
 
 /* -------------------------------------------------------------------------
-   EXACT IOE-STYLE PENALTY SHOOTOUT GAME (WIDE HIGH-RES SCREEN)
+   PRO IOE PENALTY SHOOTOUT GAME (3D PRO GRAPHICS & PHYSICS)
    ------------------------------------------------------------------------- */
 const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [options, setOptions] = useState([]);
   const [score, setScore] = useState(0);
-  const [secondsLeft, setSecondsLeft] = useState(120); // 2:00 timer like IOE
+  const [secondsLeft, setSecondsLeft] = useState(180); // 3:00 timer like IOE
   const [kickStatus, setKickStatus] = useState(null); // null | 'goal' | 'miss'
-  const [keeperPos, setKeeperPos] = useState('center'); // 'left' | 'center' | 'right'
-  const [ballPos, setBallPos] = useState({ top: '350px', left: '50%' });
+  const [keeperState, setKeeperState] = useState({ pose: 'center', x: 0, y: 0, rot: 0 });
+  const [ballState, setBallState] = useState({ x: 0, y: 0, scale: 1, rot: 0, shadowY: 0, isKicked: false });
   const [gameOver, setGameOver] = useState(false);
 
   const currentCard = cards[currentIdx];
@@ -276,7 +276,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
     return () => clearInterval(interval);
   }, [secondsLeft, gameOver]);
 
-  // Setup options for current question
+  // Reset ball & keeper for new question
   const prepareQuestion = useCallback(() => {
     if (!currentCard) return;
     const correct = currentCard.back || currentCard.front;
@@ -290,8 +290,8 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
     const allOptions = [...shuffledOthers, correct].sort(() => 0.5 - Math.random());
     setOptions(allOptions);
     setKickStatus(null);
-    setKeeperPos('center');
-    setBallPos({ top: '350px', left: '50%' });
+    setKeeperState({ pose: 'center', x: 0, y: 0, rot: 0 });
+    setBallState({ x: 0, y: 0, scale: 1, rot: 0, shadowY: 0, isKicked: false });
   }, [currentCard, cards]);
 
   useEffect(() => {
@@ -303,20 +303,40 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
 
     const isCorrect = selectedOption === (currentCard.back || currentCard.front);
 
-    // Ball flight target positions centered inside larger goal frame
+    // Dynamic 3D ball trajectory targets (dx, dy in px relative to center penalty spot)
+    // 0: A (Top-Left), 1: B (Top-Right), 2: C (Bottom-Left), 3: D (Bottom-Right)
     const ballTargets = [
-      { top: '150px', left: '34%' }, // A (Top-Left corner)
-      { top: '150px', left: '66%' }, // B (Top-Right corner)
-      { top: '230px', left: '34%' }, // C (Bottom-Left corner)
-      { top: '230px', left: '66%' }  // D (Bottom-Right corner)
+      { x: -170, y: -200, scale: 0.6, rot: 720, shadowY: 190 }, // Top-Left corner
+      { x: 170, y: -200, scale: 0.6, rot: -720, shadowY: 190 }, // Top-Right corner
+      { x: -180, y: -130, scale: 0.68, rot: 540, shadowY: 120 }, // Bottom-Left corner
+      { x: 180, y: -130, scale: 0.68, rot: -540, shadowY: 120 }  // Bottom-Right corner
     ];
 
-    const keeperDives = isCorrect
-      ? (optionIdx % 2 === 0 ? 'right' : 'left')  // Keeper dives WRONG way
-      : (optionIdx % 2 === 0 ? 'left' : 'right');  // Keeper SAVES
+    // Goalkeeper diving physics
+    const diveDirections = [
+      { pose: 'dive-left', x: -180, y: -40, rot: -38 },   // Top-Left dive
+      { pose: 'dive-right', x: 180, y: -40, rot: 38 },    // Top-Right dive
+      { pose: 'dive-left', x: -170, y: 0, rot: -28 },     // Low-Left dive
+      { pose: 'dive-right', x: 170, y: 0, rot: 28 }      // Low-Right dive
+    ];
 
-    setBallPos(ballTargets[optionIdx] || { top: '170px', left: '50%' });
-    setKeeperPos(keeperDives);
+    const targetBall = ballTargets[optionIdx] || { x: 0, y: -160, scale: 0.6, rot: 720, shadowY: 150 };
+
+    // Goalkeeper dives WRONG direction if correct, or SAVES if wrong
+    const keeperDive = isCorrect
+      ? (optionIdx % 2 === 0 ? diveDirections[1] : diveDirections[0]) // Wrong dive
+      : diveDirections[optionIdx]; // Save dive
+
+    setBallState({
+      x: targetBall.x,
+      y: targetBall.y,
+      scale: targetBall.scale,
+      rot: targetBall.rot,
+      shadowY: targetBall.shadowY,
+      isKicked: true
+    });
+
+    setKeeperState(keeperDive);
 
     setTimeout(() => {
       if (isCorrect) {
@@ -334,8 +354,8 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
         } else {
           setGameOver(true);
         }
-      }, 1800);
-    }, 450);
+      }, 1900);
+    }, 480);
   };
 
   if (!currentCard) return null;
@@ -347,82 +367,103 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
       margin: '0 auto',
       borderRadius: '24px',
       overflow: 'hidden',
-      boxShadow: '0 16px 50px rgba(0, 0, 0, 0.7)',
+      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.8)',
       border: '4px solid #0099ff',
-      background: '#0a0f1d',
+      background: '#040914',
       position: 'relative'
     }}>
-      {/* 1. TOP QUESTION BANNER (Wider High-Res IOE Header) */}
+      {/* 1. TOP QUESTION BANNER (HD Blue Banner with dashed border) */}
       <div style={{
-        background: 'linear-gradient(180deg, #00bfff 0%, #0088ff 100%)',
+        background: 'linear-gradient(180deg, #00c3ff 0%, #0077ff 100%)',
         border: '3px dashed #ffffff',
-        margin: '12px 14px 0 14px',
+        margin: '14px 16px 0 16px',
         borderRadius: '16px',
-        padding: '16px 24px',
+        padding: '16px 26px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
-        boxShadow: '0 6px 15px rgba(0,136,255,0.4)'
+        boxShadow: '0 6px 20px rgba(0, 119, 255, 0.45)'
       }}>
         <div style={{
           position: 'absolute',
-          left: '20px',
+          left: '22px',
           background: '#ffffff',
-          width: '44px',
-          height: '44px',
+          width: '46px',
+          height: '46px',
           borderRadius: '50%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '1.8rem'
+          fontSize: '2rem',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.3)'
         }}>
           ⚽
         </div>
         <div style={{
           color: '#ffffff',
-          fontSize: '1.65rem',
-          fontWeight: 'bold',
+          fontSize: '1.7rem',
+          fontWeight: '800',
           textAlign: 'center',
           fontFamily: deck?.language === 'ja' ? 'var(--font-japanese)' : 'sans-serif',
-          textShadow: '0 2px 6px rgba(0,0,0,0.4)'
+          textShadow: '0 2px 6px rgba(0,0,0,0.5)'
         }}>
           {deck?.language === 'ja' ? `Nghĩa của từ "${currentCard.front}" là gì?` : `What is the meaning of "${currentCard.front}"?`}
         </div>
       </div>
 
-      {/* 2. EXPANDED STADIUM FIELD ARENA (420px Height) */}
+      {/* 2. REALISTIC 2.5D PRO STADIUM FIELD ARENA (440px Height) */}
       <div style={{
         position: 'relative',
-        height: '420px',
-        background: 'linear-gradient(180deg, #050a14 0%, #0c1829 25%, #00b000 25%, #008a00 100%)',
+        height: '440px',
+        background: 'radial-gradient(ellipse at center top, #1e293b 0%, #050a14 50%, #020617 100%)',
         overflow: 'hidden'
       }}>
+        {/* Stadium Floodlights Glow Effect */}
+        <div style={{
+          position: 'absolute',
+          top: '-50px',
+          left: '15%',
+          width: '200px',
+          height: '200px',
+          background: 'radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, transparent 70%)',
+          pointerEvents: 'none'
+        }}></div>
+        <div style={{
+          position: 'absolute',
+          top: '-50px',
+          right: '15%',
+          width: '200px',
+          height: '200px',
+          background: 'radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, transparent 70%)',
+          pointerEvents: 'none'
+        }}></div>
+
         {/* Crowd Spectators & Flags Silhouette at top */}
         <div style={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
-          height: '105px',
-          background: 'radial-gradient(ellipse at top, #1e293b 0%, #090d16 100%)',
+          height: '110px',
+          background: 'linear-gradient(180deg, #090d16 0%, #0f172a 100%)',
           display: 'flex',
           justifyContent: 'space-around',
           alignItems: 'flex-end',
           paddingBottom: '8px',
           opacity: 0.95
         }}>
-          <div style={{ fontSize: '1.8rem' }}>🚩👥👥🚩👥👥🚩👥</div>
-          <div style={{ fontSize: '1.8rem' }}>👥👥🚩👥👥🚩👥👥</div>
-          <div style={{ fontSize: '1.8rem' }}>🚩👥👥🚩👥👥🚩👥</div>
+          <div style={{ fontSize: '1.9rem' }}>🚩👥👥🚩👥👥🚩👥</div>
+          <div style={{ fontSize: '1.9rem' }}>👥👥🚩👥👥🚩👥👥</div>
+          <div style={{ fontSize: '1.9rem' }}>🚩👥👥🚩👥👥🚩👥</div>
         </div>
 
         {/* Top-Left IOE User & Score Badge */}
         <div style={{
           position: 'absolute',
-          top: '115px',
+          top: '120px',
           left: '25px',
-          zIndex: 10,
+          zIndex: 15,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-start'
@@ -430,11 +471,12 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
-            background: 'rgba(0,0,0,0.7)',
+            gap: '12px',
+            background: 'rgba(5, 10, 20, 0.85)',
             padding: '8px 16px',
-            borderRadius: '10px',
-            border: '2px solid #ff9900'
+            borderRadius: '12px',
+            border: '2px solid #ff9900',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
           }}>
             <div style={{
               background: '#ff9900',
@@ -446,7 +488,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
               👤
             </div>
             <div>
-              <div style={{ color: '#ffff00', fontWeight: 'bold', fontSize: '1.05rem' }}>
+              <div style={{ color: '#ffff00', fontWeight: 'bold', fontSize: '1.1rem' }}>
                 Score: <span style={{ color: '#ffffff' }}>{score}</span>
               </div>
               <div style={{ color: '#ffff00', fontWeight: 'bold', fontSize: '0.95rem' }}>
@@ -454,7 +496,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
               </div>
             </div>
           </div>
-          <div style={{ color: '#a3e635', fontWeight: 'bold', fontSize: '1.05rem', marginTop: '6px', textShadow: '0 2px 4px #000' }}>
+          <div style={{ color: '#a3e635', fontWeight: 'bold', fontSize: '1.1rem', marginTop: '6px', textShadow: '0 2px 4px #000' }}>
             {userName}
           </div>
         </div>
@@ -462,141 +504,262 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
         {/* Top-Right Big Timer */}
         <div style={{
           position: 'absolute',
-          top: '115px',
+          top: '120px',
           right: '30px',
-          zIndex: 10,
+          zIndex: 15,
           color: '#ffffff',
-          fontSize: '2.5rem',
+          fontSize: '2.6rem',
           fontWeight: '900',
           fontFamily: 'monospace',
-          textShadow: '0 2px 10px rgba(0,0,0,0.9)'
+          textShadow: '0 3px 12px rgba(0,0,0,0.9)'
         }}>
           {formatTime(secondsLeft)}
         </div>
 
-        {/* PROPORTIONAL Goal Post Frame Structure (Wider 480px Net) */}
+        {/* PRO LUSH TURF GRASS FIELD (Perspected Pitch Container) */}
         <div style={{
           position: 'absolute',
-          top: '105px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '480px',
-          height: '175px',
-          border: '7px solid #ffffff',
-          borderBottom: 'none',
-          borderRadius: '12px 12px 0 0',
-          background: 'repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 11px), repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 11px)',
-          boxShadow: '0 6px 20px rgba(0,0,0,0.6)',
-          zIndex: 2
-        }}></div>
-
-        {/* Pitch Lines (Penalty Line & Goal Area Box) */}
-        <div style={{
-          position: 'absolute',
-          top: '280px',
+          top: '110px',
           left: 0,
           right: 0,
-          height: '5px',
-          background: '#ffffff'
-        }}></div>
-        <div style={{
-          position: 'absolute',
-          top: '280px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '580px',
-          height: '140px',
-          border: '5px solid #ffffff',
-          borderTop: 'none'
-        }}></div>
-
-        {/* Penalty Spot Dot */}
-        <div style={{
-          position: 'absolute',
-          top: '350px',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '14px',
-          height: '14px',
-          borderRadius: '50%',
-          background: '#ffffff',
-          boxShadow: '0 0 6px #000'
-        }}></div>
-
-        {/* Animated IOE Goalkeeper Character (Larger 6rem) */}
-        <div style={{
-          position: 'absolute',
-          top: keeperPos === 'left' ? '150px' : keeperPos === 'right' ? '150px' : '135px',
-          left: keeperPos === 'left' ? '36%' : keeperPos === 'right' ? '64%' : '50%',
-          transform: keeperPos === 'left' ? 'translate(-50%, 0) rotate(-30deg) scale(1.15)' : keeperPos === 'right' ? 'translate(-50%, 0) rotate(30deg) scale(1.15)' : 'translateX(-50%)',
-          transition: 'all 0.35s ease-out',
-          fontSize: '5.5rem',
-          filter: 'drop-shadow(0 8px 12px rgba(0,0,0,0.6))',
-          zIndex: 5
+          bottom: 0,
+          background: 'repeating-linear-gradient(90deg, #15803d 0px, #15803d 45px, #16a34a 45px, #16a34a 90px)',
+          boxShadow: 'inset 0 20px 40px rgba(0,0,0,0.7)',
+          overflow: 'hidden'
         }}>
-          🤾‍♂️
-        </div>
-
-        {/* Football Ball (Larger 3rem Ball) */}
-        <div style={{
-          position: 'absolute',
-          top: ballPos.top,
-          left: ballPos.left,
-          fontSize: '3rem',
-          transition: 'all 0.45s cubic-bezier(0.2, 0.8, 0.4, 1)',
-          transform: 'translate(-50%, -50%)',
-          filter: 'drop-shadow(0 8px 14px rgba(0,0,0,0.7))',
-          zIndex: 6
-        }}>
-          ⚽
-        </div>
-
-        {/* GOAL Celebration Banner */}
-        {kickStatus === 'goal' && (
+          {/* Subtle grass field depth gradient */}
           <div style={{
             position: 'absolute',
             inset: 0,
-            background: 'rgba(0, 180, 0, 0.88)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 20,
-            animation: 'popIn 0.3s ease'
-          }}>
-            <div style={{ fontSize: '4rem', fontWeight: '900', color: '#ffffff', textShadow: '0 4px 12px #000' }}>
-              ⚽ GOALLL! SIUUUUU! 🔥
-            </div>
-            <div style={{ fontSize: '1.6rem', color: '#ffff00', marginTop: '0.75rem', fontWeight: 'bold' }}>
-              +10 ĐIỂM THƯỞNG!
-            </div>
-          </div>
-        )}
+            background: 'linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.2) 100%)'
+          }}></div>
 
-        {/* Missed Banner */}
-        {kickStatus === 'miss' && (
+          {/* White Court Boundary & Penalty Area Box */}
           <div style={{
             position: 'absolute',
-            inset: 0,
-            background: 'rgba(220, 38, 38, 0.88)',
+            top: '145px',
+            left: 0,
+            right: 0,
+            height: '5px',
+            background: '#ffffff',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.4)'
+          }}></div>
+          <div style={{
+            position: 'absolute',
+            top: '145px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '560px',
+            height: '185px',
+            border: '5px solid #ffffff',
+            borderTop: 'none',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
+          }}></div>
+
+          {/* Goal Area Semi-Circle Arc */}
+          <div style={{
+            position: 'absolute',
+            top: '330px',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '180px',
+            height: '80px',
+            border: '5px solid #ffffff',
+            borderRadius: '0 0 90px 90px',
+            borderTop: 'none'
+          }}></div>
+
+          {/* White Penalty Spot */}
+          <div style={{
+            position: 'absolute',
+            top: '240px',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '16px',
+            height: '16px',
+            borderRadius: '50%',
+            background: '#ffffff',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.5)'
+          }}></div>
+
+          {/* PRO 3D METALLIC GOAL POST FRAME */}
+          <div style={{
+            position: 'absolute',
+            top: '10px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '500px',
+            height: '180px',
+            zIndex: 3
+          }}>
+            {/* Net mesh background */}
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(255,255,255,0.25) 10px, rgba(255,255,255,0.25) 11px), repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(255,255,255,0.25) 10px, rgba(255,255,255,0.25) 11px)',
+              borderRadius: '10px 10px 0 0',
+              boxShadow: 'inset 0 0 30px rgba(0,0,0,0.6)'
+            }}></div>
+
+            {/* Top metallic crossbar */}
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '10px',
+              background: 'linear-gradient(180deg, #ffffff 0%, #cbd5e1 50%, #64748b 100%)',
+              borderRadius: '5px',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.5)'
+            }}></div>
+
+            {/* Left metallic post */}
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              bottom: 0,
+              width: '10px',
+              background: 'linear-gradient(90deg, #ffffff 0%, #cbd5e1 50%, #64748b 100%)',
+              borderRadius: '5px 0 0 0',
+              boxShadow: '4px 0 10px rgba(0,0,0,0.5)'
+            }}></div>
+
+            {/* Right metallic post */}
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              width: '10px',
+              background: 'linear-gradient(270deg, #ffffff 0%, #cbd5e1 50%, #64748b 100%)',
+              borderRadius: '0 5px 0 0',
+              boxShadow: '-4px 0 10px rgba(0,0,0,0.5)'
+            }}></div>
+          </div>
+
+          {/* PRO ANIMATED GOALKEEPER WITH REALISTIC DIVE & SHADOW */}
+          <div style={{
+            position: 'absolute',
+            top: '55px',
+            left: '50%',
+            transform: `translate(calc(-50% + ${keeperState.x}px), ${keeperState.y}px) rotate(${keeperState.rot}deg)`,
+            transition: 'transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28)',
+            zIndex: 6,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 20,
-            animation: 'popIn 0.3s ease'
+            alignItems: 'center'
           }}>
-            <div style={{ fontSize: '3.5rem', fontWeight: '900', color: '#ffffff' }}>
-              ❌ THỦ MÔN BẮT BÓNG!
-            </div>
-            <div style={{ fontSize: '1.3rem', color: '#ffffff', marginTop: '0.75rem' }}>
-              Đáp án đúng: <strong style={{ color: '#ffff00' }}>{currentCard.back || currentCard.front}</strong>
+            {/* Goalkeeper Shadow on Pitch */}
+            <div style={{
+              width: '60px',
+              height: '16px',
+              background: 'rgba(0,0,0,0.4)',
+              borderRadius: '50%',
+              position: 'absolute',
+              bottom: '-5px',
+              filter: 'blur(4px)'
+            }}></div>
+
+            {/* Goalkeeper Image Graphic */}
+            <img
+              src="/image/gk.png"
+              alt="Goalkeeper"
+              style={{
+                width: '145px',
+                height: '145px',
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 8px 12px rgba(0,0,0,0.6))',
+                userSelect: 'none',
+                pointerEvents: 'none'
+              }}
+            />
+          </div>
+
+          {/* PRO 3D FOOTBALL & DYNAMIC PITCH DROP SHADOW */}
+          <div style={{
+            position: 'absolute',
+            top: '240px',
+            left: '50%',
+            transform: `translate(calc(-50% + ${ballState.x}px), ${ballState.y}px) scale(${ballState.scale})`,
+            transition: 'transform 0.48s cubic-bezier(0.175, 0.885, 0.32, 1.15)',
+            zIndex: 10,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            {/* Dynamic Ground Shadow that separates from ball on kick */}
+            <div style={{
+              position: 'absolute',
+              top: `${ballState.shadowY}px`,
+              width: '40px',
+              height: '14px',
+              background: 'rgba(0,0,0,0.5)',
+              borderRadius: '50%',
+              filter: 'blur(3px)',
+              transform: `scale(${ballState.scale})`,
+              transition: 'all 0.48s cubic-bezier(0.175, 0.885, 0.32, 1.15)'
+            }}></div>
+
+            {/* Spinning Soccer Ball */}
+            <div style={{
+              fontSize: '3.2rem',
+              transform: `rotate(${ballState.rot}deg)`,
+              transition: 'transform 0.48s ease-out',
+              filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.6))',
+              userSelect: 'none'
+            }}>
+              ⚽
             </div>
           </div>
-        )}
+
+          {/* GOAL Celebration Banner */}
+          {kickStatus === 'goal' && (
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'rgba(0, 180, 0, 0.88)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 25,
+              animation: 'popIn 0.3s ease'
+            }}>
+              <div style={{ fontSize: '4.2rem', fontWeight: '900', color: '#ffffff', textShadow: '0 4px 14px #000' }}>
+                ⚽ GOALLL! SIUUUUU! 🔥
+              </div>
+              <div style={{ fontSize: '1.7rem', color: '#ffff00', marginTop: '0.75rem', fontWeight: 'bold' }}>
+                +10 ĐIỂM THƯỞNG!
+              </div>
+            </div>
+          )}
+
+          {/* Missed Banner */}
+          {kickStatus === 'miss' && (
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'rgba(220, 38, 38, 0.88)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 25,
+              animation: 'popIn 0.3s ease'
+            }}>
+              <div style={{ fontSize: '3.8rem', fontWeight: '900', color: '#ffffff' }}>
+                ❌ THỦ MÔN BẮT BÓNG!
+              </div>
+              <div style={{ fontSize: '1.4rem', color: '#ffffff', marginTop: '0.75rem' }}>
+                Đáp án đúng: <strong style={{ color: '#ffff00' }}>{currentCard.back || currentCard.front}</strong>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* 3. BOTTOM IOE HEXAGONAL ANSWER BUTTONS (Wider & Larger Text) */}
+      {/* 3. BOTTOM IOE HEXAGONAL ANSWER BUTTONS (A, B, C, D) */}
       {!gameOver ? (
         <div style={{
           background: '#040914',
