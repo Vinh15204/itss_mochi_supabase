@@ -239,7 +239,7 @@ const GamesPage = () => {
 };
 
 /* -------------------------------------------------------------------------
-   EXACT IOE-STYLE PENALTY SHOOTOUT GAME (ALIGNMENT FIXED)
+   EXACT IOE-STYLE PENALTY SHOOTOUT GAME (WIDE HIGH-RES SCREEN)
    ------------------------------------------------------------------------- */
 const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -248,7 +248,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
   const [secondsLeft, setSecondsLeft] = useState(120); // 2:00 timer like IOE
   const [kickStatus, setKickStatus] = useState(null); // null | 'goal' | 'miss'
   const [keeperPos, setKeeperPos] = useState('center'); // 'left' | 'center' | 'right'
-  const [ballPos, setBallPos] = useState({ top: '275px', left: '50%' });
+  const [ballPos, setBallPos] = useState({ top: '350px', left: '50%' });
   const [gameOver, setGameOver] = useState(false);
 
   const currentCard = cards[currentIdx];
@@ -291,7 +291,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
     setOptions(allOptions);
     setKickStatus(null);
     setKeeperPos('center');
-    setBallPos({ top: '275px', left: '50%' });
+    setBallPos({ top: '350px', left: '50%' });
   }, [currentCard, cards]);
 
   useEffect(() => {
@@ -303,19 +303,19 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
 
     const isCorrect = selectedOption === (currentCard.back || currentCard.front);
 
-    // Ball flight target positions precisely centered inside the goal frame
+    // Ball flight target positions centered inside larger goal frame
     const ballTargets = [
-      { top: '115px', left: '38%' }, // A (Top-Left corner)
-      { top: '115px', left: '62%' }, // B (Top-Right corner)
-      { top: '175px', left: '38%' }, // C (Bottom-Left corner)
-      { top: '175px', left: '62%' }  // D (Bottom-Right corner)
+      { top: '150px', left: '34%' }, // A (Top-Left corner)
+      { top: '150px', left: '66%' }, // B (Top-Right corner)
+      { top: '230px', left: '34%' }, // C (Bottom-Left corner)
+      { top: '230px', left: '66%' }  // D (Bottom-Right corner)
     ];
 
     const keeperDives = isCorrect
       ? (optionIdx % 2 === 0 ? 'right' : 'left')  // Keeper dives WRONG way
       : (optionIdx % 2 === 0 ? 'left' : 'right');  // Keeper SAVES
 
-    setBallPos(ballTargets[optionIdx] || { top: '130px', left: '50%' });
+    setBallPos(ballTargets[optionIdx] || { top: '170px', left: '50%' });
     setKeeperPos(keeperDives);
 
     setTimeout(() => {
@@ -342,58 +342,59 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
 
   return (
     <div style={{
-      maxWidth: '850px',
+      maxWidth: '1150px',
+      width: '100%',
       margin: '0 auto',
-      borderRadius: '20px',
+      borderRadius: '24px',
       overflow: 'hidden',
-      boxShadow: '0 12px 40px rgba(0, 0, 0, 0.6)',
+      boxShadow: '0 16px 50px rgba(0, 0, 0, 0.7)',
       border: '4px solid #0099ff',
       background: '#0a0f1d',
       position: 'relative'
     }}>
-      {/* 1. TOP QUESTION BANNER (Exact IOE Blue Banner with dashed border) */}
+      {/* 1. TOP QUESTION BANNER (Wider High-Res IOE Header) */}
       <div style={{
         background: 'linear-gradient(180deg, #00bfff 0%, #0088ff 100%)',
         border: '3px dashed #ffffff',
-        margin: '10px 10px 0 10px',
-        borderRadius: '12px',
-        padding: '12px 20px',
+        margin: '12px 14px 0 14px',
+        borderRadius: '16px',
+        padding: '16px 24px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
-        boxShadow: '0 4px 10px rgba(0,136,255,0.4)'
+        boxShadow: '0 6px 15px rgba(0,136,255,0.4)'
       }}>
         <div style={{
           position: 'absolute',
-          left: '15px',
+          left: '20px',
           background: '#ffffff',
-          width: '36px',
-          height: '36px',
+          width: '44px',
+          height: '44px',
           borderRadius: '50%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '1.4rem'
+          fontSize: '1.8rem'
         }}>
           ⚽
         </div>
         <div style={{
           color: '#ffffff',
-          fontSize: '1.4rem',
+          fontSize: '1.65rem',
           fontWeight: 'bold',
           textAlign: 'center',
           fontFamily: deck?.language === 'ja' ? 'var(--font-japanese)' : 'sans-serif',
-          textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+          textShadow: '0 2px 6px rgba(0,0,0,0.4)'
         }}>
           {deck?.language === 'ja' ? `Nghĩa của từ "${currentCard.front}" là gì?` : `What is the meaning of "${currentCard.front}"?`}
         </div>
       </div>
 
-      {/* 2. STADIUM FIELD ARENA (PRECISION ALIGNED) */}
+      {/* 2. EXPANDED STADIUM FIELD ARENA (420px Height) */}
       <div style={{
         position: 'relative',
-        height: '330px',
+        height: '420px',
         background: 'linear-gradient(180deg, #050a14 0%, #0c1829 25%, #00b000 25%, #008a00 100%)',
         overflow: 'hidden'
       }}>
@@ -403,24 +404,24 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
           top: 0,
           left: 0,
           right: 0,
-          height: '80px',
+          height: '105px',
           background: 'radial-gradient(ellipse at top, #1e293b 0%, #090d16 100%)',
           display: 'flex',
           justifyContent: 'space-around',
           alignItems: 'flex-end',
-          paddingBottom: '5px',
-          opacity: 0.9
+          paddingBottom: '8px',
+          opacity: 0.95
         }}>
-          <div style={{ fontSize: '1.5rem' }}>🚩👥👥🚩👥👥🚩</div>
-          <div style={{ fontSize: '1.5rem' }}>👥👥🚩👥👥🚩👥</div>
-          <div style={{ fontSize: '1.5rem' }}>🚩👥👥🚩👥👥🚩</div>
+          <div style={{ fontSize: '1.8rem' }}>🚩👥👥🚩👥👥🚩👥</div>
+          <div style={{ fontSize: '1.8rem' }}>👥👥🚩👥👥🚩👥👥</div>
+          <div style={{ fontSize: '1.8rem' }}>🚩👥👥🚩👥👥🚩👥</div>
         </div>
 
         {/* Top-Left IOE User & Score Badge */}
         <div style={{
           position: 'absolute',
-          top: '90px',
-          left: '15px',
+          top: '115px',
+          left: '25px',
           zIndex: 10,
           display: 'flex',
           flexDirection: 'column',
@@ -429,31 +430,31 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
-            background: 'rgba(0,0,0,0.65)',
-            padding: '6px 12px',
-            borderRadius: '8px',
+            gap: '10px',
+            background: 'rgba(0,0,0,0.7)',
+            padding: '8px 16px',
+            borderRadius: '10px',
             border: '2px solid #ff9900'
           }}>
             <div style={{
               background: '#ff9900',
-              padding: '4px',
-              borderRadius: '6px',
+              padding: '6px',
+              borderRadius: '8px',
               color: '#ffffff',
-              fontSize: '1.2rem'
+              fontSize: '1.4rem'
             }}>
               👤
             </div>
             <div>
-              <div style={{ color: '#ffff00', fontWeight: 'bold', fontSize: '0.9rem' }}>
+              <div style={{ color: '#ffff00', fontWeight: 'bold', fontSize: '1.05rem' }}>
                 Score: <span style={{ color: '#ffffff' }}>{score}</span>
               </div>
-              <div style={{ color: '#ffff00', fontWeight: 'bold', fontSize: '0.85rem' }}>
+              <div style={{ color: '#ffff00', fontWeight: 'bold', fontSize: '0.95rem' }}>
                 Question: <span style={{ color: '#ffffff' }}>{currentIdx + 1}/{cards.length}</span>
               </div>
             </div>
           </div>
-          <div style={{ color: '#a3e635', fontWeight: 'bold', fontSize: '0.9rem', marginTop: '4px', textShadow: '0 1px 2px #000' }}>
+          <div style={{ color: '#a3e635', fontWeight: 'bold', fontSize: '1.05rem', marginTop: '6px', textShadow: '0 2px 4px #000' }}>
             {userName}
           </div>
         </div>
@@ -461,90 +462,90 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
         {/* Top-Right Big Timer */}
         <div style={{
           position: 'absolute',
-          top: '90px',
-          right: '20px',
+          top: '115px',
+          right: '30px',
           zIndex: 10,
           color: '#ffffff',
-          fontSize: '2rem',
+          fontSize: '2.5rem',
           fontWeight: '900',
           fontFamily: 'monospace',
-          textShadow: '0 2px 8px rgba(0,0,0,0.8)'
+          textShadow: '0 2px 10px rgba(0,0,0,0.9)'
         }}>
           {formatTime(secondsLeft)}
         </div>
 
-        {/* PERFECTLY CENTERED Goal Post Frame Structure (White net) */}
+        {/* PROPORTIONAL Goal Post Frame Structure (Wider 480px Net) */}
         <div style={{
           position: 'absolute',
-          top: '82px',
+          top: '105px',
           left: '50%',
           transform: 'translateX(-50%)',
-          width: '360px',
-          height: '135px',
-          border: '6px solid #ffffff',
+          width: '480px',
+          height: '175px',
+          border: '7px solid #ffffff',
           borderBottom: 'none',
-          borderRadius: '10px 10px 0 0',
-          background: 'repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(255,255,255,0.2) 8px, rgba(255,255,255,0.2) 9px), repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.2) 8px, rgba(255,255,255,0.2) 9px)',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
+          borderRadius: '12px 12px 0 0',
+          background: 'repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 11px), repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 11px)',
+          boxShadow: '0 6px 20px rgba(0,0,0,0.6)',
           zIndex: 2
         }}></div>
 
         {/* Pitch Lines (Penalty Line & Goal Area Box) */}
         <div style={{
           position: 'absolute',
-          top: '217px',
+          top: '280px',
           left: 0,
           right: 0,
-          height: '4px',
+          height: '5px',
           background: '#ffffff'
         }}></div>
         <div style={{
           position: 'absolute',
-          top: '217px',
+          top: '280px',
           left: '50%',
           transform: 'translateX(-50%)',
-          width: '440px',
-          height: '110px',
-          border: '4px solid #ffffff',
+          width: '580px',
+          height: '140px',
+          border: '5px solid #ffffff',
           borderTop: 'none'
         }}></div>
 
         {/* Penalty Spot Dot */}
         <div style={{
           position: 'absolute',
-          top: '275px',
+          top: '350px',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: '12px',
-          height: '12px',
+          width: '14px',
+          height: '14px',
           borderRadius: '50%',
           background: '#ffffff',
-          boxShadow: '0 0 4px #000'
+          boxShadow: '0 0 6px #000'
         }}></div>
 
-        {/* Animated IOE Goalkeeper Character (PRECISION CENTERED & DIVES) */}
+        {/* Animated IOE Goalkeeper Character (Larger 6rem) */}
         <div style={{
           position: 'absolute',
-          top: keeperPos === 'left' ? '120px' : keeperPos === 'right' ? '120px' : '108px',
+          top: keeperPos === 'left' ? '150px' : keeperPos === 'right' ? '150px' : '135px',
           left: keeperPos === 'left' ? '36%' : keeperPos === 'right' ? '64%' : '50%',
-          transform: keeperPos === 'left' ? 'translate(-50%, 0) rotate(-30deg) scale(1.1)' : keeperPos === 'right' ? 'translate(-50%, 0) rotate(30deg) scale(1.1)' : 'translateX(-50%)',
+          transform: keeperPos === 'left' ? 'translate(-50%, 0) rotate(-30deg) scale(1.15)' : keeperPos === 'right' ? 'translate(-50%, 0) rotate(30deg) scale(1.15)' : 'translateX(-50%)',
           transition: 'all 0.35s ease-out',
-          fontSize: '4.5rem',
-          filter: 'drop-shadow(0 6px 8px rgba(0,0,0,0.5))',
+          fontSize: '5.5rem',
+          filter: 'drop-shadow(0 8px 12px rgba(0,0,0,0.6))',
           zIndex: 5
         }}>
           🤾‍♂️
         </div>
 
-        {/* Football Ball (Penalty spot & Flight Animation) */}
+        {/* Football Ball (Larger 3rem Ball) */}
         <div style={{
           position: 'absolute',
           top: ballPos.top,
           left: ballPos.left,
-          fontSize: '2.4rem',
+          fontSize: '3rem',
           transition: 'all 0.45s cubic-bezier(0.2, 0.8, 0.4, 1)',
           transform: 'translate(-50%, -50%)',
-          filter: 'drop-shadow(0 6px 10px rgba(0,0,0,0.6))',
+          filter: 'drop-shadow(0 8px 14px rgba(0,0,0,0.7))',
           zIndex: 6
         }}>
           ⚽
@@ -563,10 +564,10 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
             zIndex: 20,
             animation: 'popIn 0.3s ease'
           }}>
-            <div style={{ fontSize: '3.5rem', fontWeight: '900', color: '#ffffff', textShadow: '0 4px 10px #000' }}>
+            <div style={{ fontSize: '4rem', fontWeight: '900', color: '#ffffff', textShadow: '0 4px 12px #000' }}>
               ⚽ GOALLL! SIUUUUU! 🔥
             </div>
-            <div style={{ fontSize: '1.4rem', color: '#ffff00', marginTop: '0.5rem', fontWeight: 'bold' }}>
+            <div style={{ fontSize: '1.6rem', color: '#ffff00', marginTop: '0.75rem', fontWeight: 'bold' }}>
               +10 ĐIỂM THƯỞNG!
             </div>
           </div>
@@ -585,24 +586,24 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
             zIndex: 20,
             animation: 'popIn 0.3s ease'
           }}>
-            <div style={{ fontSize: '3rem', fontWeight: '900', color: '#ffffff' }}>
+            <div style={{ fontSize: '3.5rem', fontWeight: '900', color: '#ffffff' }}>
               ❌ THỦ MÔN BẮT BÓNG!
             </div>
-            <div style={{ fontSize: '1.2rem', color: '#ffffff', marginTop: '0.5rem' }}>
+            <div style={{ fontSize: '1.3rem', color: '#ffffff', marginTop: '0.75rem' }}>
               Đáp án đúng: <strong style={{ color: '#ffff00' }}>{currentCard.back || currentCard.front}</strong>
             </div>
           </div>
         )}
       </div>
 
-      {/* 3. BOTTOM IOE HEXAGONAL ANSWER BUTTONS (A, B, C, D) */}
+      {/* 3. BOTTOM IOE HEXAGONAL ANSWER BUTTONS (Wider & Larger Text) */}
       {!gameOver ? (
         <div style={{
           background: '#040914',
-          padding: '20px 25px',
+          padding: '24px 30px',
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
-          gap: '15px 25px',
+          gap: '18px 30px',
           position: 'relative'
         }}>
           {options.map((opt, idx) => {
@@ -615,18 +616,18 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
                 style={{
                   background: 'linear-gradient(180deg, #00aaff 0%, #0077ee 100%)',
                   border: '3px dashed #ffffff',
-                  borderRadius: '16px',
-                  padding: '14px 20px',
+                  borderRadius: '18px',
+                  padding: '18px 26px',
                   color: '#ffffff',
                   fontWeight: 'bold',
-                  fontSize: '1.15rem',
+                  fontSize: '1.3rem',
                   display: 'flex',
                   alignItems: 'center',
                   cursor: kickStatus !== null ? 'not-allowed' : 'pointer',
-                  boxShadow: '0 6px 12px rgba(0,119,238,0.4)',
+                  boxShadow: '0 8px 16px rgba(0,119,238,0.4)',
                   transition: 'all 0.2s ease',
                   textAlign: 'left',
-                  clipPath: 'polygon(6% 0%, 94% 0%, 100% 50%, 94% 100%, 6% 100%, 0% 50%)' // IOE Hexagonal shape
+                  clipPath: 'polygon(5% 0%, 95% 0%, 100% 50%, 95% 100%, 5% 100%, 0% 50%)' // IOE Hexagonal shape
                 }}
                 onMouseOver={(e) => {
                   if (kickStatus === null) e.currentTarget.style.transform = 'scale(1.03)';
@@ -635,7 +636,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
-                <span style={{ fontSize: '1.4rem', color: '#ffffff', marginRight: '10px' }}>
+                <span style={{ fontSize: '1.5rem', color: '#ffffff', marginRight: '14px' }}>
                   {letter} :
                 </span>
                 <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -647,13 +648,13 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
         </div>
       ) : (
         /* Victory Screen */
-        <div style={{ padding: '3rem 2rem', textAlign: 'center', background: '#0a0f1d' }}>
-          <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>🏆⚽</div>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: '900', color: '#38bdf8' }}>HOÀN THÀNH TRẬN ĐẤU IOE!</h1>
-          <p style={{ fontSize: '1.3rem', marginTop: '0.75rem', color: '#ffffff' }}>
-            Tổng số điểm đạt me: <strong style={{ color: '#ffff00', fontSize: '1.8rem' }}>{score} Điểm</strong>
+        <div style={{ padding: '4rem 2rem', textAlign: 'center', background: '#0a0f1d' }}>
+          <div style={{ fontSize: '6rem', marginBottom: '1rem' }}>🏆⚽</div>
+          <h1 style={{ fontSize: '3rem', fontWeight: '900', color: '#38bdf8' }}>HOÀN THÀNH TRẬN ĐẤU IOE!</h1>
+          <p style={{ fontSize: '1.5rem', marginTop: '1rem', color: '#ffffff' }}>
+            Tổng số điểm đạt được: <strong style={{ color: '#ffff00', fontSize: '2.2rem' }}>{score} Điểm</strong>
           </p>
-          <button className="btn btn-primary" onClick={onRestart} style={{ marginTop: '2rem', padding: '0.875rem 2.5rem', fontSize: '1.1rem' }}>
+          <button className="btn btn-primary" onClick={onRestart} style={{ marginTop: '2.5rem', padding: '1rem 3rem', fontSize: '1.25rem' }}>
             🔄 Chơi Trận Tiếp Theo
           </button>
         </div>
