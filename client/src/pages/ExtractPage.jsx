@@ -22,15 +22,13 @@ const ExtractPage = () => {
   const extractWordsFromText = (rawText, lang) => {
     if (!rawText) return [];
     if (lang === 'ja') {
-      // Extract Japanese Kanji & Kana words
       const matches = rawText.match(/[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]+/g) || [];
       const unique = Array.from(new Set(matches)).filter(w => w.length >= 1);
-      return unique.slice(0, 30).map(w => ({ front: w, back: '', reading: '', type: 'word' }));
+      return unique.slice(0, 25).map(w => ({ front: w, back: '', reading: '', type: 'word' }));
     } else {
-      // Extract English words
       const matches = rawText.match(/\b[A-Za-z]{3,}\b/g) || [];
       const unique = Array.from(new Set(matches.map(w => w.toLowerCase())));
-      return unique.slice(0, 30).map(w => ({ front: w, back: '', reading: '', type: 'word' }));
+      return unique.slice(0, 25).map(w => ({ front: w, back: '', reading: '', type: 'word' }));
     }
   };
 
@@ -52,44 +50,51 @@ const ExtractPage = () => {
       setExtracted(true);
       addToast(currentLang === 'vi' ? `Tìm thấy ${extractedWords.length} từ! Đang tra nghĩa từ vựng...` : currentLang === 'en' ? `Found ${extractedWords.length} words! Fetching meanings...` : `${extractedWords.length} 語検出しました！意味を検索中...`, 'info');
 
-      await fetchDefinitionsParallel(extractedWords, language);
+      await fetchDefinitionsSequentially(extractedWords, language);
     } catch (err) {
       console.error('Extraction error:', err);
       addToast(currentLang === 'vi' ? 'Trích xuất thất bại' : currentLang === 'en' ? 'Extraction failed' : '抽出に失敗しました', 'error');
     }
   };
 
-  const fetchDefinitionsParallel = async (wordsToDefine, lang) => {
+  const fetchDefinitionsSequentially = async (wordsToDefine, lang) => {
     const currentId = extractRequestId.current;
     setDefining(true);
 
-    const chunkSize = 5;
-    for (let i = 0; i < wordsToDefine.length; i += chunkSize) {
-      if (currentId !== extractRequestId.current) break;
-      const chunk = wordsToDefine.slice(i, i + chunkSize);
+    const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
-      await Promise.all(chunk.map(async (word) => {
-        const index = wordsToDefine.indexOf(word);
-        try {
-          if (lang === 'en') {
-            const definition = await fetchEnglishDefinition(word.front);
-            if (definition) {
-              const viMeaning = await translateToVietnamese(definition, 'en');
-              if (currentId === extractRequestId.current) {
-                setWords(prevWords => {
-                  const newWords = [...prevWords];
-                  if (newWords[index]) {
-                    newWords[index] = { ...newWords[index], back: viMeaning || definition };
-                  }
-                  return newWords;
-                });
-              }
+    for (let i = 0; i < wordsToDefine.length; i++) {
+      if (currentId !== extractRequestId.current) break;
+
+      const word = wordsToDefine[i];
+      try {
+        if (lang === 'en') {
+          let meaning = await translateToVietnamese(word.front, 'en');
+          if (!meaning) {
+            const def = await fetchEnglishDefinition(word.front);
+            if (def) {
+              meaning = await translateToVietnamese(def, 'en') || def;
             }
           }
-        } catch (error) {
-          console.error(`Failed to define ${word.front}:`, error);
+
+          if (currentId === extractRequestId.current && meaning) {
+            setWords(prevWords => {
+              const newWords = [...prevWords];
+              if (newWords[i]) {
+                newWords[i] = { ...newWords[i], back: meaning };
+              }
+              return newWords;
+            });
+          }
         }
-      }));
+      } catch {
+        // Ignore single word failure silently
+      }
+
+      // Small delay between requests to avoid API 429 rate limit
+      if (i % 3 === 0) {
+        await delay(120);
+      }
     }
 
     setDefining(false);
@@ -129,7 +134,7 @@ const ExtractPage = () => {
         .insert([{
           user_id: currentUser?.id,
           title: deckTitle,
-          description: `Extracted ${words.length} words from pasted text`,
+          description: `Extracted ${words.length} words from text`,
           language: language,
           card_count: words.length
         }])
