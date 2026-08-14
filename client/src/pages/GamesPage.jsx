@@ -239,7 +239,7 @@ const GamesPage = () => {
 };
 
 /* -------------------------------------------------------------------------
-   EXACT IOE-STYLE PENALTY SHOOTOUT GAME (SÚT PHẠT TRẮC NGHIỆM IOE)
+   EXACT IOE-STYLE PENALTY SHOOTOUT GAME (ALIGNMENT FIXED)
    ------------------------------------------------------------------------- */
 const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -248,7 +248,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
   const [secondsLeft, setSecondsLeft] = useState(120); // 2:00 timer like IOE
   const [kickStatus, setKickStatus] = useState(null); // null | 'goal' | 'miss'
   const [keeperPos, setKeeperPos] = useState('center'); // 'left' | 'center' | 'right'
-  const [ballPos, setBallPos] = useState({ top: '82%', left: '50%' });
+  const [ballPos, setBallPos] = useState({ top: '275px', left: '50%' });
   const [gameOver, setGameOver] = useState(false);
 
   const currentCard = cards[currentIdx];
@@ -291,7 +291,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
     setOptions(allOptions);
     setKickStatus(null);
     setKeeperPos('center');
-    setBallPos({ top: '82%', left: '50%' });
+    setBallPos({ top: '275px', left: '50%' });
   }, [currentCard, cards]);
 
   useEffect(() => {
@@ -303,19 +303,19 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
 
     const isCorrect = selectedOption === (currentCard.back || currentCard.front);
 
-    // Ball flight target positions
+    // Ball flight target positions precisely centered inside the goal frame
     const ballTargets = [
-      { top: '35%', left: '22%' }, // A (top-left)
-      { top: '35%', left: '78%' }, // B (top-right)
-      { top: '48%', left: '26%' }, // C (bottom-left)
-      { top: '48%', left: '74%' }  // D (bottom-right)
+      { top: '115px', left: '38%' }, // A (Top-Left corner)
+      { top: '115px', left: '62%' }, // B (Top-Right corner)
+      { top: '175px', left: '38%' }, // C (Bottom-Left corner)
+      { top: '175px', left: '62%' }  // D (Bottom-Right corner)
     ];
 
     const keeperDives = isCorrect
       ? (optionIdx % 2 === 0 ? 'right' : 'left')  // Keeper dives WRONG way
       : (optionIdx % 2 === 0 ? 'left' : 'right');  // Keeper SAVES
 
-    setBallPos(ballTargets[optionIdx] || { top: '35%', left: '50%' });
+    setBallPos(ballTargets[optionIdx] || { top: '130px', left: '50%' });
     setKeeperPos(keeperDives);
 
     setTimeout(() => {
@@ -390,10 +390,10 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
         </div>
       </div>
 
-      {/* 2. STADIUM FIELD ARENA */}
+      {/* 2. STADIUM FIELD ARENA (PRECISION ALIGNED) */}
       <div style={{
         position: 'relative',
-        height: '340px',
+        height: '330px',
         background: 'linear-gradient(180deg, #050a14 0%, #0c1829 25%, #00b000 25%, #008a00 100%)',
         overflow: 'hidden'
       }}>
@@ -403,7 +403,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
           top: 0,
           left: 0,
           right: 0,
-          height: '85px',
+          height: '80px',
           background: 'radial-gradient(ellipse at top, #1e293b 0%, #090d16 100%)',
           display: 'flex',
           justifyContent: 'space-around',
@@ -419,7 +419,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
         {/* Top-Left IOE User & Score Badge */}
         <div style={{
           position: 'absolute',
-          top: '95px',
+          top: '90px',
           left: '15px',
           zIndex: 10,
           display: 'flex',
@@ -430,7 +430,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            background: 'rgba(0,0,0,0.6)',
+            background: 'rgba(0,0,0,0.65)',
             padding: '6px 12px',
             borderRadius: '8px',
             border: '2px solid #ff9900'
@@ -461,7 +461,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
         {/* Top-Right Big Timer */}
         <div style={{
           position: 'absolute',
-          top: '95px',
+          top: '90px',
           right: '20px',
           zIndex: 10,
           color: '#ffffff',
@@ -473,25 +473,26 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
           {formatTime(secondsLeft)}
         </div>
 
-        {/* Goal Post Frame Structure (White net) */}
+        {/* PERFECTLY CENTERED Goal Post Frame Structure (White net) */}
         <div style={{
           position: 'absolute',
-          top: '90px',
+          top: '82px',
           left: '50%',
           transform: 'translateX(-50%)',
-          width: '320px',
-          height: '140px',
+          width: '360px',
+          height: '135px',
           border: '6px solid #ffffff',
           borderBottom: 'none',
-          borderRadius: '12px 12px 0 0',
+          borderRadius: '10px 10px 0 0',
           background: 'repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(255,255,255,0.2) 8px, rgba(255,255,255,0.2) 9px), repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.2) 8px, rgba(255,255,255,0.2) 9px)',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.5)'
+          boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
+          zIndex: 2
         }}></div>
 
-        {/* Pitch Lines (Penalty Line & Goal Area) */}
+        {/* Pitch Lines (Penalty Line & Goal Area Box) */}
         <div style={{
           position: 'absolute',
-          top: '230px',
+          top: '217px',
           left: 0,
           right: 0,
           height: '4px',
@@ -499,20 +500,34 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
         }}></div>
         <div style={{
           position: 'absolute',
-          top: '230px',
-          left: '20%',
-          right: '20%',
-          height: '100px',
+          top: '217px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '440px',
+          height: '110px',
           border: '4px solid #ffffff',
           borderTop: 'none'
         }}></div>
 
-        {/* Animated IOE Goalkeeper Character */}
+        {/* Penalty Spot Dot */}
         <div style={{
           position: 'absolute',
-          top: '120px',
-          left: keeperPos === 'left' ? '32%' : keeperPos === 'right' ? '65%' : '48%',
-          transform: keeperPos === 'left' ? 'rotate(-25deg) scale(1.1)' : keeperPos === 'right' ? 'rotate(25deg) scale(1.1)' : 'translateX(-50%)',
+          top: '275px',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '12px',
+          height: '12px',
+          borderRadius: '50%',
+          background: '#ffffff',
+          boxShadow: '0 0 4px #000'
+        }}></div>
+
+        {/* Animated IOE Goalkeeper Character (PRECISION CENTERED & DIVES) */}
+        <div style={{
+          position: 'absolute',
+          top: keeperPos === 'left' ? '120px' : keeperPos === 'right' ? '120px' : '108px',
+          left: keeperPos === 'left' ? '36%' : keeperPos === 'right' ? '64%' : '50%',
+          transform: keeperPos === 'left' ? 'translate(-50%, 0) rotate(-30deg) scale(1.1)' : keeperPos === 'right' ? 'translate(-50%, 0) rotate(30deg) scale(1.1)' : 'translateX(-50%)',
           transition: 'all 0.35s ease-out',
           fontSize: '4.5rem',
           filter: 'drop-shadow(0 6px 8px rgba(0,0,0,0.5))',
@@ -521,7 +536,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
           🤾‍♂️
         </div>
 
-        {/* Football Ball (Penalty spot flight animation) */}
+        {/* Football Ball (Penalty spot & Flight Animation) */}
         <div style={{
           position: 'absolute',
           top: ballPos.top,
@@ -540,7 +555,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
           <div style={{
             position: 'absolute',
             inset: 0,
-            background: 'rgba(0, 180, 0, 0.85)',
+            background: 'rgba(0, 180, 0, 0.88)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -562,7 +577,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
           <div style={{
             position: 'absolute',
             inset: 0,
-            background: 'rgba(220, 38, 38, 0.85)',
+            background: 'rgba(220, 38, 38, 0.88)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -636,7 +651,7 @@ const IOEPenaltyGame = ({ cards, deck, user, speak, onRestart }) => {
           <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>🏆⚽</div>
           <h1 style={{ fontSize: '2.5rem', fontWeight: '900', color: '#38bdf8' }}>HOÀN THÀNH TRẬN ĐẤU IOE!</h1>
           <p style={{ fontSize: '1.3rem', marginTop: '0.75rem', color: '#ffffff' }}>
-            Tổng số điểm đạt được: <strong style={{ color: '#ffff00', fontSize: '1.8rem' }}>{score} Điểm</strong>
+            Tổng số điểm đạt me: <strong style={{ color: '#ffff00', fontSize: '1.8rem' }}>{score} Điểm</strong>
           </p>
           <button className="btn btn-primary" onClick={onRestart} style={{ marginTop: '2rem', padding: '0.875rem 2.5rem', fontSize: '1.1rem' }}>
             🔄 Chơi Trận Tiếp Theo
