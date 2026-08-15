@@ -14,6 +14,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
   const navItems = [
     { path: '/dashboard', icon: '🏠', label: t('sidebar.dashboard') },
+    { path: '/roadmap', icon: '🧭', label: 'Lộ trình học' },
     { path: '/decks', icon: '📚', label: t('sidebar.flashcards') },
     { path: '/extract', icon: '✨', label: t('sidebar.extract') },
     { path: '/test', icon: '📝', label: t('sidebar.test') },

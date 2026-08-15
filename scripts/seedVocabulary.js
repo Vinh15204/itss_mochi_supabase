@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { createClient } from '../client/node_modules/@supabase/supabase-js/dist/main/index.js';
+import { createClient } from '@supabase/supabase-js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,15 +12,24 @@ const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIs
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function seed() {
-  console.log('🚀 Bắt đầu nạp kho từ vựng chuẩn vào Supabase...');
+  console.log('🚀 Bắt đầu nạp 1050 từ vựng vào Supabase...');
   const dataDir = path.join(__dirname, '..', 'data');
-  const files = fs.readdirSync(dataDir).filter(f => f.endsWith('.json'));
+  const files = [
+    'it_software.json',
+    'medical.json',
+    'economics_finance.json',
+    'engineering.json',
+    'law_politics.json',
+    'toeic_workplace.json',
+    'ielts_academic.json'
+  ];
 
   let totalDecks = 0;
   let totalCards = 0;
 
   for (const file of files) {
     const filePath = path.join(dataDir, file);
+    if (!fs.existsSync(filePath)) continue;
     const content = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     console.log(`\n📂 Đang xử lý file: ${file} (${content.length} bài học)...`);
 
@@ -37,7 +46,7 @@ async function seed() {
         deckId = existingDecks[0].id;
         console.log(`  ℹ️ Bộ thẻ "${deckInfo.title}" đã tồn tại (ID: ${deckId}). Cập nhật thẻ...`);
       } else {
-        // Create new deck
+        // Create new deck (user_id is null for system preset)
         const { data: newDeck, error: deckErr } = await supabase
           .from('decks')
           .insert([{
@@ -61,7 +70,6 @@ async function seed() {
 
       // 2. Insert cards
       if (deckId && deckInfo.cards && deckInfo.cards.length > 0) {
-        // Delete old cards in deck if re-seeding to prevent duplicates
         await supabase.from('cards').delete().eq('deck_id', deckId);
 
         const cardsToInsert = deckInfo.cards.map(c => ({
@@ -80,7 +88,7 @@ async function seed() {
         if (cardsErr) {
           console.error(`  ❌ Lỗi khi thêm thẻ vào "${deckInfo.title}":`, cardsErr.message);
         } else {
-          console.log(`    ✨ Đã nạp thành công ${cardsToInsert.length} từ vựng vào "${deckInfo.title}".`);
+          console.log(`    ✨ Đã nạp ${cardsToInsert.length} từ vựng vào "${deckInfo.title}".`);
           totalCards += cardsToInsert.length;
         }
       }
