@@ -19,6 +19,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     { path: '/extract', icon: '✨', label: t('sidebar.extract') },
     { path: '/test', icon: '📝', label: t('sidebar.test') },
     { path: '/games', icon: '🎮', label: 'Games' },
+    { path: '/survey', icon: '📋', label: 'Khảo sát ĐMST' },
     { path: '/profile', icon: '⚙️', label: t('sidebar.settings') },
   ];
 

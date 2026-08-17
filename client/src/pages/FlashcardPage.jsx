@@ -4,6 +4,7 @@ import { supabase } from '../services/supabase';
 import { useToast } from '../hooks/useToast';
 import { useTranslation } from '../hooks/useTranslation';
 import { useSpeech } from '../hooks/useSpeech';
+import { useDeckStatus } from '../hooks/useDeckStatus';
 
 const FlashcardPage = () => {
   const { deckId } = useParams();
@@ -11,6 +12,7 @@ const FlashcardPage = () => {
   const { addToast, ToastContainer } = useToast();
   const { t, currentLang } = useTranslation();
   const { speak, currentlySpeaking, isSupported: speechSupported } = useSpeech();
+  const { getStatus, setStatus, DECK_STATUS } = useDeckStatus();
 
   const [deck, setDeck] = useState(null);
   const [cards, setCards] = useState([]);
@@ -43,17 +45,25 @@ const FlashcardPage = () => {
 
       if (error) throw error;
 
-      setCards(prev => prev.map(c => (c.id || c._id) === cardId ? { ...c, mastered: newMastered } : c));
-      addToast(newMastered 
-        ? (currentLang === 'vi' ? '✅ Đã đánh dấu thuộc!' : currentLang === 'en' ? '✅ Marked as Mastered!' : '✅ 習得済みに設定しました！') 
-        : (currentLang === 'vi' ? '↩️ Đã bỏ đánh dấu thuộc' : currentLang === 'en' ? '↩️ Unmarked Mastered' : '↩️ 習得済みを解除しました'), 
-        'success'
-      );
+      const updatedCards = cards.map(c => (c.id || c._id) === cardId ? { ...c, mastered: newMastered } : c);
+      setCards(updatedCards);
+
+      // Nếu toàn bộ từ trong bộ thẻ đã thuộc, tự động cập nhật trạng thái Đã học
+      if (updatedCards.length > 0 && updatedCards.every(c => c.mastered)) {
+        setStatus(deckId, DECK_STATUS.COMPLETED);
+        addToast('🏆 Xuất sắc! Bạn đã thuộc toàn bộ từ vựng trong bộ thẻ này!', 'success');
+      } else {
+        addToast(newMastered 
+          ? (currentLang === 'vi' ? '✅ Đã đánh dấu thuộc!' : currentLang === 'en' ? '✅ Marked as Mastered!' : '✅ 習得済みに設定しました！') 
+          : (currentLang === 'vi' ? '↩️ Đã bỏ đánh dấu thuộc' : currentLang === 'en' ? '↩️ Unmarked Mastered' : '↩️ 習得済みを解除しました'), 
+          'success'
+        );
+      }
     } catch (err) {
       console.error('Error toggling mastered:', err);
       addToast(currentLang === 'vi' ? 'Lỗi khi cập nhật trạng thái' : currentLang === 'en' ? 'Failed to update status' : '状態の更新に失敗しました', 'error');
     }
-  }, [cards, currentLang, addToast]);
+  }, [cards, currentLang, addToast, setStatus, deckId, DECK_STATUS]);
 
   const handleFlip = () => setIsFlipped(!isFlipped);
 
@@ -114,13 +124,18 @@ const FlashcardPage = () => {
 
       if (cardsErr) throw cardsErr;
       setCards(cardsData || []);
+
+      // Tự động kích hoạt trạng thái "Đang học" nếu bộ thẻ này chưa được học
+      if (deckId && getStatus(deckId) === DECK_STATUS.NOT_STARTED) {
+        setStatus(deckId, DECK_STATUS.LEARNING);
+      }
     } catch (err) {
       console.error('Error loading deck & cards:', err);
       addToast('Failed to load deck', 'error');
     } finally {
       setLoading(false);
     }
-  }, [deckId, addToast]);
+  }, [deckId, addToast, getStatus, setStatus, DECK_STATUS]);
 
   useEffect(() => {
     loadDeckAndCards();

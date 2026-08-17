@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../hooks/useToast';
 import { useTranslation } from '../hooks/useTranslation';
 import { useSpeech } from '../hooks/useSpeech';
+import { useDeckStatus } from '../hooks/useDeckStatus';
 
 const GamesPage = () => {
   const [decks, setDecks] = useState([]);
@@ -68,12 +69,60 @@ const GamesPage = () => {
     }
   };
 
+  const {
+    getStatus,
+    setStatus,
+    learningDecks,
+    notStartedDecks,
+    completedDecks,
+    DECK_STATUS
+  } = useDeckStatus(decks);
+
+  const [statusTab, setStatusTab] = useState(DECK_STATUS.LEARNING); // Mặc định chỉ hiện 'learning'
+  const [showAddDeckModal, setShowAddDeckModal] = useState(false);
+  const [modalSearch, setModalSearch] = useState('');
+
+  // Tự động chọn deck đầu tiên của tab hiện tại nếu deck hiện tại không nằm trong danh sách
+  const currentTabDecks = statusTab === DECK_STATUS.LEARNING
+    ? learningDecks
+    : statusTab === DECK_STATUS.COMPLETED
+    ? completedDecks
+    : notStartedDecks;
+
+  useEffect(() => {
+    if (currentTabDecks.length > 0) {
+      const exists = currentTabDecks.some(d => (d.id || d._id) === (selectedDeck?.id || selectedDeck?._id));
+      if (!exists) {
+        setSelectedDeck(currentTabDecks[0]);
+        loadCardsForDeck(currentTabDecks[0]);
+      }
+    } else if (decks.length > 0 && learningDecks.length === 0 && statusTab === DECK_STATUS.LEARNING) {
+      setSelectedDeck(null);
+      setCards([]);
+    }
+  }, [statusTab, currentTabDecks, selectedDeck, decks.length, learningDecks.length]);
+
   const handleSelectDeck = async (deck) => {
     setSelectedDeck(deck);
     await loadCardsForDeck(deck);
   };
 
+  const toggleDeckStatus = (e, deckId, newStatus) => {
+    e.stopPropagation();
+    setStatus(deckId, newStatus);
+    const msg = newStatus === DECK_STATUS.LEARNING 
+      ? 'Đã thêm vào danh sách Đang học!' 
+      : newStatus === DECK_STATUS.COMPLETED 
+      ? 'Đã đánh dấu Đã học xong!' 
+      : 'Đã chuyển về Chưa học';
+    addToast(msg, 'success');
+  };
+
   const startNewGame = async (gameType) => {
+    if (!selectedDeck) {
+      addToast(currentLang === 'vi' ? 'Vui lòng chọn một bộ thẻ Đang học để chơi!' : 'Please select an active deck!', 'error');
+      return;
+    }
     const activeCards = await loadCardsForDeck(selectedDeck);
     if (activeCards.length < 4) {
       addToast(
@@ -109,43 +158,130 @@ const GamesPage = () => {
       {/* Lobby View */}
       {!activeGame ? (
         <div>
-          {/* Deck selector */}
-          <div className="glass-card" style={{ marginBottom: '2rem' }}>
-            <h3 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              📚 Chọn Bộ Thẻ Để Chơi:
-            </h3>
-            {decks.length === 0 ? (
-              <div className="empty-state" style={{ padding: '1rem' }}>
-                <p>Bạn chưa có bộ thẻ nào. Hãy tạo bộ thẻ trước để bắt đầu chơi!</p>
-                <button className="btn btn-primary" onClick={() => navigate('/decks')} style={{ marginTop: '0.5rem' }}>
-                  ➕ Tạo Bộ Thẻ Ngay
+          {/* Deck selector with Status Filtering */}
+          <div className="glass-card" style={{ marginBottom: '2rem', padding: '1.25rem 1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
+              <div>
+                <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem' }}>
+                  📚 Chọn Bộ Thẻ Để Chơi:
+                </h3>
+                <p style={{ margin: '0.25rem 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                  {statusTab === DECK_STATUS.LEARNING && 'Chỉ hiển thị các bộ thẻ bạn ĐANG HỌC giúp tập trung tối đa!'}
+                  {statusTab === DECK_STATUS.NOT_STARTED && 'Các bộ thẻ CHƯA HỌC trong kho học liệu'}
+                  {statusTab === DECK_STATUS.COMPLETED && 'Các bộ thẻ bạn ĐÃ THUỘC & HOÀN THÀNH'}
+                </p>
+              </div>
+
+              {/* Status Filter Tabs & Add Button */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', background: 'rgba(255,255,255,0.06)', padding: '3px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  <button
+                    type="button"
+                    className={`btn ${statusTab === DECK_STATUS.LEARNING ? 'btn-primary' : 'btn-ghost'}`}
+                    onClick={() => setStatusTab(DECK_STATUS.LEARNING)}
+                    style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', borderRadius: '8px' }}
+                  >
+                    🟢 Đang học ({learningDecks.length})
+                  </button>
+                  <button
+                    type="button"
+                    className={`btn ${statusTab === DECK_STATUS.NOT_STARTED ? 'btn-primary' : 'btn-ghost'}`}
+                    onClick={() => setStatusTab(DECK_STATUS.NOT_STARTED)}
+                    style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', borderRadius: '8px' }}
+                  >
+                    ⚪ Chưa học ({notStartedDecks.length})
+                  </button>
+                  <button
+                    type="button"
+                    className={`btn ${statusTab === DECK_STATUS.COMPLETED ? 'btn-primary' : 'btn-ghost'}`}
+                    onClick={() => setStatusTab(DECK_STATUS.COMPLETED)}
+                    style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', borderRadius: '8px' }}
+                  >
+                    🔵 Đã học ({completedDecks.length})
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={() => setShowAddDeckModal(true)}
+                  style={{ padding: '0.45rem 0.9rem', fontSize: '0.85rem', whiteSpace: 'nowrap' }}
+                >
+                  ➕ Thêm bộ đang học
                 </button>
               </div>
+            </div>
+
+            {/* Deck List or Empty State */}
+            {currentTabDecks.length === 0 ? (
+              <div className="empty-state" style={{ padding: '2rem 1rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px dashed rgba(255,255,255,0.15)' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>
+                  {statusTab === DECK_STATUS.LEARNING ? '🎯' : statusTab === DECK_STATUS.COMPLETED ? '🏆' : '📦'}
+                </div>
+                <h4 style={{ margin: '0 0 0.5rem', color: '#fff' }}>
+                  {statusTab === DECK_STATUS.LEARNING && 'Chưa có bộ thẻ nào trong mục "Đang học"'}
+                  {statusTab === DECK_STATUS.NOT_STARTED && 'Tất cả các bộ thẻ đều đã được đưa vào học!'}
+                  {statusTab === DECK_STATUS.COMPLETED && 'Chưa có bộ thẻ nào hoàn thành'}
+                </h4>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                  {statusTab === DECK_STATUS.LEARNING && 'Hãy bấm nút bên dưới để chọn các bài học bạn muốn chơi và ôn luyện hôm nay.'}
+                </p>
+                {statusTab === DECK_STATUS.LEARNING && (
+                  <button className="btn btn-primary" onClick={() => setShowAddDeckModal(true)}>
+                    ➕ Chọn Bộ Thẻ Vào "Đang Học"
+                  </button>
+                )}
+              </div>
             ) : (
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                {decks.map(deck => {
-                  const isSelected = selectedDeck?.id === deck.id || selectedDeck?._id === deck._id;
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.875rem' }}>
+                {currentTabDecks.map(deck => {
+                  const deckId = deck.id || deck._id;
+                  const isSelected = selectedDeck?.id === deckId || selectedDeck?._id === deckId;
+                  const currentStatus = getStatus(deckId);
+
                   return (
                     <div
-                      key={deck.id || deck._id}
+                      key={deckId}
                       onClick={() => handleSelectDeck(deck)}
                       className={`glass-card ${isSelected ? 'active-deck-card' : ''}`}
                       style={{
-                        padding: '1rem 1.25rem',
+                        padding: '1rem',
                         cursor: 'pointer',
                         borderRadius: '12px',
-                        border: isSelected ? '2px solid var(--accent-purple-light)' : '1px solid rgba(255, 255, 255, 0.1)',
-                        background: isSelected ? 'rgba(124, 58, 237, 0.15)' : 'var(--bg-glass)',
+                        border: isSelected ? '2px solid #8b5cf6' : '1px solid rgba(255, 255, 255, 0.1)',
+                        background: isSelected ? 'rgba(139, 92, 246, 0.18)' : 'rgba(255, 255, 255, 0.03)',
                         transition: 'all 0.2s ease',
-                        minWidth: '180px',
-                        flex: '1'
+                        position: 'relative',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between'
                       }}
                     >
-                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem' }}>
-                        {deck.language === 'ja' ? '🇯🇵' : '🇬🇧'} {deck.title}
-                      </div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                        {deck.card_count || deck.cardCount || 0} từ vựng
+                      <div>
+                        {/* Header: Flag & Status Badge */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                          <span style={{ fontSize: '1.2rem' }}>
+                            {deck.language === 'ja' ? '🇯🇵' : '🇬🇧'}
+                          </span>
+                          <span style={{
+                            fontSize: '0.7rem',
+                            padding: '2px 7px',
+                            borderRadius: '6px',
+                            fontWeight: '700',
+                            background: currentStatus === DECK_STATUS.LEARNING ? 'rgba(34, 197, 94, 0.2)' : currentStatus === DECK_STATUS.COMPLETED ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+                            color: currentStatus === DECK_STATUS.LEARNING ? '#4ade80' : currentStatus === DECK_STATUS.COMPLETED ? '#60a5fa' : '#94a3b8'
+                          }}>
+                            {currentStatus === DECK_STATUS.LEARNING ? 'ĐANG HỌC' : currentStatus === DECK_STATUS.COMPLETED ? 'ĐÃ THUỘC' : 'CHƯA HỌC'}
+                          </span>
+                        </div>
+
+                        {/* Title */}
+                        <div style={{ fontWeight: '600', fontSize: '0.95rem', color: '#fff', marginBottom: '0.35rem', lineHeight: '1.4' }}>
+                          {deck.title}
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                          {deck.card_count || deck.cardCount || 15} từ vựng
+                        </div>
                       </div>
                     </div>
                   );
@@ -153,6 +289,84 @@ const GamesPage = () => {
               </div>
             )}
           </div>
+
+          {/* Modal Quản lý / Thêm Bộ Thẻ Vào "Đang Học" */}
+          {showAddDeckModal && (
+            <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
+              <div className="glass-card" style={{ maxWidth: '640px', width: '100%', maxHeight: '85vh', display: 'flex', flexDirection: 'column', padding: '1.5rem', background: '#181826', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.15)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: '700' }}>📚 Kho Bộ Thẻ – Thêm Vào "Đang Học"</h3>
+                    <p style={{ margin: '0.2rem 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                      Chọn nhanh các bài học bạn muốn luyện tập trong Games
+                    </p>
+                  </div>
+                  <button className="btn btn-ghost" onClick={() => setShowAddDeckModal(false)} style={{ fontSize: '1.25rem', padding: '0.25rem 0.6rem' }}>
+                    ✕
+                  </button>
+                </div>
+
+                <div style={{ marginBottom: '1rem' }}>
+                  <input
+                    type="text"
+                    placeholder="🔍 Tìm theo tên bộ thẻ (IT, Y khoa, Kinh tế, TOEIC, IELTS)..."
+                    value={modalSearch}
+                    onChange={(e) => setModalSearch(e.target.value)}
+                    style={{ width: '100%', padding: '0.65rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff', fontSize: '0.9rem' }}
+                  />
+                </div>
+
+                <div style={{ overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem', paddingRight: '4px' }}>
+                  {decks
+                    .filter(d => (d.title || '').toLowerCase().includes(modalSearch.toLowerCase()))
+                    .map(deck => {
+                      const deckId = deck.id || deck._id;
+                      const currentStatus = getStatus(deckId);
+                      const isLearning = currentStatus === DECK_STATUS.LEARNING;
+
+                      return (
+                        <div
+                          key={deckId}
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            padding: '0.75rem 1rem',
+                            borderRadius: '10px',
+                            background: isLearning ? 'rgba(34, 197, 94, 0.08)' : 'rgba(255,255,255,0.03)',
+                            border: isLearning ? '1px solid rgba(34, 197, 94, 0.3)' : '1px solid rgba(255,255,255,0.06)'
+                          }}
+                        >
+                          <div>
+                            <div style={{ fontWeight: '600', color: '#fff', fontSize: '0.9rem' }}>
+                              {deck.language === 'ja' ? '🇯🇵' : '🇬🇧'} {deck.title}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                              {deck.card_count || deck.cardCount || 15} từ vựng
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            className={`btn ${isLearning ? 'btn-secondary' : 'btn-primary'}`}
+                            onClick={() => toggleDeckStatus({ stopPropagation: () => {} }, deckId, isLearning ? DECK_STATUS.NOT_STARTED : DECK_STATUS.LEARNING)}
+                            style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', minWidth: '110px' }}
+                          >
+                            {isLearning ? '✕ Bỏ chọn' : '➕ Đang học'}
+                          </button>
+                        </div>
+                      );
+                    })}
+                </div>
+
+                <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'flex-end' }}>
+                  <button className="btn btn-primary" onClick={() => setShowAddDeckModal(false)}>
+                    ✅ Hoàn tất & Chơi game ({learningDecks.length} bộ đang học)
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Games Selection List */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem' }}>

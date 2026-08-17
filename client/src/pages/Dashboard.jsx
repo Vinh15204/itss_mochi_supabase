@@ -170,6 +170,39 @@ const Dashboard = () => {
           </button>
         </div>
       </div>
+
+      {/* Innovation & Startup Survey Banner */}
+      <div 
+        className="glass-card" 
+        style={{ 
+          marginTop: '2rem', 
+          padding: '1.5rem 2rem', 
+          background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(239, 68, 68, 0.08) 100%)', 
+          border: '1px solid rgba(245, 158, 11, 0.3)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '1rem'
+        }}
+      >
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '700', fontSize: '1.1rem', color: '#fbbf24' }}>
+            <span>📋</span>
+            <span>Khảo Sát Đổi Mới Sáng Tạo & Trải Nghiệm MVP</span>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+            Dành 1 phút chia sẻ cảm nhận trải nghiệm để giúp nhóm hoàn thiện sản phẩm môn CH2021!
+          </p>
+        </div>
+        <button 
+          className="btn btn-primary" 
+          onClick={() => navigate('/survey')}
+          style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', border: 'none', color: '#fff', fontWeight: '600' }}
+        >
+          ✍️ Làm Khảo Sát Ngay
+        </button>
+      </div>
     </div>
   );
 };

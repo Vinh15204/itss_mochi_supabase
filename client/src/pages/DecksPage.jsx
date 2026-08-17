@@ -4,12 +4,14 @@ import { supabase } from '../services/supabase';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../hooks/useToast';
 import { useTranslation } from '../hooks/useTranslation';
+import { useDeckStatus } from '../hooks/useDeckStatus';
 
 const DecksPage = () => {
   const [decks, setDecks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [form, setForm] = useState({ title: '', description: '', language: 'ja' });
+  const [statusFilter, setStatusFilter] = useState('all'); // all | learning | not_started | completed
   const [sourceFilter, setSourceFilter] = useState('all'); // all | system | my
   const [topicFilter, setTopicFilter] = useState('all'); // all | it | medical | economics | engineering | law | toeic | ielts | japanese
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,6 +19,8 @@ const DecksPage = () => {
   const { user } = useAuth();
   const { addToast, ToastContainer } = useToast();
   const { t, currentLang } = useTranslation();
+
+  const { getStatus, setStatus, DECK_STATUS } = useDeckStatus(decks);
 
   const loadDecks = useCallback(async () => {
     try {
@@ -55,6 +59,12 @@ const DecksPage = () => {
 
   const filteredDecks = useMemo(() => {
     return decks.filter(deck => {
+      const deckId = deck.id || deck._id;
+      const status = getStatus(deckId);
+
+      // 0. Phân loại theo trạng thái học (Đang học / Chưa học / Đã học)
+      if (statusFilter !== 'all' && status !== statusFilter) return false;
+
       // 1. Phân loại theo nguồn gốc (Hệ thống vs Của tôi)
       const isSystem = !deck.user_id;
       const isMine = user?.id && deck.user_id === user.id;
@@ -78,7 +88,7 @@ const DecksPage = () => {
 
       return true;
     });
-  }, [decks, sourceFilter, topicFilter, searchTerm, user]);
+  }, [decks, statusFilter, sourceFilter, topicFilter, searchTerm, user, getStatus]);
 
   const createDeck = async (e) => {
     e.preventDefault();
@@ -156,37 +166,71 @@ const DecksPage = () => {
 
       {/* Primary Tab Filters: All vs System vs My Decks */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)', marginBottom: 'var(--space-xl)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-md)' }}>
-          <div className="filter-group">
+        {/* Status Filter Tabs (Đang học / Chưa học / Đã học) */}
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
+          {[
+            { id: 'all', label: 'Tất cả trạng thái', icon: '📁' },
+            { id: DECK_STATUS.LEARNING, label: '🟢 Đang học', icon: '🎯' },
+            { id: DECK_STATUS.NOT_STARTED, label: '⚪ Chưa học', icon: '📦' },
+            { id: DECK_STATUS.COMPLETED, label: '🔵 Đã học xong', icon: '🏆' }
+          ].map(st => (
             <button
-              className={`filter-option-btn ${sourceFilter === 'all' ? 'active-all' : ''}`}
+              key={st.id}
+              onClick={() => setStatusFilter(st.id)}
+              style={{
+                padding: '0.4rem 0.9rem',
+                borderRadius: '8px',
+                border: '1px solid',
+                borderColor: statusFilter === st.id ? 'var(--primary-color)' : 'rgba(255,255,255,0.1)',
+                background: statusFilter === st.id ? 'var(--primary-glow, rgba(99, 102, 241, 0.25))' : 'rgba(255,255,255,0.04)',
+                color: statusFilter === st.id ? '#fff' : 'var(--text-secondary)',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                fontWeight: statusFilter === st.id ? '700' : '500',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {st.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Primary Controls Row */}
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+          {/* Source Tabs */}
+          <div style={{ display: 'flex', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '3px', borderRadius: '8px' }}>
+            <button
+              className={`btn ${sourceFilter === 'all' ? 'btn-primary' : 'btn-ghost'}`}
               onClick={() => setSourceFilter('all')}
+              style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
             >
-              🌐 {currentLang === 'vi' ? 'Tất cả bộ thẻ' : 'All Decks'} ({decks.length})
+              {currentLang === 'vi' ? 'Tất cả nguồn' : 'All Decks'} ({decks.length})
             </button>
             <button
-              className={`filter-option-btn ${sourceFilter === 'system' ? 'active-mastered' : ''}`}
+              className={`btn ${sourceFilter === 'system' ? 'btn-primary' : 'btn-ghost'}`}
               onClick={() => setSourceFilter('system')}
+              style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
             >
-              🏛️ {currentLang === 'vi' ? 'Bộ từ gốc hệ thống' : 'System Presets'} ({systemCount})
+              🏛️ {currentLang === 'vi' ? 'Kho học liệu' : 'System Decks'}
             </button>
             <button
-              className={`filter-option-btn ${sourceFilter === 'my' ? 'active-unmastered' : ''}`}
+              className={`btn ${sourceFilter === 'my' ? 'btn-primary' : 'btn-ghost'}`}
               onClick={() => setSourceFilter('my')}
+              style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
             >
-              👤 {currentLang === 'vi' ? 'Bộ từ của tôi' : 'My Custom Decks'} ({myCount})
+              👤 {currentLang === 'vi' ? 'Của tôi' : 'My Decks'}
             </button>
           </div>
 
-          {/* Search Box */}
-          <div style={{ minWidth: '260px', flex: '1', maxWidth: '380px' }}>
+          {/* Search Bar */}
+          <div style={{ flex: 1, minWidth: '240px', maxWidth: '360px' }}>
             <input
               type="text"
               className="form-input"
-              style={{ width: '100%', padding: '0.6rem 1rem' }}
-              placeholder={currentLang === 'vi' ? '🔍 Tìm kiếm bài học, chủ đề...' : '🔍 Search decks...'}
+              placeholder={currentLang === 'vi' ? '🔍 Tìm kiếm theo tên hoặc mô tả...' : 'Search decks...'}
               value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ padding: '0.45rem 0.85rem', fontSize: '0.85rem', width: '100%' }}
             />
           </div>
         </div>
@@ -339,6 +383,26 @@ const DecksPage = () => {
 
                 <h3 className="deck-title">{deck.title}</h3>
                 <p className="deck-desc">{deck.description || (currentLang === 'vi' ? 'Chưa có mô tả' : currentLang === 'en' ? 'No description' : '説明なし')}</p>
+                
+                {/* Trạng thái học tập */}
+                <div style={{ margin: '0.4rem 0' }}>
+                  {(() => {
+                    const st = getStatus(deckId);
+                    return (
+                      <span style={{
+                        fontSize: '0.725rem',
+                        padding: '2px 8px',
+                        borderRadius: '6px',
+                        fontWeight: '700',
+                        background: st === DECK_STATUS.LEARNING ? 'rgba(34, 197, 94, 0.2)' : st === DECK_STATUS.COMPLETED ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255, 255, 255, 0.08)',
+                        color: st === DECK_STATUS.LEARNING ? '#4ade80' : st === DECK_STATUS.COMPLETED ? '#60a5fa' : '#94a3b8'
+                      }}>
+                        {st === DECK_STATUS.LEARNING ? '🟢 ĐANG HỌC' : st === DECK_STATUS.COMPLETED ? '🔵 ĐÃ THUỘC' : '⚪ CHƯA HỌC'}
+                      </span>
+                    );
+                  })()}
+                </div>
+
                 <div className="deck-meta">
                   <span>{t('decks.totalCards', { count: deck.card_count || deck.cardCount || 0 })}</span>
                   {isMyDeck && (

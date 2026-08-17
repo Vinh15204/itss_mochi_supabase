@@ -14,6 +14,7 @@ import ExtractPage from './pages/ExtractPage';
 import MiniTestPage from './pages/MiniTestPage';
 import GamesPage from './pages/GamesPage';
 import ProfilePage from './pages/ProfilePage';
+import SurveyPage from './pages/SurveyPage';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -122,6 +123,11 @@ const App = () => {
           <Route path="/profile" element={
             <ProtectedRoute>
               <AppLayout><ProfilePage /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/survey" element={
+            <ProtectedRoute>
+              <AppLayout><SurveyPage /></AppLayout>
             </ProtectedRoute>
           } />
         </Routes>
