@@ -213,7 +213,7 @@ Số liệu tại Bảng 1.1 cho thấy nhu cầu giải phóng sức lao độn
 # PHẦN 2: NỘI DUNG Ý TƯỞNG VÀ GIẢI PHÁP ĐỔI MỚI
 
 ## 2.1. Ý tưởng cốt lõi: Sản phẩm và dịch vụ
-Dự án **Mochi (Lingua)** là một nền tảng Web Application thông minh thuộc lĩnh vực Công nghệ Giáo dục (EdTech), tiên phong giải quyết bài toán học từ vựng ngoại ngữ chuyên ngành và chứng chỉ quốc tế thông qua mô hình **Micro-learning kết hợp Trích xuất tự động (Auto-Extraction Pipeline)** và **Đấu trường thi đấu thời gian thực (Gamification PvP)**.
+Dự án **Mochi (Siuuu Learn)** là một nền tảng Web Application thông minh thuộc lĩnh vực Công nghệ Giáo dục (EdTech), tiên phong giải quyết bài toán học từ vựng ngoại ngữ chuyên ngành và chứng chỉ quốc tế thông qua mô hình **Micro-learning kết hợp Trích xuất tự động (Auto-Extraction Pipeline)** và **Đấu trường thi đấu thời gian thực (Gamification PvP)**.
 
 Sản phẩm cung cấp một hệ sinh thái khép kín 4 bước được mô tả tại Hình 2.1:
 1. **Input (Nhập liệu tức thì):** Người dùng chỉ cần sao chép bất kỳ đoạn văn bản, tài liệu PDF, bài báo chuyên ngành (IT, Y tế, Kinh tế, Kỹ thuật) hoặc bài đọc luyện thi dán vào hệ thống.
@@ -397,7 +397,7 @@ Bảng 5.1. Bảng phân công vai trò và trách nhiệm của đội ngũ sá
    - *Mục đích:* Nâng cấp thuật toán trích xuất từ vựng dựa trên các mô hình ngôn ngữ lớn (LLM nhúng cục bộ) giúp phân tích ngữ cảnh sâu và tự động phân loại cấp độ từ vựng (CEFR / JLPT Leveling).
    - *Chuyên gia hướng tới:* Tiến sĩ, Trưởng phòng thí nghiệm Xử lý Ngôn ngữ Tự nhiên (NLP Lab) – Viện CNTT&TT.
 3. **Cố vấn Pháp lý & Sở hữu Trí tuệ (Legal & IP Advisor):**  
-   - *Mục đích:* Tư vấn thủ tục đăng ký bản quyền quyền tác giả đối với mã nguồn phần mềm, bảo hộ thương hiệu Mochi/Lingua và thẩm định các điều khoản bảo mật dữ liệu người dùng theo Nghị định 13/2023/NĐ-CP.
+   - *Mục đích:* Tư vấn thủ tục đăng ký bản quyền quyền tác giả đối với mã nguồn phần mềm, bảo hộ thương hiệu Mochi/Siuuu Learn và thẩm định các điều khoản bảo mật dữ liệu người dùng theo Nghị định 13/2023/NĐ-CP.
 4. **Cố vấn Chiến lược Khởi nghiệp & Đầu tư mạo hiểm (Startup Mentor):**  
    - *Mục đích:* Hoàn thiện hồ sơ tham gia các cuộc thi Khởi nghiệp Quốc gia (SV.STARTUP, Techfest) và kết nối với các quỹ đầu tư thiên thần (Angel Investors).
 

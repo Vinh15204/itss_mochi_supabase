@@ -165,8 +165,8 @@ const SurveyPage = () => {
   const filteredSurveys = useMemo(() => {
     return surveyList.filter(s => {
       const matchText = (s.full_name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        (s.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        (s.major || '').toLowerCase().includes(searchTerm.toLowerCase());
+        (s.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (s.major || '').toLowerCase().includes(searchTerm.toLowerCase());
       if (filterMajor === 'all') return matchText;
       return matchText && (s.major || '').toLowerCase().includes(filterMajor.toLowerCase());
     });
@@ -179,10 +179,10 @@ const SurveyPage = () => {
     }
 
     const headers = [
-      'Thời gian', 'Họ tên', 'Email', 'Trường', 'Khóa', 'Ngành', 
-      'Hiểu về ứng dụng', 'Điểm giá trị (1-5)', 'Lý do giá trị', 
-      'Tình huống sử dụng', 'Tính năng cốt lõi', 'Lý do chọn tính năng', 
-      'So sánh đối thủ', 'Đề xuất cải tiến', 'Mức giá sẵn sàng trả', 
+      'Thời gian', 'Họ tên', 'Email', 'Trường', 'Khóa', 'Ngành',
+      'Hiểu về ứng dụng', 'Điểm giá trị (1-5)', 'Lý do giá trị',
+      'Tình huống sử dụng', 'Tính năng cốt lõi', 'Lý do chọn tính năng',
+      'So sánh đối thủ', 'Đề xuất cải tiến', 'Mức giá sẵn sàng trả',
       'Điểm NPS (1-10)', 'Đánh giá chung (1-5)'
     ];
 
@@ -248,7 +248,7 @@ const SurveyPage = () => {
           >
             ✍️ Điền Khảo Sát
           </button>
-          
+
           <button
             type="button"
             className={`btn ${activeTab === 'stats' ? 'btn-primary' : 'btn-ghost'}`}
@@ -270,7 +270,7 @@ const SurveyPage = () => {
       ======================================================== */}
       {activeTab === 'stats' ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          
+
           {/* Header Action bar */}
           <div className="glass-card" style={{ padding: '1.25rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -322,7 +322,7 @@ const SurveyPage = () => {
 
           {/* Biểu đồ phân tích tính năng & mức giá */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
-            
+
             {/* Phân tích tính năng yêu thích nhất */}
             <div className="glass-card" style={{ padding: '1.5rem' }}>
               <h3 style={{ fontSize: '1.05rem', fontWeight: '700', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -436,13 +436,13 @@ const SurveyPage = () => {
                         <div style={{ fontSize: '0.75rem', color: '#6366f1' }}>{item.academic_year} • {item.university || 'HUST'}</div>
                       </td>
                       <td style={{ padding: '0.75rem 0.5rem' }}>
-                        <span style={{ 
-                          padding: '3px 8px', 
-                          borderRadius: '6px', 
-                          background: item.willingness_to_pay === 'free_only' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(16, 185, 129, 0.15)', 
-                          color: item.willingness_to_pay === 'free_only' ? '#fbbf24' : '#34d399', 
-                          fontSize: '0.75rem', 
-                          fontWeight: '700' 
+                        <span style={{
+                          padding: '3px 8px',
+                          borderRadius: '6px',
+                          background: item.willingness_to_pay === 'free_only' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+                          color: item.willingness_to_pay === 'free_only' ? '#fbbf24' : '#34d399',
+                          fontSize: '0.75rem',
+                          fontWeight: '700'
                         }}>
                           {item.willingness_to_pay === 'free_only' ? 'FREE ONLY' : item.willingness_to_pay === '349k_year' ? 'GÓI NĂM' : 'PRO THÁNG'}
                         </span>
@@ -476,419 +476,419 @@ const SurveyPage = () => {
         </div>
       ) : (
 
-      /* ========================================================
-          TAB 2: BIỂU MẪU ĐIỀN KHẢO SÁT DÀNH CHO NGƯỜI DÙNG
-      ======================================================== */
-      submitted ? (
-        <div className="glass-card" style={{ padding: '3rem 2rem', textAlign: 'center' }}>
-          <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉</div>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--primary)' }}>
-            Gửi Khảo Sát Thành Công!
-          </h2>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: '1.6' }}>
-            Cảm ơn bạn đã dành thời gian trải nghiệm Mochi (Lingua) và cung cấp phản hồi quan trọng.<br/>
-            Dữ liệu của bạn đã được lưu trực tiếp vào cơ sở dữ liệu của dự án.
-          </p>
+        /* ========================================================
+            TAB 2: BIỂU MẪU ĐIỀN KHẢO SÁT DÀNH CHO NGƯỜI DÙNG
+        ======================================================== */
+        submitted ? (
+          <div className="glass-card" style={{ padding: '3rem 2rem', textAlign: 'center' }}>
+            <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉</div>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--primary)' }}>
+              Gửi Khảo Sát Thành Công!
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: '1.6' }}>
+              Cảm ơn bạn đã dành thời gian trải nghiệm Mochi (Siuuu Learn) và cung cấp phản hồi quan trọng.<br />
+              Dữ liệu của bạn đã được lưu trực tiếp vào cơ sở dữ liệu của dự án.
+            </p>
 
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>
-              🏠 Về Bảng Điều Khiển
-            </button>
-            <button className="btn btn-outline" onClick={() => { setSubmitted(false); setActiveTab('stats'); }}>
-              📊 Xem Thống Kê Khảo Sát
-            </button>
-            <button className="btn btn-ghost" onClick={() => setSubmitted(false)}>
-              📝 Điền Lại Phiếu Khác
-            </button>
-          </div>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          
-          {/* PHẦN 1: THÔNG TIN SINH VIÊN */}
-          <div className="glass-card" style={{ padding: '1.75rem' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ background: 'var(--primary)', color: '#fff', width: '28px', height: '28px', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}>1</span>
-              Thông Tin Khách Hàng / Sinh Viên
-            </h3>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                  Họ và tên <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.fullName}
-                  onChange={(e) => handleChange('fullName', e.target.value)}
-                  placeholder="Ví dụ: Nguyễn Văn A"
-                  style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
-                />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                  Email liên hệ
-                </label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleChange('email', e.target.value)}
-                  placeholder="user@sis.hust.edu.vn"
-                  style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
-                />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                  Trường Đại học <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.university}
-                  onChange={(e) => handleChange('university', e.target.value)}
-                  placeholder="Đại học Bách khoa Hà Nội"
-                  style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
-                />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                  Khóa / Năm học <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-                <select
-                  value={formData.academicYear}
-                  onChange={(e) => handleChange('academicYear', e.target.value)}
-                  style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: '#1e1e2d', color: '#fff' }}
-                >
-                  <option value="K65">Khóa K65 (Năm 4 / Năm cuối)</option>
-                  <option value="K66">Khóa K66 (Năm 3 / Năm 4)</option>
-                  <option value="K67">Khóa K67 (Năm 2)</option>
-                  <option value="K68">Khóa K68 (Năm 1)</option>
-                  <option value="K69">Khóa K69 (Tân sinh viên)</option>
-                  <option value="Graduated">Đã tốt nghiệp / Đang đi làm</option>
-                </select>
-              </div>
-
-              <div style={{ gridColumn: '1 / -1' }}>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                  Chuyên ngành đang theo học <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.major}
-                  onChange={(e) => handleChange('major', e.target.value)}
-                  placeholder="Ví dụ: Kỹ thuật phần mềm, Tự động hóa, Kinh tế, Cơ khí, Y đa khoa..."
-                  style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
-                />
-              </div>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>
+                🏠 Về Bảng Điều Khiển
+              </button>
+              <button className="btn btn-outline" onClick={() => { setSubmitted(false); setActiveTab('stats'); }}>
+                📊 Xem Thống Kê Khảo Sát
+              </button>
+              <button className="btn btn-ghost" onClick={() => setSubmitted(false)}>
+                📝 Điền Lại Phiếu Khác
+              </button>
             </div>
           </div>
+        ) : (
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
-          {/* PHẦN 2: NHẬN THỨC VÀ GIÁ TRỊ GIẢI PHÁP */}
-          <div className="glass-card" style={{ padding: '1.75rem' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ background: 'var(--primary)', color: '#fff', width: '28px', height: '28px', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}>2</span>
-              Nhận Thức & Giá Trị Cốt Lõi Của Sản Phẩm
-            </h3>
+            {/* PHẦN 1: THÔNG TIN SINH VIÊN */}
+            <div className="glass-card" style={{ padding: '1.75rem' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ background: 'var(--primary)', color: '#fff', width: '28px', height: '28px', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}>1</span>
+                Thông Tin Khách Hàng / Sinh Viên
+              </h3>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                  Sau khi trải nghiệm, bạn hiểu như thế nào về ứng dụng Mochi (Lingua)? <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-                <textarea
-                  required
-                  rows={3}
-                  value={formData.appUnderstanding}
-                  onChange={(e) => handleChange('appUnderstanding', e.target.value)}
-                  placeholder="Ví dụ: Là ứng dụng học từ vựng siêu ngắn (Micro-learning) giúp tự động trích xuất từ vựng từ bài đọc trong 3 giây và kiểm tra nhanh bằng mini test..."
-                  style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff', resize: 'vertical' }}
-                />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                  Mức độ hấp dẫn của giá trị mà ứng dụng mang lại đối với bạn (1 = Rất thấp, 5 = Cực kỳ hấp dẫn):
-                </label>
-                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: '0.5rem' }}>
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      type="button"
-                      key={star}
-                      onClick={() => handleChange('valueAttraction', star)}
-                      style={{
-                        background: formData.valueAttraction >= star ? '#f59e0b' : 'rgba(255,255,255,0.1)',
-                        color: '#fff',
-                        border: 'none',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        fontWeight: '700',
-                        fontSize: '1rem',
-                        transition: 'all 0.2s ease'
-                      }}
-                    >
-                      ★ {star}
-                    </button>
-                  ))}
-                  <span style={{ marginLeft: '1rem', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
-                    {formData.valueAttraction === 5 ? 'Cực kỳ hấp dẫn' : formData.valueAttraction === 4 ? 'Hấp dẫn' : 'Bình thường'}
-                  </span>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
+                    Họ và tên <span style={{ color: '#ef4444' }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.fullName}
+                    onChange={(e) => handleChange('fullName', e.target.value)}
+                    placeholder="Ví dụ: Nguyễn Văn A"
+                    style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
+                  />
                 </div>
-              </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                  Tại sao bạn lại đánh giá như vậy? (Lý do cụ thể)
-                </label>
-                <textarea
-                  rows={2}
-                  value={formData.valueAttractionReason}
-                  onChange={(e) => handleChange('valueAttractionReason', e.target.value)}
-                  placeholder="Ví dụ: Giúp em tiết kiệm thời gian gõ từng từ tạo thẻ, rất phù hợp khi đọc tài liệu kỹ thuật dài..."
-                  style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
-                />
-              </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
+                    Email liên hệ
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleChange('email', e.target.value)}
+                    placeholder="user@sis.hust.edu.vn"
+                    style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
+                  />
+                </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                  Trong học tập và cuộc sống, bạn nghĩ mình sẽ sử dụng ứng dụng này trong tình huống nào? <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.dailyUsageScenario}
-                  onChange={(e) => handleChange('dailyUsageScenario', e.target.value)}
-                  placeholder="Ví dụ: Khi chuẩn bị cho bài kiểm tra từ vựng ngày mai, lúc rảnh 10 phút chuyển ca, trên xe buýt..."
-                  style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
-                />
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
+                    Trường Đại học <span style={{ color: '#ef4444' }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.university}
+                    onChange={(e) => handleChange('university', e.target.value)}
+                    placeholder="Đại học Bách khoa Hà Nội"
+                    style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
+                    Khóa / Năm học <span style={{ color: '#ef4444' }}>*</span>
+                  </label>
+                  <select
+                    value={formData.academicYear}
+                    onChange={(e) => handleChange('academicYear', e.target.value)}
+                    style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: '#1e1e2d', color: '#fff' }}
+                  >
+                    <option value="K65">Khóa K65 (Năm 4 / Năm cuối)</option>
+                    <option value="K66">Khóa K66 (Năm 3 / Năm 4)</option>
+                    <option value="K67">Khóa K67 (Năm 2)</option>
+                    <option value="K68">Khóa K68 (Năm 1)</option>
+                    <option value="K69">Khóa K69 (Tân sinh viên)</option>
+                    <option value="Graduated">Đã tốt nghiệp / Đang đi làm</option>
+                  </select>
+                </div>
+
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
+                    Chuyên ngành đang theo học <span style={{ color: '#ef4444' }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.major}
+                    onChange={(e) => handleChange('major', e.target.value)}
+                    placeholder="Ví dụ: Kỹ thuật phần mềm, Tự động hóa, Kinh tế, Cơ khí, Y đa khoa..."
+                    style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* PHẦN 3: ĐÁNH GIÁ TÍNH NĂNG CỐT LÕI */}
-          <div className="glass-card" style={{ padding: '1.75rem' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ background: 'var(--primary)', color: '#fff', width: '28px', height: '28px', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}>3</span>
-              Đánh Giá Tính Năng Cốt Lõi (Feature Priority)
-            </h3>
+            {/* PHẦN 2: NHẬN THỨC VÀ GIÁ TRỊ GIẢI PHÁP */}
+            <div className="glass-card" style={{ padding: '1.75rem' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ background: 'var(--primary)', color: '#fff', width: '28px', height: '28px', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}>2</span>
+                Nhận Thức & Giá Trị Cốt Lõi Của Sản Phẩm
+              </h3>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.75rem', fontWeight: '600' }}>
-                  Theo bạn, đâu là tính năng quan trọng và mang lại giá trị lớn nhất? <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.75rem' }}>
-                  {[
-                    { id: 'auto_extract', icon: '✨', title: 'Trích xuất từ vựng tự động (3s)', desc: 'Dán bài đọc dài tự bóc tách từ mới & nghĩa chuyên ngành' },
-                    { id: 'flashcard_tts', icon: '📇', title: 'Flashcard 3D & Giọng đọc bản xứ', desc: 'Lật thẻ ghi nhớ ngắt quãng SRS kết hợp âm thanh phát âm' },
-                    { id: 'mini_test', icon: '📝', title: 'Mini Test tùy biến số câu', desc: 'Kiểm tra 5-15 câu tức thì theo thời gian rảnh rỗi' },
-                    { id: 'vocab_bank', icon: '📚', title: 'Kho từ 6 chuyên ngành có sẵn', desc: 'Hơn 1,000+ từ vựng IT, Y khoa, Cơ khí, Kinh tế, TOEIC' },
-                    { id: 'pvp_battle', icon: '🎮', title: 'Đấu trường PvP & Playoff', desc: 'Thi đấu tốc độ từ vựng trực tuyến với bạn bè' }
-                  ].map(f => (
-                    <div
-                      key={f.id}
-                      onClick={() => handleChange('mostImportantFeature', f.id)}
-                      style={{
-                        padding: '1rem',
-                        borderRadius: '12px',
-                        border: formData.mostImportantFeature === f.id ? '2px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)',
-                        background: formData.mostImportantFeature === f.id ? 'rgba(99, 102, 241, 0.15)' : 'rgba(255,255,255,0.03)',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '700', marginBottom: '0.25rem' }}>
-                        <span>{f.icon}</span>
-                        <span>{f.title}</span>
-                      </div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                        {f.desc}
-                      </div>
-                    </div>
-                  ))}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
+                    Sau khi trải nghiệm, bạn hiểu như thế nào về ứng dụng Mochi (Siuuu Learn)? <span style={{ color: '#ef4444' }}>*</span>
+                  </label>
+                  <textarea
+                    required
+                    rows={3}
+                    value={formData.appUnderstanding}
+                    onChange={(e) => handleChange('appUnderstanding', e.target.value)}
+                    placeholder="Ví dụ: Là ứng dụng học từ vựng siêu ngắn (Micro-learning) giúp tự động trích xuất từ vựng từ bài đọc trong 3 giây và kiểm tra nhanh bằng mini test..."
+                    style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff', resize: 'vertical' }}
+                  />
                 </div>
-              </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                  Tại sao bạn lại chọn tính năng này là quan trọng nhất?
-                </label>
-                <textarea
-                  rows={2}
-                  value={formData.featureReason}
-                  onChange={(e) => handleChange('featureReason', e.target.value)}
-                  placeholder="Giải thích lý do lựa chọn của bạn..."
-                  style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* PHẦN 4: SO SÁNH CẠNH TRANH & ĐỀ XUẤT CẢI TIẾN */}
-          <div className="glass-card" style={{ padding: '1.75rem' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ background: 'var(--primary)', color: '#fff', width: '28px', height: '28px', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}>4</span>
-              So Sánh Thị Trường & Đề Xuất Cải Tiến
-            </h3>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                  So với các công cụ tương tự (như Quizlet, Anki, Duolingo), Mochi vượt trội ở điểm nào?
-                </label>
-                <textarea
-                  rows={2}
-                  value={formData.competitiveAdvantage}
-                  onChange={(e) => handleChange('competitiveAdvantage', e.target.value)}
-                  placeholder="Ví dụ: Quizlet phải tự gõ từng từ rất mệt, còn Mochi dán văn bản là ra luôn thẻ; bài test ngắn tùy chỉnh câu hỏi linh hoạt hơn..."
-                  style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
-                />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                  Để giải quyết tốt hơn bài toán học từ vựng cho bạn, ứng dụng cần cải tiến/thêm điều gì? <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-                <textarea
-                  required
-                  rows={2}
-                  value={formData.improvementSuggestions}
-                  onChange={(e) => handleChange('improvementSuggestions', e.target.value)}
-                  placeholder="Ví dụ: Bổ sung thêm từ vựng chuyên ngành X, tăng độ tương phản màu chữ, thêm bảng xếp hạng bạn bè..."
-                  style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* PHẦN 5: KHẢO SÁT THƯƠNG MẠI HÓA (ĐMST & KN) */}
-          <div className="glass-card" style={{ padding: '1.75rem' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ background: 'var(--primary)', color: '#fff', width: '28px', height: '28px', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}>5</span>
-              Khảo Sát Thương Mại Hóa & Mức Độ Sẵn Sàng Chi Trả
-            </h3>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.75rem', fontWeight: '600' }}>
-                  Nếu ra mắt phiên bản chính thức (Mở khóa trích xuất không giới hạn + Full 6 kho từ chuyên ngành + Đấu trường PvP), bạn sẵn sàng chi trả mức giá nào?
-                </label>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
-                  {[
-                    { id: '49k_month', label: '49.000 đ / tháng', note: 'Bằng 1 cốc cà phê / trà sữa' },
-                    { id: '349k_year', label: '349.000 đ / năm', note: 'Tiết kiệm 40% chi phí' },
-                    { id: 'free_only', label: 'Chỉ dùng bản miễn phí', note: 'Chấp nhận giới hạn tính năng' },
-                    { id: 'higher_pro', label: 'Sẵn sàng trả cao hơn', note: 'Nếu có thêm tính năng AI nâng cao' }
-                  ].map(p => (
-                    <label
-                      key={p.id}
-                      style={{
-                        padding: '1rem',
-                        borderRadius: '10px',
-                        border: formData.willingnessToPay === p.id ? '2px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)',
-                        background: formData.willingnessToPay === p.id ? 'rgba(99, 102, 241, 0.15)' : 'rgba(255,255,255,0.03)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '700' }}>
-                        <input
-                          type="radio"
-                          name="willingnessToPay"
-                          checked={formData.willingnessToPay === p.id}
-                          onChange={() => handleChange('willingnessToPay', p.id)}
-                        />
-                        {p.label}
-                      </div>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.25rem', paddingLeft: '1.4rem' }}>
-                        {p.note}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                  Mức độ sẵn sàng giới thiệu Mochi cho bạn bè / nhóm học (Chỉ số NPS từ 1 đến 10 điểm):
-                </label>
-                <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
-                    <button
-                      type="button"
-                      key={num}
-                      onClick={() => handleChange('npsScore', num)}
-                      style={{
-                        flex: '1',
-                        minWidth: '36px',
-                        padding: '0.6rem 0',
-                        borderRadius: '8px',
-                        border: 'none',
-                        background: formData.npsScore === num ? 'var(--primary)' : 'rgba(255,255,255,0.08)',
-                        color: '#fff',
-                        fontWeight: '700',
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease'
-                      }}
-                    >
-                      {num}
-                    </button>
-                  ))}
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.35rem' }}>
-                  <span>1: Hoàn toàn không giới thiệu</span>
-                  <span>10: Chắc chắn sẽ giới thiệu</span>
-                </div>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                  Đánh giá tổng quan về trải nghiệm sản phẩm Mochi (MVP):
-                </label>
-                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <span
-                      key={star}
-                      onClick={() => handleChange('overallRating', star)}
-                      style={{
-                        fontSize: '1.75rem',
-                        cursor: 'pointer',
-                        color: formData.overallRating >= star ? '#fbbf24' : 'rgba(255,255,255,0.2)',
-                        transition: 'color 0.2s ease'
-                      }}
-                    >
-                      ★
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
+                    Mức độ hấp dẫn của giá trị mà ứng dụng mang lại đối với bạn (1 = Rất thấp, 5 = Cực kỳ hấp dẫn):
+                  </label>
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: '0.5rem' }}>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        type="button"
+                        key={star}
+                        onClick={() => handleChange('valueAttraction', star)}
+                        style={{
+                          background: formData.valueAttraction >= star ? '#f59e0b' : 'rgba(255,255,255,0.1)',
+                          color: '#fff',
+                          border: 'none',
+                          padding: '0.5rem 1rem',
+                          borderRadius: '8px',
+                          cursor: 'pointer',
+                          fontWeight: '700',
+                          fontSize: '1rem',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        ★ {star}
+                      </button>
+                    ))}
+                    <span style={{ marginLeft: '1rem', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
+                      {formData.valueAttraction === 5 ? 'Cực kỳ hấp dẫn' : formData.valueAttraction === 4 ? 'Hấp dẫn' : 'Bình thường'}
                     </span>
-                  ))}
-                  <span style={{ marginLeft: '0.75rem', fontWeight: '600', color: '#fbbf24' }}>
-                    {formData.overallRating}/5 Sao
-                  </span>
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
+                    Tại sao bạn lại đánh giá như vậy? (Lý do cụ thể)
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={formData.valueAttractionReason}
+                    onChange={(e) => handleChange('valueAttractionReason', e.target.value)}
+                    placeholder="Ví dụ: Giúp em tiết kiệm thời gian gõ từng từ tạo thẻ, rất phù hợp khi đọc tài liệu kỹ thuật dài..."
+                    style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
+                    Trong học tập và cuộc sống, bạn nghĩ mình sẽ sử dụng ứng dụng này trong tình huống nào? <span style={{ color: '#ef4444' }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.dailyUsageScenario}
+                    onChange={(e) => handleChange('dailyUsageScenario', e.target.value)}
+                    placeholder="Ví dụ: Khi chuẩn bị cho bài kiểm tra từ vựng ngày mai, lúc rảnh 10 phút chuyển ca, trên xe buýt..."
+                    style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
+                  />
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* NÚT SUBMIT */}
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginTop: '1rem' }}>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={submitting}
-              style={{ minWidth: '180px', fontSize: '1rem', padding: '0.875rem 1.75rem' }}
-            >
-              {submitting ? 'Đang gửi...' : '🚀 Hoàn Tất & Gửi Khảo Sát'}
-            </button>
-          </div>
-        </form>
-      ))}
+            {/* PHẦN 3: ĐÁNH GIÁ TÍNH NĂNG CỐT LÕI */}
+            <div className="glass-card" style={{ padding: '1.75rem' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ background: 'var(--primary)', color: '#fff', width: '28px', height: '28px', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}>3</span>
+                Đánh Giá Tính Năng Cốt Lõi (Feature Priority)
+              </h3>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.75rem', fontWeight: '600' }}>
+                    Theo bạn, đâu là tính năng quan trọng và mang lại giá trị lớn nhất? <span style={{ color: '#ef4444' }}>*</span>
+                  </label>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.75rem' }}>
+                    {[
+                      { id: 'auto_extract', icon: '✨', title: 'Trích xuất từ vựng tự động (3s)', desc: 'Dán bài đọc dài tự bóc tách từ mới & nghĩa chuyên ngành' },
+                      { id: 'flashcard_tts', icon: '📇', title: 'Flashcard 3D & Giọng đọc bản xứ', desc: 'Lật thẻ ghi nhớ ngắt quãng SRS kết hợp âm thanh phát âm' },
+                      { id: 'mini_test', icon: '📝', title: 'Mini Test tùy biến số câu', desc: 'Kiểm tra 5-15 câu tức thì theo thời gian rảnh rỗi' },
+                      { id: 'vocab_bank', icon: '📚', title: 'Kho từ 6 chuyên ngành có sẵn', desc: 'Hơn 1,000+ từ vựng IT, Y khoa, Cơ khí, Kinh tế, TOEIC' },
+                      { id: 'pvp_battle', icon: '🎮', title: 'Đấu trường PvP & Playoff', desc: 'Thi đấu tốc độ từ vựng trực tuyến với bạn bè' }
+                    ].map(f => (
+                      <div
+                        key={f.id}
+                        onClick={() => handleChange('mostImportantFeature', f.id)}
+                        style={{
+                          padding: '1rem',
+                          borderRadius: '12px',
+                          border: formData.mostImportantFeature === f.id ? '2px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)',
+                          background: formData.mostImportantFeature === f.id ? 'rgba(99, 102, 241, 0.15)' : 'rgba(255,255,255,0.03)',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '700', marginBottom: '0.25rem' }}>
+                          <span>{f.icon}</span>
+                          <span>{f.title}</span>
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                          {f.desc}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
+                    Tại sao bạn lại chọn tính năng này là quan trọng nhất?
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={formData.featureReason}
+                    onChange={(e) => handleChange('featureReason', e.target.value)}
+                    placeholder="Giải thích lý do lựa chọn của bạn..."
+                    style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* PHẦN 4: SO SÁNH CẠNH TRANH & ĐỀ XUẤT CẢI TIẾN */}
+            <div className="glass-card" style={{ padding: '1.75rem' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ background: 'var(--primary)', color: '#fff', width: '28px', height: '28px', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}>4</span>
+                So Sánh Thị Trường & Đề Xuất Cải Tiến
+              </h3>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
+                    So với các công cụ tương tự (như Quizlet, Anki, Duolingo), Mochi vượt trội ở điểm nào?
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={formData.competitiveAdvantage}
+                    onChange={(e) => handleChange('competitiveAdvantage', e.target.value)}
+                    placeholder="Ví dụ: Quizlet phải tự gõ từng từ rất mệt, còn Mochi dán văn bản là ra luôn thẻ; bài test ngắn tùy chỉnh câu hỏi linh hoạt hơn..."
+                    style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
+                    Để giải quyết tốt hơn bài toán học từ vựng cho bạn, ứng dụng cần cải tiến/thêm điều gì? <span style={{ color: '#ef4444' }}>*</span>
+                  </label>
+                  <textarea
+                    required
+                    rows={2}
+                    value={formData.improvementSuggestions}
+                    onChange={(e) => handleChange('improvementSuggestions', e.target.value)}
+                    placeholder="Ví dụ: Bổ sung thêm từ vựng chuyên ngành X, tăng độ tương phản màu chữ, thêm bảng xếp hạng bạn bè..."
+                    style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* PHẦN 5: KHẢO SÁT THƯƠNG MẠI HÓA (ĐMST & KN) */}
+            <div className="glass-card" style={{ padding: '1.75rem' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ background: 'var(--primary)', color: '#fff', width: '28px', height: '28px', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}>5</span>
+                Khảo Sát Thương Mại Hóa & Mức Độ Sẵn Sàng Chi Trả
+              </h3>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.75rem', fontWeight: '600' }}>
+                    Nếu ra mắt phiên bản chính thức (Mở khóa trích xuất không giới hạn + Full 6 kho từ chuyên ngành + Đấu trường PvP), bạn sẵn sàng chi trả mức giá nào?
+                  </label>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
+                    {[
+                      { id: '49k_month', label: '49.000 đ / tháng', note: 'Bằng 1 cốc cà phê / trà sữa' },
+                      { id: '349k_year', label: '349.000 đ / năm', note: 'Tiết kiệm 40% chi phí' },
+                      { id: 'free_only', label: 'Chỉ dùng bản miễn phí', note: 'Chấp nhận giới hạn tính năng' },
+                      { id: 'higher_pro', label: 'Sẵn sàng trả cao hơn', note: 'Nếu có thêm tính năng AI nâng cao' }
+                    ].map(p => (
+                      <label
+                        key={p.id}
+                        style={{
+                          padding: '1rem',
+                          borderRadius: '10px',
+                          border: formData.willingnessToPay === p.id ? '2px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)',
+                          background: formData.willingnessToPay === p.id ? 'rgba(99, 102, 241, 0.15)' : 'rgba(255,255,255,0.03)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '700' }}>
+                          <input
+                            type="radio"
+                            name="willingnessToPay"
+                            checked={formData.willingnessToPay === p.id}
+                            onChange={() => handleChange('willingnessToPay', p.id)}
+                          />
+                          {p.label}
+                        </div>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.25rem', paddingLeft: '1.4rem' }}>
+                          {p.note}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
+                    Mức độ sẵn sàng giới thiệu Mochi cho bạn bè / nhóm học (Chỉ số NPS từ 1 đến 10 điểm):
+                  </label>
+                  <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
+                      <button
+                        type="button"
+                        key={num}
+                        onClick={() => handleChange('npsScore', num)}
+                        style={{
+                          flex: '1',
+                          minWidth: '36px',
+                          padding: '0.6rem 0',
+                          borderRadius: '8px',
+                          border: 'none',
+                          background: formData.npsScore === num ? 'var(--primary)' : 'rgba(255,255,255,0.08)',
+                          color: '#fff',
+                          fontWeight: '700',
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease'
+                        }}
+                      >
+                        {num}
+                      </button>
+                    ))}
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.35rem' }}>
+                    <span>1: Hoàn toàn không giới thiệu</span>
+                    <span>10: Chắc chắn sẽ giới thiệu</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
+                    Đánh giá tổng quan về trải nghiệm sản phẩm Mochi (MVP):
+                  </label>
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span
+                        key={star}
+                        onClick={() => handleChange('overallRating', star)}
+                        style={{
+                          fontSize: '1.75rem',
+                          cursor: 'pointer',
+                          color: formData.overallRating >= star ? '#fbbf24' : 'rgba(255,255,255,0.2)',
+                          transition: 'color 0.2s ease'
+                        }}
+                      >
+                        ★
+                      </span>
+                    ))}
+                    <span style={{ marginLeft: '0.75rem', fontWeight: '600', color: '#fbbf24' }}>
+                      {formData.overallRating}/5 Sao
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* NÚT SUBMIT */}
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={submitting}
+                style={{ minWidth: '180px', fontSize: '1rem', padding: '0.875rem 1.75rem' }}
+              >
+                {submitting ? 'Đang gửi...' : '🚀 Hoàn Tất & Gửi Khảo Sát'}
+              </button>
+            </div>
+          </form>
+        ))}
     </div>
   );
 };

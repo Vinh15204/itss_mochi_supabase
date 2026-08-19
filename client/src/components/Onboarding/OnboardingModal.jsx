@@ -63,7 +63,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
 
       updateUser(profileData);
       addToast('🎉 Đã thiết lập lộ trình học cá nhân hóa thành công!', 'success');
-      
+
       if (onComplete) onComplete(profileData);
       if (onClose) onClose();
 
@@ -80,7 +80,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
     <div className="modal-overlay" style={{ zIndex: 1100 }}>
       <div className="modal-content" style={{ maxWidth: '580px', width: '92%' }} onClick={e => e.stopPropagation()}>
         <div className="glass-card" style={{ padding: '2rem' }}>
-          
+
           {/* Header */}
           <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
             <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🎯</div>
@@ -88,7 +88,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
               Thiết Lập Lộ Trình Học Cá Nhân
             </h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-              Hãy trả lời 3 câu hỏi nhanh để Lingua tối ưu hóa bài học theo đúng ngành học & thời gian của bạn
+              Hãy trả lời 3 câu hỏi nhanh để Siuuu Learn tối ưu hóa bài học theo đúng ngành học & thời gian của bạn
             </p>
 
             {/* Step Indicators */}

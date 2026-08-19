@@ -92,7 +92,7 @@ const ProfilePage = () => {
 
       <div style={{ maxWidth: '720px', margin: '0 auto' }}>
         <div className="glass-card" style={{ padding: '2rem' }}>
-          
+
           {/* Avatar & Basic Info */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
             <div style={{
@@ -110,13 +110,13 @@ const ProfilePage = () => {
               {form.username?.charAt(0).toUpperCase() || 'U'}
             </div>
             <div>
-              <h2 style={{ fontSize: '1.35rem', fontWeight: '700' }}>{form.username || 'Người học Lingua'}</h2>
+              <h2 style={{ fontSize: '1.35rem', fontWeight: '700' }}>{form.username || 'Người học Siuuu Learn'}</h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{user?.email}</p>
             </div>
           </div>
 
           <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            
+
             {/* 1. Tên hiển thị */}
             <div className="form-group">
               <label className="form-label">👤 Tên hiển thị của bạn</label>

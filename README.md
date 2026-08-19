@@ -1,4 +1,4 @@
-# 🎓 Lingua — Language Learning App
+# 🎓 Siuuu Learn — Language Learning App
 
 A full-stack web application for learning Japanese and English with flashcards, mini-tests, streak tracking, virtual pets, and study buddies.
 

@@ -9,6 +9,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import RoadmapPage from './pages/RoadmapPage';
 import DecksPage from './pages/DecksPage';
+import TopicDecksPage from './pages/TopicDecksPage';
 import FlashcardPage from './pages/FlashcardPage';
 import ExtractPage from './pages/ExtractPage';
 import MiniTestPage from './pages/MiniTestPage';
@@ -92,6 +93,11 @@ const App = () => {
           <Route path="/decks" element={
             <ProtectedRoute>
               <AppLayout><DecksPage /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/decks/topic/:topicId" element={
+            <ProtectedRoute>
+              <AppLayout><TopicDecksPage /></AppLayout>
             </ProtectedRoute>
           } />
           <Route path="/decks/:deckId" element={

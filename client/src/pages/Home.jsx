@@ -30,7 +30,7 @@ const Home = () => {
       <header className="landing-nav">
         <div className="landing-nav-logo">
           <div className="logo-icon">🎓</div>
-          <span className="text-gradient">Lingua</span>
+          <span className="text-gradient">Siuuu Learn</span>
         </div>
         <div className="landing-nav-links">
           {user ? (
@@ -99,7 +99,7 @@ const Home = () => {
       </section>
 
       <footer style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-        <p>© 2024 Lingua — ITSS2 Project. Built with ❤️ for language learners.</p>
+        <p>© 2024 Siuuu Learn — ITSS2 Project. Built with ❤️ for language learners.</p>
       </footer>
     </div>
   );

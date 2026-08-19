@@ -243,7 +243,7 @@ const FlashcardPage = () => {
       <ToastContainer />
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <button className="btn btn-ghost" onClick={() => navigate('/decks')} style={{ marginBottom: 'var(--space-sm)' }}>
+          <button className="btn btn-ghost" onClick={() => navigate(-1)} style={{ marginBottom: 'var(--space-sm)' }}>
             {t('flashcards.backToDecks')}
           </button>
           <h1 className="page-title">

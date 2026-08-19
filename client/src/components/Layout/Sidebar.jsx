@@ -33,7 +33,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         <div className="sidebar-header">
           <div className="sidebar-logo">🎓</div>
           <span className="sidebar-brand">
-            <span className="text-gradient">Lingua</span>
+            <span className="text-gradient">Siuuu Learn</span>
           </span>
         </div>
 
