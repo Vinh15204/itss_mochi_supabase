@@ -43,7 +43,7 @@ Mời người nghe dùng thử và feedback.
 2. Gợi ý slide + nội dung slide
 Slide 1 — タイトル
 Nội dung cho vào slide bằng tiếng Nhật モチ スキマ時間で外国語の語彙を学べる マイクロラーニングアプリ チーム：モチ
-Dịch tiếng Việt Mochi Ứng dụng micro-learning giúp học từ vựng ngoại ngữ trong thời gian rảnh ngắn Nhóm: Mochi
+Dịch tiếng Việt Siuuu Ứng dụng micro-learning giúp học từ vựng ngoại ngữ trong thời gian rảnh ngắn Nhóm: Siuuu
 Slide 2 — ターゲットユーザー
 Nội dung cho vào slide bằng tiếng Nhật ターゲットユーザー ・ハノイ工科大学の学生 ・外国語を勉強している学生 ・課題や専門科目で忙しい学生 ・短い時間で語彙を復習したい学生
 Dịch tiếng Việt Người dùng mục tiêu ・Sinh viên Đại học Bách khoa Hà Nội ・Sinh viên đang học ngoại ngữ ・Sinh viên bận với bài tập và môn chuyên ngành ・Sinh viên muốn ôn từ vựng trong thời gian ngắn
@@ -61,7 +61,7 @@ Dịch tiếng Việt Thách thức Ngay cả trong lịch trình bận rộn, l
 Slide 6 — 解決策
 Nội dung cho vào slide bằng tiếng Nhật 解決策：モチ モチは、語彙学習を短く・簡単に・続けやすくする マイクロラーニングアプリです。
 ユーザーは文章を貼り付けるだけで、 単語を抽出し、カードで学習し、 ミニテストで確認できます。
-Dịch tiếng Việt Giải pháp: Mochi Mochi là ứng dụng micro-learning giúp việc học từ vựng ngắn hơn, đơn giản hơn và dễ duy trì hơn.
+Dịch tiếng Việt Giải pháp: Siuuu Siuuu là ứng dụng micro-learning giúp việc học từ vựng ngắn hơn, đơn giản hơn và dễ duy trì hơn.
 Người dùng chỉ cần dán đoạn văn, ứng dụng sẽ trích xuất từ vựng, học bằng flashcard, và kiểm tra bằng mini test.
 Slide 7 — MVPの主な機能
 Nội dung cho vào slide bằng tiếng Nhật MVPの主な機能
@@ -88,7 +88,7 @@ Slide 10 — デモの場面
 Nội dung cho vào slide bằng tiếng Nhật デモの場面 ある学生は、明日外国語の小テストがあります。 しかし、長い文章から単語をまとめる時間がありません。
 そこで、モチを使って 短時間で単語を抽出し、 カードで学習し、 ミニテストで確認します。
 Dịch tiếng Việt Tình huống demo Một sinh viên ngày mai có bài kiểm tra ngoại ngữ. Tuy nhiên, bạn ấy không có thời gian tự tổng hợp từ vựng từ đoạn văn dài.
-Vì vậy, bạn ấy dùng Mochi để: trích xuất từ vựng nhanh, học bằng flashcard, và kiểm tra bằng mini test.
+Vì vậy, bạn ấy dùng Siuuu để: trích xuất từ vựng nhanh, học bằng flashcard, và kiểm tra bằng mini test.
 Slide 11 — デモの流れ
 Nội dung cho vào slide bằng tiếng Nhật デモの流れ
 文章を貼り付ける
@@ -107,7 +107,7 @@ Xem kết quả
 Slide 12 — まとめ
 Nội dung cho vào slide bằng tiếng Nhật まとめ モチは、忙しい学生が スキマ時間で外国語の語彙を学べるようにする マイクロラーニングアプリです。
 単語抽出、フラッシュカード、ミニテストにより、 学習開始までの手間を減らし、 短時間で復習できるようにします。
-Dịch tiếng Việt Tổng kết Mochi là ứng dụng micro-learning giúp sinh viên bận rộn học từ vựng ngoại ngữ trong thời gian rảnh ngắn.
+Dịch tiếng Việt Tổng kết Siuuu là ứng dụng micro-learning giúp sinh viên bận rộn học từ vựng ngoại ngữ trong thời gian rảnh ngắn.
 Thông qua trích xuất từ vựng, flashcard và mini test, ứng dụng giúp giảm công sức bắt đầu học và hỗ trợ ôn tập trong thời gian ngắn.
 3. Nội dung thuyết trình bằng tiếng Nhật + dịch tiếng Việt
 Phần 1 — Mạnh: 問題・課題
@@ -118,13 +118,13 @@ Phần 1 — Mạnh: 問題・課題
 また、インタビューでは、 学習を先延ばしにした後に後悔を感じる学生や、 集中力が切れやすいと感じる学生が多くいました。 現在の学習方法に対する満足度も、あまり高くありませんでした。
 そこで、私たちは次の課題を設定しました。 多忙なスケジュールの合間でも、プレッシャーを感じることなく、 日常のスキマ時間を「自然な学びの時間」に変えることです。
 この課題を解決するために、私たちはMVP「モチ」を考えました。 次に、解決策について説明します。
-Dịch tiếng Việt Xin chào mọi người. Chúng tôi là nhóm “Mochi”. Hôm nay, chúng tôi sẽ trình bày MVP hỗ trợ học từ vựng ngoại ngữ.
+Dịch tiếng Việt Xin chào mọi người. Chúng tôi là nhóm “Siuuu”. Hôm nay, chúng tôi sẽ trình bày MVP hỗ trợ học từ vựng ngoại ngữ.
 Trước hết, tôi sẽ giải thích vấn đề mà nhóm tìm thấy. Người dùng mục tiêu của chúng tôi là sinh viên Đại học Bách khoa Hà Nội. Đặc biệt là những sinh viên đang học ngoại ngữ nhưng bận rộn với bài tập và môn chuyên ngành.
 Thông qua phỏng vấn vấn đề, chúng tôi nhận thấy nhiều sinh viên muốn tiếp tục học ngoại ngữ, nhưng trong lịch trình bận rộn, họ dễ trì hoãn việc học.
 Nguyên nhân chính có ba điểm. Thứ nhất, họ không có thời gian học dài. Thứ hai, việc tạo flashcard thủ công rất mất công. Thứ ba, động lực học dễ bị giảm.
 Ngoài ra, trong phỏng vấn, nhiều sinh viên cảm thấy hối hận sau khi trì hoãn việc học, hoặc cảm thấy dễ mất tập trung. Mức độ hài lòng với phương pháp học hiện tại cũng chưa cao.
 Vì vậy, chúng tôi đặt ra thách thức như sau: Ngay cả trong lịch trình bận rộn, làm sao để sinh viên không cảm thấy áp lực và có thể biến thời gian rảnh ngắn hằng ngày thành “thời gian học tự nhiên”.
-Để giải quyết thách thức này, nhóm chúng tôi đã xây dựng MVP “Mochi”. Tiếp theo, tôi sẽ giải thích giải pháp.
+Để giải quyết thách thức này, nhóm chúng tôi đã xây dựng MVP “Siuuu”. Tiếp theo, tôi sẽ giải thích giải pháp.
 Phần 2 — Giáp: 解決策・MVP
 日本語 次に、私たちの解決策について説明します。
 私たちの解決策は「モチ」です。 モチは、語彙学習を短く、簡単に、続けやすくする マイクロラーニングアプリです。
@@ -140,7 +140,7 @@ MVPの主な機能は五つあります。
 そのため、私たちはUIの色を明るくし、 発音機能を追加し、 ミニテストの問題数を選べるように改善しました。
 このように、モチはユーザーの課題に合わせて、 短時間で使いやすい語彙学習体験を提供します。 次に、実際の使い方をデモで紹介します。
 Dịch tiếng Việt Tiếp theo, tôi sẽ giải thích giải pháp của nhóm.
-Giải pháp của chúng tôi là “Mochi”. Mochi là ứng dụng micro-learning giúp việc học từ vựng trở nên ngắn hơn, đơn giản hơn và dễ duy trì hơn.
+Giải pháp của chúng tôi là “Siuuu”. Siuuu là ứng dụng micro-learning giúp việc học từ vựng trở nên ngắn hơn, đơn giản hơn và dễ duy trì hơn.
 Người dùng dán đoạn văn muốn học vào ứng dụng. Sau đó, ứng dụng tự động trích xuất các từ quan trọng. Tiếp theo, người dùng học từ và nghĩa bằng flashcard, rồi kiểm tra mức độ hiểu bằng mini test.
 MVP có năm chức năng chính.
 Thứ nhất là chức năng trích xuất từ vựng. Người dùng chỉ cần dán đoạn văn, ứng dụng sẽ tự động trích xuất từ. Nhờ đó, có thể giảm công sức tạo thẻ thủ công.
@@ -151,7 +151,7 @@ Thứ năm là tùy chỉnh số lượng câu hỏi trong bài test. Người d
 Trong phỏng vấn giải pháp, 7/8 người đánh giá chức năng trích xuất từ vựng là có giá trị nhất. 7/8 người cho rằng MVP có thể giải quyết vấn đề học từ vựng. Ngoài ra, cả 8/8 người đều trả lời rằng muốn tiếp tục sử dụng.
 Tuy nhiên, cũng có một số điểm cần cải thiện. Ví dụ: màu giao diện hơi tối, người dùng muốn có phát âm, và muốn chọn số câu hỏi trong mini test.
 Vì vậy, nhóm đã cải thiện màu giao diện sáng hơn, thêm phát âm, và cho phép chọn số câu hỏi trong mini test.
-Như vậy, Mochi cung cấp trải nghiệm học từ vựng ngắn gọn, dễ dùng và phù hợp với vấn đề của người dùng. Tiếp theo, chúng tôi sẽ demo cách sử dụng thực tế.
+Như vậy, Siuuu cung cấp trải nghiệm học từ vựng ngắn gọn, dễ dùng và phù hợp với vấn đề của người dùng. Tiếp theo, chúng tôi sẽ demo cách sử dụng thực tế.
 Phần 3 — Diện: デモ
 日本語 それでは、デモを始めます。
 今回の場面は、ある学生が明日外国語の小テストを受けるという状況です。 しかし、その学生は専門科目の課題で忙しく、 長い文章から単語を一つ一つまとめる時間がありません。
@@ -167,14 +167,14 @@ Phần 3 — Diện: デモ
 以上でデモを終わります。 この後、皆さんにも実際にアプリを使っていただきたいです。 フィードバックをよろしくお願いします。
 Dịch tiếng Việt Bây giờ tôi sẽ bắt đầu phần demo.
 Tình huống lần này là một sinh viên ngày mai có bài kiểm tra ngoại ngữ. Tuy nhiên, sinh viên đó bận với bài tập môn chuyên ngành, nên không có thời gian tự tổng hợp từng từ từ một đoạn văn dài.
-Vì vậy, bạn ấy sử dụng Mochi.
+Vì vậy, bạn ấy sử dụng Siuuu.
 Đầu tiên, người dùng sao chép đoạn văn muốn học và dán vào ứng dụng. Tiếp theo, nhấn nút trích xuất từ vựng. Sau đó, ứng dụng tự động trích xuất các từ quan trọng từ đoạn văn.
 Nhờ vậy, người dùng không cần nhập từ thủ công. Thời gian để bắt đầu học được giảm đáng kể.
 Tiếp theo, người dùng học các từ đã trích xuất bằng flashcard. Mặt trước của thẻ hiển thị từ vựng. Khi lật thẻ, người dùng có thể xem nghĩa. Ngay cả trong thời gian ngắn, người dùng vẫn có thể học từng từ.
 Ngoài ra, bằng cách nhấn nút phát âm, người dùng có thể nghe cách đọc của từ. Điều này đặc biệt hữu ích khi học tiếng Anh hoặc tiếng Nhật.
 Sau đó, người dùng làm mini test. Người dùng có thể chọn số câu hỏi phù hợp với thời gian của mình. Ví dụ, nếu có ít thời gian, có thể chọn chỉ 5 câu.
 Sau khi làm xong bài test, người dùng có thể xem kết quả. Bằng cách xem lại các từ trả lời sai, người dùng không chỉ học mà còn có thể ôn tập.
-Như vậy, khi dùng Mochi, người dùng không cần chuẩn bị lâu, vẫn có thể trích xuất từ từ đoạn văn, học bằng flashcard, và kiểm tra bằng mini test.
+Như vậy, khi dùng Siuuu, người dùng không cần chuẩn bị lâu, vẫn có thể trích xuất từ từ đoạn văn, học bằng flashcard, và kiểm tra bằng mini test.
 Nói cách khác, ngay cả sinh viên bận rộn cũng có thể dùng thời gian rảnh ngắn để tiếp tục học từ vựng một cách tự nhiên.
 Phần demo đến đây là kết thúc. Sau đây, chúng tôi muốn mọi người dùng thử ứng dụng. Mong mọi người góp ý.
 4. Câu mời người nghe dùng thử

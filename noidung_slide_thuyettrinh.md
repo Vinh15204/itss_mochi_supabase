@@ -12,7 +12,7 @@
     *   *Học xong dễ quên* → Kết hợp Flashcard và Mini Test kiểm tra ngay lập tức.
     *   *Học ngoại ngữ cần phát âm* → Tích hợp tính năng phát âm bản xứ (TTS).
     *   *Cần sự linh hoạt theo thời gian rảnh* → Cho phép tùy chỉnh số câu hỏi Mini Test.
-*   **Demo theo câu chuyện (Storytelling):** Không giới thiệu tính năng khô khan theo kiểu "đây là nút A, đây là nút B". Phải demo qua tình huống cụ thể: *"Một sinh viên sắp có bài kiểm tra từ vựng, không có thời gian gõ từng từ tạo flashcard, đã sử dụng Mochi để dán bài đọc → trích xuất từ vựng → học qua flashcard kèm nghe phát âm → làm mini test 5 câu nhanh gọn → xem kết quả để ôn lại từ sai."*
+*   **Demo theo câu chuyện (Storytelling):** Không giới thiệu tính năng khô khan theo kiểu "đây là nút A, đây là nút B". Phải demo qua tình huống cụ thể: *"Một sinh viên sắp có bài kiểm tra từ vựng, không có thời gian gõ từng từ tạo flashcard, đã sử dụng Siuuu để dán bài đọc → trích xuất từ vựng → học qua flashcard kèm nghe phát âm → làm mini test 5 câu nhanh gọn → xem kết quả để ôn lại từ sai."*
 *   **Slide trình chiếu:** Chỉ hiển thị **tiếng Nhật hoàn toàn** trên màn hình để chuyên nghiệp. Phần tiếng Việt được để trong Speaker Notes để nhóm đọc hiểu và luyện tập.
 
 ---
@@ -45,7 +45,7 @@ gantt
 ### SLIDE 1 — タイトル (TRANG TIÊU ĐỀ)
 *   **Ý tưởng thiết kế & Gợi ý hình ảnh (Visuals):**
     *   Thiết kế giao diện Dark Mode cao cấp (màu tím/xanh đậm kết hợp hiệu ứng kính mờ Glassmorphism).
-    *   Logo Mochi nổi bật và đồ họa mô phỏng luồng học 3 bước tối giản.
+    *   Logo Siuuu nổi bật và đồ họa mô phỏng luồng học 3 bước tối giản.
 *   **Nội dung hiển thị trên Slide (Tiếng Nhật):**
     ```text
     モチ
@@ -55,13 +55,13 @@ gantt
     ```
 *   **Dịch nghĩa (Tiếng Việt):**
     ```text
-    Mochi
+    Siuuu
     Ứng dụng micro-learning giúp học từ vựng ngoại ngữ trong thời gian rảnh ngắn
-    Nhóm: Mochi
+    Nhóm: Siuuu
     ```
 *   **Kịch bản nói (Presenter - Mạnh):**
     *   **日本語:** 皆さん、こんにちは。私たちはチーム「モチ」です。今日は、外国語の語彙学習をサポートするMVPについて発表します。
-    *   **Tiếng Việt:** Xin chào mọi người. Chúng tôi là nhóm “Mochi”. Hôm nay, chúng tôi sẽ trình bày về dự án phát triển MVP hỗ trợ học từ vựng ngoại ngữ.
+    *   **Tiếng Việt:** Xin chào mọi người. Chúng tôi là nhóm “Siuuu”. Hôm nay, chúng tôi sẽ trình bày về dự án phát triển MVP hỗ trợ học từ vựng ngoại ngữ.
 
 ---
 
@@ -165,14 +165,14 @@ gantt
     ```
 *   **Kịch bản nói (Presenter - Mạnh):**
     *   **日本語:** そこで、私たちは次の課題を設定しました。多忙なスケジュールの合間でも、プレッシャーを感じることなく、日常のスキマ時間を「自然な学びの時間」に変えることです。この課題を解決するために、私たちはMVP「モチ」を考えました。
-    *   **Tiếng Việt:** Vì vậy, chúng tôi đặt ra thách thức cốt lõi: Làm thế nào để ngay cả khi lịch trình bận rộn, sinh viên không cảm thấy áp lực mà vẫn có thể biến các khoảng thời gian rảnh ngắn hằng ngày thành “thời gian học tập tự nhiên”. Để giải quyết thách thức này, chúng tôi đã phát triển MVP “Mochi”.
+    *   **Tiếng Việt:** Vì vậy, chúng tôi đặt ra thách thức cốt lõi: Làm thế nào để ngay cả khi lịch trình bận rộn, sinh viên không cảm thấy áp lực mà vẫn có thể biến các khoảng thời gian rảnh ngắn hằng ngày thành “thời gian học tập tự nhiên”. Để giải quyết thách thức này, chúng tôi đã phát triển MVP “Siuuu”.
 
 ---
 
 ### SLIDE 6 — 解決策 (GIẢI PHÁP - MOCHI)
 *   **Ý tưởng thiết kế & Gợi ý hình ảnh (Visuals):**
     *   Hình vẽ chuỗi 3 bước khép kín: Paste Văn Bản → Tách Từ → Lật Thẻ → Làm Test.
-    *   Giao diện ứng dụng Mochi mượt mà trên thiết bị di động/máy tính.
+    *   Giao diện ứng dụng Siuuu mượt mà trên thiết bị di động/máy tính.
 *   **Nội dung hiển thị trên Slide (Tiếng Nhật):**
     ```text
     解決策：モチ
@@ -185,8 +185,8 @@ gantt
     ```
 *   **Dịch nghĩa (Tiếng Việt):**
     ```text
-    Giải pháp: Mochi
-    Mochi là ứng dụng micro-learning giúp việc học từ vựng ngắn hơn,
+    Giải pháp: Siuuu
+    Siuuu là ứng dụng micro-learning giúp việc học từ vựng ngắn hơn,
     đơn giản hơn và dễ duy trì hơn.
 
     Người dùng chỉ cần dán đoạn văn, ứng dụng sẽ trích xuất từ vựng,
@@ -194,7 +194,7 @@ gantt
     ```
 *   **Kịch bản nói (Presenter - Giáp):**
     *   **日本語:** 次に、私たちの解決策について説明します。解決策は「モチ」です。モチは、語彙学習を短く、簡単に、続けやすくするマイクロラーニングアプリです。ユーザーは、学習したい文章をアプリに貼り付けます。すると、アプリが重要な単語を自動で抽出します。その後、ユーザーはフラッシュカードで単語と意味を確認し、ミニテストで理解度をチェックできます。
-    *   **Tiếng Việt:** Tiếp theo, tôi xin trình bày giải pháp của nhóm. Giải pháp của chúng tôi là "Mochi". Mochi là ứng dụng học tập siêu ngắn giúp việc học từ vựng trở nên ngắn gọn, đơn giản và dễ duy trì hơn. Người dùng chỉ cần sao chép văn bản muốn học dán vào ứng dụng, hệ thống sẽ tự động tách các từ quan trọng để người dùng học qua thẻ flashcard và kiểm tra bằng bài test nhanh.
+    *   **Tiếng Việt:** Tiếp theo, tôi xin trình bày giải pháp của nhóm. Giải pháp của chúng tôi là "Siuuu". Siuuu là ứng dụng học tập siêu ngắn giúp việc học từ vựng trở nên ngắn gọn, đơn giản và dễ duy trì hơn. Người dùng chỉ cần sao chép văn bản muốn học dán vào ứng dụng, hệ thống sẽ tự động tách các từ quan trọng để người dùng học qua thẻ flashcard và kiểm tra bằng bài test nhanh.
 
 ---
 
@@ -312,14 +312,14 @@ gantt
     Một sinh viên ngày mai có bài kiểm tra ngoại ngữ.
     Tuy nhiên, bạn ấy không có thời gian để tự tổng hợp từ vựng từ bài đọc rất dài.
 
-    Vì vậy, sinh viên này dùng Mochi để:
+    Vì vậy, sinh viên này dùng Siuuu để:
     ・Trích xuất nhanh các từ quan trọng trong 3 giây
     ・Học nhanh bằng thẻ flashcard
     ・Đo lường kiến thức bằng bài kiểm tra ngắn
     ```
 *   **Kịch bản nói (Presenter - Diện):**
     *   **日本語:** それでは、デモを始めます。今回の場面は、ある学生が明日外国語の小テストを受けるという状況です。しかし、その学生は専門科目の課題で忙しく、長い文章から単語を一つ一つまとめる時間がありません。そこで、モチを使います。
-    *   **Tiếng Việt:** Sau đây tôi xin bắt đầu phần demo thực tế của MVP. Tình huống giả định là một sinh viên ngày mai sẽ có bài kiểm tra từ vựng. Tuy nhiên, bạn ấy đang bị quá tải bởi các bài tập môn chuyên ngành và không có thời gian tự tra cứu và tạo thẻ từ vựng thủ công từ một bài đọc dài. Bạn ấy quyết định dùng Mochi để giải quyết vấn đề.
+    *   **Tiếng Việt:** Sau đây tôi xin bắt đầu phần demo thực tế của MVP. Tình huống giả định là một sinh viên ngày mai sẽ có bài kiểm tra từ vựng. Tuy nhiên, bạn ấy đang bị quá tải bởi các bài tập môn chuyên ngành và không có thời gian tự tra cứu và tạo thẻ từ vựng thủ công từ một bài đọc dài. Bạn ấy quyết định dùng Siuuu để giải quyết vấn đề.
 
 ---
 
@@ -368,7 +368,7 @@ gantt
 *   **Dịch nghĩa (Tiếng Việt):**
     ```text
     Tổng kết
-    Mochi là ứng dụng micro-learning giúp sinh viên bận rộn học từ vựng ngoại ngữ
+    Siuuu là ứng dụng micro-learning giúp sinh viên bận rộn học từ vựng ngoại ngữ
     trong thời gian rảnh ngắn một cách tự nhiên.
 
     ・Trích xuất từ giúp loại bỏ hoàn toàn công sức chuẩn bị bài học thủ công
@@ -377,7 +377,7 @@ gantt
     ```
 *   **Kịch bản nói (Presenter - Diện):**
     *   **日本語:** まとめです。モチは、忙しい学生がスキマ時間を使って、外国語の語彙を効果的に学べるようにするマイクロラーニングアプリです。単語抽出、フラッシュカード、ミニテストにより、準備の手間を減らし、短時間での復習を可能にします。発表は以上です。ご清聴ありがとうございました。
-    *   **Tiếng Việt:** Tóm lại, Mochi mang đến trải nghiệm học từ vựng nhanh gọn, thực chất và phù hợp với lối sống bận rộn của sinh viên. Bằng cách kết hợp trích xuất tự động, thẻ flashcard lật và minitest, ứng dụng giúp giảm thiểu rào cản bắt đầu học. Phần trình bày của nhóm chúng em đến đây là kết thúc. Xin chân thành cảm ơn thầy và các bạn đã lắng nghe.
+    *   **Tiếng Việt:** Tóm lại, Siuuu mang đến trải nghiệm học từ vựng nhanh gọn, thực chất và phù hợp với lối sống bận rộn của sinh viên. Bằng cách kết hợp trích xuất tự động, thẻ flashcard lật và minitest, ứng dụng giúp giảm thiểu rào cản bắt đầu học. Phần trình bày của nhóm chúng em đến đây là kết thúc. Xin chân thành cảm ơn thầy và các bạn đã lắng nghe.
 
 ---
 

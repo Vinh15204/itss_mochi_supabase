@@ -102,14 +102,14 @@
 ## DANH MỤC CÁC BẢNG BIỂU
 
 - [Bảng 1.1. Thống kê mức độ khó khăn của sinh viên khi tự học từ vựng ngoại ngữ chuyên ngành](#bảng-11-thống-kê-mức-độ-khó-khăn-của-sinh-viên-khi-tự-học-từ-vựng-ngoại-ngữ-chuyên-ngành-nguồn-khảo-sát-nội-bộ-nhóm-08-2025)
-- [Bảng 2.1. Ma trận so sánh tính năng Mochi so với các đối thủ trên thị trường](#bảng-21-ma-trận-so-sánh-tính-năng-mochi-so-với-các-đối-thủ-trên-thị-trường-nguồn-nhóm-tổng-hợp-2025)
-- [Bảng 3.1. Phân khúc khách hàng mục tiêu của dự án Mochi](#bảng-31-phân-khúc-khách-hàng-mục-tiêu-của-dự-án-mochi)
+- [Bảng 2.1. Ma trận so sánh tính năng Siuuu so với các đối thủ trên thị trường](#bảng-21-ma-trận-so-sánh-tính-năng-mochi-so-với-các-đối-thủ-trên-thị-trường-nguồn-nhóm-tổng-hợp-2025)
+- [Bảng 3.1. Phân khúc khách hàng mục tiêu của dự án Siuuu](#bảng-31-phân-khúc-khách-hàng-mục-tiêu-của-dự-án-mochi)
 - [Bảng 3.2. Tính toán quy mô thị trường TAM - SAM - SOM giai đoạn 2026 - 2028](#bảng-32-tính-toán-quy-mô-thị-trường-tam---sam---som-giai-đoạn-2026---2028)
-- [Bảng 4.1. Khung mô hình kinh doanh 9 cấu phần (Business Model Canvas) của Mochi](#bảng-41-khung-mô-hình-kinh-doanh-9-cấu-phần-business-model-canvas-của-mochi)
+- [Bảng 4.1. Khung mô hình kinh doanh 9 cấu phần (Business Model Canvas) của Siuuu](#bảng-41-khung-mô-hình-kinh-doanh-9-cấu-phần-business-model-canvas-của-mochi)
 - [Bảng 4.2. Dự toán chi phí và doanh thu 3 năm đầu (Đơn vị: Triệu VNĐ)](#bảng-42-dự-toán-chi-phí-và-doanh-thu-3-năm-đầu-đơn-vị-triệu-vnđ)
 - [Bảng 5.1. Bảng phân công vai trò và trách nhiệm của đội ngũ sáng lập](#bảng-51-bảng-phân-công-vai-trò-và-trách-nhiệm-của-đội-ngũ-sáng-lập)
 - [Bảng 6.1. Bảng kiểm chứng giả thuyết cốt lõi qua MVP](#bảng-61-bảng-kiểm-chứng-giả-thuyết-cốt-lõi-qua-mvp)
-- [Bảng 6.2. Danh mục các gói từ vựng chuyên ngành có sẵn trên hệ thống Mochi](#bảng-62-danh-mục-các-gói-từ-vựng-chuyên-ngành-có-sẵn-trên-hệ-thống-mochi)
+- [Bảng 6.2. Danh mục các gói từ vựng chuyên ngành có sẵn trên hệ thống Siuuu](#bảng-62-danh-mục-các-gói-từ-vựng-chuyên-ngành-có-sẵn-trên-hệ-thống-mochi)
 - [Bảng 6.3. Tổng hợp phản hồi kiểm thử sản phẩm từ người dùng thực nghiệm](#bảng-63-tổng-hợp-phản-hồi-kiểm-thử-sản-phẩm-từ-người-dùng-thực-nghiệm)
 - [Bảng 8.1. Bảng tổng hợp phỏng vấn sâu 20 khách hàng tiềm năng](#bảng-81-bảng-tổng-hợp-phỏng-vấn-sâu-20-khách-hàng-tiềm-năng)
 
@@ -118,11 +118,11 @@
 ## DANH MỤC CÁC HÌNH VẼ
 
 - [Hình 1.1. Biểu đồ phân bổ nguyên nhân trì hoãn học ngoại ngữ của sinh viên](#hình-11-biểu-đồ-phân-bổ-nguyên-nhân-trì-hoãn-học-ngoại-ngữ-của-sinh-viên)
-- [Hình 2.1. Mô hình vòng lặp học tập Micro-learning 4 bước khép kín của Mochi](#hình-21-mô-hình-vòng-lặp-học-tập-micro-learning-4-bước-khép-kín-của-mochi)
-- [Hình 3.1. Sơ đồ phễu thị trường TAM, SAM, SOM dự án Mochi tại Việt Nam](#hình-31-sơ-đồ-phễu-thị-trường-tam-sam-som-dự-án-mochi-tại-việt-nam)
-- [Hình 6.1. Sơ đồ kiến trúc kỹ thuật phân tầng Full-stack của Web App Mochi](#hình-61-sơ-đồ-kiến-trúc-kỹ-thuật-phân-tầng-full-stack-của-web-app-mochi)
+- [Hình 2.1. Mô hình vòng lặp học tập Micro-learning 4 bước khép kín của Siuuu](#hình-21-mô-hình-vòng-lặp-học-tập-micro-learning-4-bước-khép-kín-của-mochi)
+- [Hình 3.1. Sơ đồ phễu thị trường TAM, SAM, SOM dự án Siuuu tại Việt Nam](#hình-31-sơ-đồ-phễu-thị-trường-tam-sam-som-dự-án-mochi-tại-việt-nam)
+- [Hình 6.1. Sơ đồ kiến trúc kỹ thuật phân tầng Full-stack của Web App Siuuu](#hình-61-sơ-đồ-kiến-trúc-kỹ-thuật-phân-tầng-full-stack-của-web-app-mochi)
 - [Hình 6.2. Sơ đồ luồng dữ liệu xử lý trích xuất từ vựng thông minh (Auto-Extract Pipeline)](#hình-62-sơ-đồ-luồng-dữ-liệu-xử-lý-trích-xuất-từ-vựng-thông-minh-auto-extract-pipeline)
-- [Hình 6.3. Giao diện chức năng Flashcard 3D và Mini Test trên hệ thống Mochi](#hình-63-giao-diện-chức-năng-flashcard-3d-và-mini-test-trên-hệ-thống-mochi)
+- [Hình 6.3. Giao diện chức năng Flashcard 3D và Mini Test trên hệ thống Siuuu](#hình-63-giao-diện-chức-năng-flashcard-3d-và-mini-test-trên-hệ-thống-mochi)
 - [Hình 6.4. Đấu trường từ vựng trực tuyến (Speed Battle) & Cây lộ trình chuyên ngành](#hình-64-đấu-trường-từ-vựng-trực-tuyến-speed-battle--cây-lộ-trình-chuyên-ngành)
 
 ---
@@ -213,7 +213,7 @@ Số liệu tại Bảng 1.1 cho thấy nhu cầu giải phóng sức lao độn
 # PHẦN 2: NỘI DUNG Ý TƯỞNG VÀ GIẢI PHÁP ĐỔI MỚI
 
 ## 2.1. Ý tưởng cốt lõi: Sản phẩm và dịch vụ
-Dự án **Mochi (Siuuu Learn)** là một nền tảng Web Application thông minh thuộc lĩnh vực Công nghệ Giáo dục (EdTech), tiên phong giải quyết bài toán học từ vựng ngoại ngữ chuyên ngành và chứng chỉ quốc tế thông qua mô hình **Micro-learning kết hợp Trích xuất tự động (Auto-Extraction Pipeline)** và **Đấu trường thi đấu thời gian thực (Gamification PvP)**.
+Dự án **Siuuu (Siuuu Learn)** là một nền tảng Web Application thông minh thuộc lĩnh vực Công nghệ Giáo dục (EdTech), tiên phong giải quyết bài toán học từ vựng ngoại ngữ chuyên ngành và chứng chỉ quốc tế thông qua mô hình **Micro-learning kết hợp Trích xuất tự động (Auto-Extraction Pipeline)** và **Đấu trường thi đấu thời gian thực (Gamification PvP)**.
 
 Sản phẩm cung cấp một hệ sinh thái khép kín 4 bước được mô tả tại Hình 2.1:
 1. **Input (Nhập liệu tức thì):** Người dùng chỉ cần sao chép bất kỳ đoạn văn bản, tài liệu PDF, bài báo chuyên ngành (IT, Y tế, Kinh tế, Kỹ thuật) hoặc bài đọc luyện thi dán vào hệ thống.
@@ -229,19 +229,19 @@ Sản phẩm cung cấp một hệ sinh thái khép kín 4 bước được mô 
          ▲                                                                             │
          └──────────────────────── Vòng lặp củng cố ngắt quãng ────────────────────────┘
 ```
-*Hình 2.1. Mô hình vòng lặp học tập Micro-learning 4 bước khép kín của Mochi*
+*Hình 2.1. Mô hình vòng lặp học tập Micro-learning 4 bước khép kín của Siuuu*
 
 ## 2.2. Tính đổi mới và điểm khác biệt vượt trội (USP)
-So với các giải pháp truyền thống và các phần mềm hiện hữu trên thị trường toàn cầu, Mochi sở hữu các giá trị khác biệt cốt lõi (Unique Selling Propositions):
+So với các giải pháp truyền thống và các phần mềm hiện hữu trên thị trường toàn cầu, Siuuu sở hữu các giá trị khác biệt cốt lõi (Unique Selling Propositions):
 
-1. **Công nghệ trích xuất từ vựng theo ngữ cảnh (Contextual Auto-Extract):** Khác với Quizlet (người dùng phải gõ thủ công từng dòng) hay Anki (phức tạp trong cấu hình), Mochi chuyển đổi văn bản thô bất kỳ thành bộ thẻ học thông minh trong 3 giây.
+1. **Công nghệ trích xuất từ vựng theo ngữ cảnh (Contextual Auto-Extract):** Khác với Quizlet (người dùng phải gõ thủ công từng dòng) hay Anki (phức tạp trong cấu hình), Siuuu chuyển đổi văn bản thô bất kỳ thành bộ thẻ học thông minh trong 3 giây.
 2. **Cá nhân hóa bài thi thử theo quỹ thời gian thực (Time-adaptive Mini Quiz):** Thuật toán cho phép người dùng tùy chọn kích thước bài test linh hoạt dựa trên số phút rảnh hiện có, xóa bỏ áp lực "phải dành cả tiếng đồng hồ mới học được".
 3. **Ngân hàng dữ liệu từ vựng chuyên ngành chuẩn hóa (Pre-built Professional Vocab Bank):** Tích hợp sẵn hơn 3,000+ từ vựng chuyên sâu phân loại theo 6 phân ngành mũi nhọn: Kỹ thuật phần mềm (IT), Y khoa, Kỹ thuật công nghiệp, Kinh tế - Tài chính, Tiếng Anh công sở (TOEIC Workplace) và Học thuật chuyên sâu (IELTS Academic).
 4. **Đấu trường thi đấu đối kháng trực tuyến (PvP Speed Vocab Battle & Tournament):** Biến việc học từ vựng thành trò chơi eSports học thuật. Người dùng có thể ghép trận ngẫu nhiên 1vs1, tham gia bảng đấu loại trực tiếp (Playoff Tournaments) với bạn bè, kích thích sự hưng phấn và xóa tan cảm giác cô độc khi học.
 
-Bảng 2.1. Ma trận so sánh tính năng Mochi so với các đối thủ trên thị trường. [Nguồn: Nhóm tổng hợp, 2025]
+Bảng 2.1. Ma trận so sánh tính năng Siuuu so với các đối thủ trên thị trường. [Nguồn: Nhóm tổng hợp, 2025]
 
-| Tiêu chí so sánh | Mochi (Dự án) | Quizlet | Anki | Duolingo |
+| Tiêu chí so sánh | Siuuu (Dự án) | Quizlet | Anki | Duolingo |
 | :--- | :---: | :---: | :---: | :---: |
 | **Trích xuất từ vựng tự động từ văn bản** | **Có (3 giây)** | Không (Nhập tay) | Không (Nhập tay) | Không |
 | **Kho từ vựng chuyên ngành (IT, Y tế, Cơ khí)** | **Chuyên sâu 6 ngành** | Rải rác, do user tạo | Phụ thuộc add-on | Chỉ có giao tiếp cơ bản |
@@ -264,9 +264,9 @@ Bảng 2.1. Ma trận so sánh tính năng Mochi so với các đối thủ trê
 # PHẦN 3: PHÂN TÍCH THỊ TRƯỜNG
 
 ## 3.1. Xác định chân dung khách hàng mục tiêu
-Dự án Mochi phân loại đối tượng khách hàng thành hai nhóm chiến lược rõ ràng như mô tả tại Bảng 3.1:
+Dự án Siuuu phân loại đối tượng khách hàng thành hai nhóm chiến lược rõ ràng như mô tả tại Bảng 3.1:
 
-Bảng 3.1. Phân khúc khách hàng mục tiêu của dự án Mochi
+Bảng 3.1. Phân khúc khách hàng mục tiêu của dự án Siuuu
 
 | Đặc điểm phân khúc | Nhóm khách hàng chính (Primary - Trả tiền / Quyết định mua) | Nhóm khách hàng thứ cấp (Secondary - Lan tỏa / Bổ trợ) |
 | :--- | :--- | :--- |
@@ -306,7 +306,7 @@ Dựa trên số liệu thống kê từ Tổng cục Thống kê và Bộ Giáo
           │ SOM: 15.3 Tỷ VNĐ (42,500 người dùng trả phí)     │
           └──────────────────────────────────────────────────┘
 ```
-*Hình 3.1. Sơ đồ phễu thị trường TAM, SAM, SOM dự án Mochi tại Việt Nam*
+*Hình 3.1. Sơ đồ phễu thị trường TAM, SAM, SOM dự án Siuuu tại Việt Nam*
 
 Bảng 3.2. Tính toán quy mô thị trường TAM - SAM - SOM giai đoạn 2026 - 2028
 
@@ -321,7 +321,7 @@ Bảng 3.2. Tính toán quy mô thị trường TAM - SAM - SOM giai đoạn 202
 ## 3.3. Phân tích đối thủ cạnh tranh và định vị thị trường
 Thị trường EdTech ngôn ngữ hiện nay chia làm hai thái cực: Một là các ứng dụng game hóa giao tiếp cơ bản (như Duolingo) không phục vụ được nhu cầu chuyên ngành đại học; Hai là các công cụ ghi nhớ thuần túy (như Quizlet, Anki) nhưng lại có độ trễ tạo dữ liệu quá cao và thiếu tính năng tương tác tự động.
 
-**Định vị chiến lược của Mochi:** "Nền tảng Micro-learning siêu tốc chuyên sâu dành cho học thuật và chuyên ngành kỹ thuật". Mochi lấp đầy khoảng trống thị trường bằng tính năng Auto-Extract văn bản độc quyền, biến thời gian chuẩn bị bài đọc từ hàng giờ xuống vài giây.
+**Định vị chiến lược của Siuuu:** "Nền tảng Micro-learning siêu tốc chuyên sâu dành cho học thuật và chuyên ngành kỹ thuật". Siuuu lấp đầy khoảng trống thị trường bằng tính năng Auto-Extract văn bản độc quyền, biến thời gian chuẩn bị bài đọc từ hàng giờ xuống vài giây.
 
 ---
 
@@ -330,9 +330,9 @@ Thị trường EdTech ngôn ngữ hiện nay chia làm hai thái cực: Một l
 # PHẦN 4: MÔ HÌNH KINH DOANH (BUSINESS MODEL CANVAS)
 
 ## 4.1. Bảng tổng thể 9 cấu phần BMC
-Bảng 4.1 trình bày chi tiết Khung mô hình kinh doanh Canvas chuẩn hóa quốc tế của Mochi:
+Bảng 4.1 trình bày chi tiết Khung mô hình kinh doanh Canvas chuẩn hóa quốc tế của Siuuu:
 
-Bảng 4.1. Khung mô hình kinh doanh 9 cấu phần (Business Model Canvas) của Mochi
+Bảng 4.1. Khung mô hình kinh doanh 9 cấu phần (Business Model Canvas) của Siuuu
 
 | **1. Đối tác chính (Key Partners)** | **2. Hoạt động cốt lõi (Key Activities)** | **3. Tuyên ngôn giá trị (Value Propositions)** | **4. Quan hệ khách hàng (Customer Relationships)** | **5. Phân khúc khách hàng (Customer Segments)** |
 | :--- | :--- | :--- | :--- | :--- |
@@ -340,10 +340,10 @@ Bảng 4.1. Khung mô hình kinh doanh 9 cấu phần (Business Model Canvas) c�
 | **6. Nguồn lực chính (Key Resources)** | | | **7. Kênh tiếp cận (Channels)** | |
 | - Nền tảng công nghệ Web App (React + Supabase).<br/>- Thuật toán trích xuất từ vựng và xử lý ngôn ngữ.<br/>- Cơ sở dữ liệu 3,000+ từ vựng chuyên ngành độc quyền.<br/>- Đội ngũ kỹ sư phần mềm và quản trị tăng trưởng. | | | - Truyền thông trực tiếp tại khuôn viên trường đại học (On-campus).<br/>- Kênh mạng xã hội sinh viên (TikTok, Facebook Group sinh viên).<br/>- Giới thiệu truyền miệng (Word-of-mouth & Referral).<br/>- Nền tảng Web trực tuyến tối ưu hóa SEO. | |
 | **8. Cơ cấu chi phí (Cost Structure)** | | **9. Dòng doanh thu (Revenue Streams)** | | |
-| - Chi phí phát triển và bảo trì phần mềm (Lương kỹ sư & R&D).<br/>- Chi phí hạ tầng Cloud Server, Database Supabase, Băng thông.<br/>- Chi phí Marketing, tổ chức sự kiện thi đấu tại trường đại học.<br/>- Chi phí bản quyền nội dung và cố vấn chuyên gia ngôn ngữ. | | - **Gói Freemium:** Miễn phí các tính năng cơ bản, giới hạn số lần trích xuất mỗi ngày.<br/>- **Gói Mochi Pro Cá nhân:** 49,000 VNĐ/tháng hoặc 349,000 VNĐ/năm (Không giới hạn trích xuất, toàn quyền mở khóa từ điển chuyên sâu, tham gia đấu trường PvP không giới hạn).<br/>- **Gói B2B Học đường:** Bán tài khoản theo lớp/trung tâm đào tạo (giảm giá 30%). | | |
+| - Chi phí phát triển và bảo trì phần mềm (Lương kỹ sư & R&D).<br/>- Chi phí hạ tầng Cloud Server, Database Supabase, Băng thông.<br/>- Chi phí Marketing, tổ chức sự kiện thi đấu tại trường đại học.<br/>- Chi phí bản quyền nội dung và cố vấn chuyên gia ngôn ngữ. | | - **Gói Freemium:** Miễn phí các tính năng cơ bản, giới hạn số lần trích xuất mỗi ngày.<br/>- **Gói Siuuu Pro Cá nhân:** 49,000 VNĐ/tháng hoặc 349,000 VNĐ/năm (Không giới hạn trích xuất, toàn quyền mở khóa từ điển chuyên sâu, tham gia đấu trường PvP không giới hạn).<br/>- **Gói B2B Học đường:** Bán tài khoản theo lớp/trung tâm đào tạo (giảm giá 30%). | | |
 
 ## 4.2. Phân tích chi tiết từng cấu phần chiến lược
-- **Tuyên ngôn giá trị (Value Propositions):** Tập trung tuyệt đối vào việc "Giảm tải tối đa sự ma sát khi bắt đầu học". Mochi không dạy ngữ pháp dài dòng, Mochi là "vũ khí ghi nhớ từ vựng siêu tốc" cho người bận rộn.
+- **Tuyên ngôn giá trị (Value Propositions):** Tập trung tuyệt đối vào việc "Giảm tải tối đa sự ma sát khi bắt đầu học". Siuuu không dạy ngữ pháp dài dòng, Siuuu là "vũ khí ghi nhớ từ vựng siêu tốc" cho người bận rộn.
 - **Chiến lược dòng doanh thu (Freemium to Premium Funnel):** Người dùng được sử dụng miễn phí đầy đủ tính năng với hạn mức 3 lần trích xuất/ngày và kho từ cơ bản. Để mở khóa trích xuất không giới hạn tài liệu đồ án và toàn bộ 6 kho từ vựng chuyên sâu, người dùng nâng cấp gói Pro chỉ với 49,000 VNĐ/tháng (tương đương 1 ly trà sữa), mang lại tỷ lệ chuyển đổi dự kiến đạt 6.5% - 8.0%.
 
 ## 4.3. Kế hoạch tài chính và điểm hòa vốn dự kiến
@@ -375,7 +375,7 @@ Bảng 4.2. Dự toán chi phí và doanh thu 3 năm đầu (Đơn vị: Triệu
 # PHẦN 5: ĐỘI NGŨ THỰC HIỆN VÀ NHÂN SỰ BỔ SUNG
 
 ## 5.1. Năng lực đội ngũ sáng lập và phân công nhiệm vụ
-Nhóm sáng lập dự án Mochi quy tụ 5 sinh viên xuất sắc từ các chuyên ngành Kỹ thuật phần mềm, Khoa học máy tính, Quản trị kinh doanh và Marketing của Đại học Bách khoa Hà Nội, đảm bảo sự cân bằng giữa năng lực công nghệ và tư duy kinh doanh.
+Nhóm sáng lập dự án Siuuu quy tụ 5 sinh viên xuất sắc từ các chuyên ngành Kỹ thuật phần mềm, Khoa học máy tính, Quản trị kinh doanh và Marketing của Đại học Bách khoa Hà Nội, đảm bảo sự cân bằng giữa năng lực công nghệ và tư duy kinh doanh.
 
 Bảng 5.1. Bảng phân công vai trò và trách nhiệm của đội ngũ sáng lập
 
@@ -397,7 +397,7 @@ Bảng 5.1. Bảng phân công vai trò và trách nhiệm của đội ngũ sá
    - *Mục đích:* Nâng cấp thuật toán trích xuất từ vựng dựa trên các mô hình ngôn ngữ lớn (LLM nhúng cục bộ) giúp phân tích ngữ cảnh sâu và tự động phân loại cấp độ từ vựng (CEFR / JLPT Leveling).
    - *Chuyên gia hướng tới:* Tiến sĩ, Trưởng phòng thí nghiệm Xử lý Ngôn ngữ Tự nhiên (NLP Lab) – Viện CNTT&TT.
 3. **Cố vấn Pháp lý & Sở hữu Trí tuệ (Legal & IP Advisor):**  
-   - *Mục đích:* Tư vấn thủ tục đăng ký bản quyền quyền tác giả đối với mã nguồn phần mềm, bảo hộ thương hiệu Mochi/Siuuu Learn và thẩm định các điều khoản bảo mật dữ liệu người dùng theo Nghị định 13/2023/NĐ-CP.
+   - *Mục đích:* Tư vấn thủ tục đăng ký bản quyền quyền tác giả đối với mã nguồn phần mềm, bảo hộ thương hiệu Siuuu/Siuuu Learn và thẩm định các điều khoản bảo mật dữ liệu người dùng theo Nghị định 13/2023/NĐ-CP.
 4. **Cố vấn Chiến lược Khởi nghiệp & Đầu tư mạo hiểm (Startup Mentor):**  
    - *Mục đích:* Hoàn thiện hồ sơ tham gia các cuộc thi Khởi nghiệp Quốc gia (SV.STARTUP, Techfest) và kết nối với các quỹ đầu tư thiên thần (Angel Investors).
 
@@ -422,7 +422,7 @@ Bảng 6.1. Bảng kiểm chứng giả thuyết cốt lõi qua MVP
 | Cam kết tiếp tục sử dụng sản phẩm | Tỷ lệ mong muốn dùng tiếp sản phẩm hàng ngày | $> 80\%$ | **100% (8/8 người thử nghiệm)** | **Xác thực thành công** |
 
 ## 6.2. Kiến trúc công nghệ và hiện thực hóa sản phẩm
-Sản phẩm Mochi MVP được xây dựng trên nền tảng Full-stack Web hiện đại với tính sẵn sàng cao, đảm bảo tốc độ phản hồi dưới 100ms trên mọi thiết bị máy tính và điện thoại di động:
+Sản phẩm Siuuu MVP được xây dựng trên nền tảng Full-stack Web hiện đại với tính sẵn sàng cao, đảm bảo tốc độ phản hồi dưới 100ms trên mọi thiết bị máy tính và điện thoại di động:
 
 - **Frontend:** Xây dựng bằng **React.js 18** và bộ công cụ xây dựng **Vite** siêu tốc; Sử dụng **Vanilla CSS** với thiết kế hiện đại Dark Mode kết hợp hiệu ứng kính mờ (Glassmorphism), tối ưu hóa trải nghiệm thị giác và chống mỏi mắt khi học ban đêm.
 - **Backend & Cloud Database:** Sử dụng **Node.js/Express.js** kết hợp nền tảng **Supabase Cloud (PostgreSQL)**, cung cấp cơ chế bảo mật xác thực người dùng JWT, lưu trữ dữ liệu thời gian thực (Real-time WebSockets) phục vụ đấu trường thi đấu.
@@ -443,7 +443,7 @@ Sản phẩm Mochi MVP được xây dựng trên nền tảng Full-stack Web hi
 │  └───────────────────────┘  └───────────────────────────────────────┘  │
 └────────────────────────────────────────────────────────────────────────┘
 ```
-*Hình 6.1. Sơ đồ kiến trúc kỹ thuật phân tầng Full-stack của Web App Mochi*
+*Hình 6.1. Sơ đồ kiến trúc kỹ thuật phân tầng Full-stack của Web App Siuuu*
 
 ## 6.3. Chi tiết các chức năng cốt lõi trên Web App
 Nhóm đã hoàn thiện và đóng gói thành công 5 phân hệ chức năng hoàn chỉnh:
@@ -474,12 +474,12 @@ Hệ thống tự động xáo trộn và sinh đề trắc nghiệm 4 lựa ch�
        │  [◄ Trước]  [Lật thẻ]  [Tiếp ►] │      │  [ Tuỳ chỉnh: 5 | 10 | 15 câu ] │
        └─────────────────────────────────┘      └─────────────────────────────────┘
 ```
-*Hình 6.3. Giao diện chức năng Flashcard 3D và Mini Test trên hệ thống Mochi*
+*Hình 6.3. Giao diện chức năng Flashcard 3D và Mini Test trên hệ thống Siuuu*
 
 ### 4. Phân hệ Ngân hàng Từ vựng Chuyên ngành Mũi nhọn (6 Lĩnh vực)
 Hệ thống tích hợp sẵn hơn 3,000 từ vựng đã được nhóm biên soạn, chuẩn hóa và nạp sẵn trong cơ sở dữ liệu (`seed_vocabulary.sql`), sẵn sàng phục vụ học tập ngay lập tức:
 
-Bảng 6.2. Danh mục các gói từ vựng chuyên ngành có sẵn trên hệ thống Mochi
+Bảng 6.2. Danh mục các gói từ vựng chuyên ngành có sẵn trên hệ thống Siuuu
 
 | STT | Tên gói chuyên ngành | Mã dữ liệu | Số lượng từ | Định hướng đối tượng |
 | :---: | :--- | :--- | :---: | :--- |
@@ -556,7 +556,7 @@ Bảng 6.3. Tổng hợp phản hồi kiểm thử sản phẩm từ người d�
 
 # PHẦN 8: PHỤ LỤC – DỮ LIỆU PHỎNG VẤN KHÁCH HÀNG (MIN 20 NGƯỜI)
 
-Dưới đây là biên bản trích xuất chi tiết dữ liệu từ đợt phỏng vấn sâu 20 đối tượng khách hàng tiềm năng đại diện cho các phân khúc mục tiêu của dự án Mochi tại các trường đại học trên địa bàn Hà Nội.
+Dưới đây là biên bản trích xuất chi tiết dữ liệu từ đợt phỏng vấn sâu 20 đối tượng khách hàng tiềm năng đại diện cho các phân khúc mục tiêu của dự án Siuuu tại các trường đại học trên địa bàn Hà Nội.
 
 Bảng 8.1. Bảng tổng hợp phỏng vấn sâu 20 khách hàng tiềm năng
 
@@ -572,20 +572,20 @@ Bảng 8.1. Bảng tổng hợp phỏng vấn sâu 20 khách hàng tiềm năng
 | **08** | Nguyễn Thùy Linh (K67) | FTU / Kinh tế Đối ngoại | "Em cần học từ vựng IELTS Academic để nộp hồ sơ xin học bổng du học." | "Tự làm file Excel tổng hợp từ vựng nhưng không có cơ chế nhắc nhở ngắt quãng." | "Tính năng trích xuất tự động sẽ giúp em giải quyết các bài đọc Reading dài 3000 từ." | "Sẵn sàng chi trả mức giá dưới 100k/tháng." |
 | **09** | Bùi Minh Tuấn (K66) | HUST / Kỹ thuật Ô tô | "Rất ngại việc học từ vựng một mình, cảm thấy rất khô khan và buồn ngủ." | "Chỉ học trước kỳ thi 2 ngày theo kiểu nhồi nhét rồi thi xong quên hết." | "Tính năng Đấu trường PvP thi đấu với bạn bè sẽ kích thích tinh thần học tập rất nhiều." | "Rất sẵn sàng nếu rủ được bạn bè cùng thi đấu xếp hạng." |
 | **10** | Phan Thanh Hà (K68) | ĐH Y Hà Nội / Y đa khoa | "Từ vựng giải phẫu và dược lý tiếng Anh cực kỳ dài và khó nhớ." | "Ghi chép giấy nhớ dán khắp bàn học nhưng dễ thất lạc." | "Nếu có sẵn kho từ vựng chuyên ngành Y khoa thì em sẽ đăng ký ngay lập tức." | "Sẵn sàng chi trả mức phí cao hơn (thậm chí 100k/tháng) vì từ điển Y rất hiếm." |
-| **11** | Đặng Hữu Hùng (K66) | HUST / CNTT Việt Nhật (HEDPI) | "Em chuẩn bị đi thực tập tại doanh nghiệp Nhật Bản, cần từ vựng IT tiếng Nhật gấp." | "Dùng Anki nhưng việc cấu hình add-on quá phức tạp và tốn thời gian." | "Mochi trực quan và tiện hơn Anki rất nhiều nhờ tính năng tự động bóc tách từ." | "Hoàn toàn sẵn sàng mua gói Pro." |
+| **11** | Đặng Hữu Hùng (K66) | HUST / CNTT Việt Nhật (HEDPI) | "Em chuẩn bị đi thực tập tại doanh nghiệp Nhật Bản, cần từ vựng IT tiếng Nhật gấp." | "Dùng Anki nhưng việc cấu hình add-on quá phức tạp và tốn thời gian." | "Siuuu trực quan và tiện hơn Anki rất nhiều nhờ tính năng tự động bóc tách từ." | "Hoàn toàn sẵn sàng mua gói Pro." |
 | **12** | Lê Thảo My (K67) | NEU / Marketing | "Em hay bị áp lực tâm lý tội lỗi khi bỏ lỡ lịch học ngoại ngữ đã đặt ra." | "Đặt báo thức học nhưng toàn bấm tắt vì rào cản mở sách ra quá lớn." | "Micro-learning 5 phút giúp em dễ bắt đầu hơn mà không sợ bị quá tải." | "Có, em thấy mức giá 49k là rất hợp lý." |
 | **13** | Trịnh Quang Huy (K68) | HUST / Kỹ thuật Hàng không | "Tài liệu hướng dẫn kỹ thuật toàn tiếng Anh chuyên ngành với nhiều thuật ngữ lạ." | "Dùng Google Translate đọc qua loa nên không nhớ được từ để dùng lại." | "Tự tạo flashcard chỉ sau 3 giây là giải pháp đột phá cho việc đọc manual kỹ thuật." | "Sẵn sàng chi trả nếu được dùng thử miễn phí trước 7 ngày." |
 | **14** | Vũ Bích Ngọc (K67) | HV Ngân hàng / Tài chính | "Em cần chuẩn bị từ vựng cho chứng chỉ CFA Level 1." | "Học theo tài liệu dày cộp của viện CFA, rất mỏi mắt và khó nhớ từ khóa." | "Nếu dán bài đọc tóm tắt vào mà bóc tách được từ khóa tài chính thì quá tuyệt." | "Sẵn sàng trả tiền ngay khi ứng dụng ra mắt bản chính thức." |
 | **15** | Hoàng Đình Trọng (K66) | HUST / Kỹ thuật Nhiệt | "Vốn từ vựng cơ bản của em yếu nên rất sợ học tiếng Anh." | "Gần như không học, chỉ đợi đến sát hạn nộp chứng chỉ mới đi học mẹo thi." | "Giao diện lật thẻ 3D trực quan và bài test ngắn giúp người sợ tiếng Anh dễ tiếp cận." | "Sẵn sàng chi trả nếu ứng dụng có lộ trình rõ ràng từ cơ bản đến nâng cao." |
-| **16** | Đinh Thu Hương (K68) | ĐH Ngoại ngữ - ĐHQGHN | "Em là sinh viên ngôn ngữ nhưng muốn học thêm từ vựng chuyên ngành công nghệ." | "Tự tra từ điển Oxford và gõ vào Quizlet mất từ 1-2 tiếng mỗi ngày." | "Tiết kiệm được 80-90% thời gian soạn bài là lý do em muốn chuyển sang Mochi." | "Sẵn sàng ủng hộ sản phẩm của sinh viên Bách Khoa." |
+| **16** | Đinh Thu Hương (K68) | ĐH Ngoại ngữ - ĐHQGHN | "Em là sinh viên ngôn ngữ nhưng muốn học thêm từ vựng chuyên ngành công nghệ." | "Tự tra từ điển Oxford và gõ vào Quizlet mất từ 1-2 tiếng mỗi ngày." | "Tiết kiệm được 80-90% thời gian soạn bài là lý do em muốn chuyển sang Siuuu." | "Sẵn sàng ủng hộ sản phẩm của sinh viên Bách Khoa." |
 | **17** | Nguyễn Minh Triết (K66) | HUST / Hệ thống Thông tin | "Thường xuyên quên từ sau 3-4 ngày nếu không làm bài kiểm tra ôn lại." | "Học xong không có công cụ tự kiểm tra đánh giá mức độ nhớ từ." | "Rất ưng ý tính năng làm Mini Test ngay sau khi học lật thẻ flashcard." | "Có, 49k/tháng là khoản đầu tư rất rẻ cho việc học." |
 | **18** | Cao Thị Kim Oanh (K67) | HUST / Công nghệ Sinh học | "Các thuật ngữ sinh học phân tử rất dài, gõ tay trên máy tính rất dễ sai chính tả." | "Viết tay ra giấy nhưng chữ xấu và khó tra cứu lại sau này." | "Tính năng copy-paste tự trích xuất sẽ giải quyết triệt để vấn đề gõ sai chính tả." | "Rất sẵn sàng chi trả." |
 | **19** | Tạ Đức Toàn (K66) | ĐH Giao thông Vận tải / Cầu đường | "Đi thực tập công trường bận rộn cả ngày, chỉ có 10-15 phút nghỉ trưa." | "Không thể mang theo sách vở ra công trường để học được." | "Có thể tranh thủ học 5 phút ngay trên điện thoại ở bất cứ đâu là ưu điểm lớn nhất." | "Sẵn sàng trả phí để mở khóa toàn bộ tính năng." |
-| **20** | Nguyễn Thị Hải Yến (K68) | HUST / Kỹ thuật Môi trường | "Áp lực chuẩn đầu ra tiếng Anh khiến em rất căng thẳng mỗi khi nghĩ đến việc học." | "Thử nhiều app nhưng các bài học dài khiến em nhanh nản và bỏ dở giữa chừng." | "Mochi mang lại cảm giác học nhẹ nhàng, không áp lực và rất dễ duy trì thói quen." | "Chắc chắn em sẽ đăng ký và rủ bạn cùng phòng sử dụng." |
+| **20** | Nguyễn Thị Hải Yến (K68) | HUST / Kỹ thuật Môi trường | "Áp lực chuẩn đầu ra tiếng Anh khiến em rất căng thẳng mỗi khi nghĩ đến việc học." | "Thử nhiều app nhưng các bài học dài khiến em nhanh nản và bỏ dở giữa chừng." | "Siuuu mang lại cảm giác học nhẹ nhàng, không áp lực và rất dễ duy trì thói quen." | "Chắc chắn em sẽ đăng ký và rủ bạn cùng phòng sử dụng." |
 
 ---
 
 ### KẾT LUẬN VÀ KIẾN NGHỊ TỪ DỮ LIỆU PHỎNG VẤN:
 1. **100% đối tượng được phỏng vấn (20/20 người)** khẳng định việc tự tạo flashcard thủ công là rào cản lớn nhất khiến họ từ bỏ việc học từ vựng ngoại ngữ.
 2. **95% đối tượng (19/20 người)** đánh giá tính năng Trích xuất tự động trong 3 giây và Mini Test thời gian ngắn là giải pháp mang tính đột phá và giải quyết trúng nhu cầu cấp thiết của họ.
-3. **90% đối tượng (18/20 người)** xác nhận sẵn sàng chi trả mức phí từ 49,000 VNĐ/tháng cho phiên bản Mochi Pro, chứng minh tính khả thi thương mại và tiềm năng tăng trưởng vượt trội của dự án khởi nghiệp Mochi.
+3. **90% đối tượng (18/20 người)** xác nhận sẵn sàng chi trả mức phí từ 49,000 VNĐ/tháng cho phiên bản Siuuu Pro, chứng minh tính khả thi thương mại và tiềm năng tăng trưởng vượt trội của dự án khởi nghiệp Siuuu.

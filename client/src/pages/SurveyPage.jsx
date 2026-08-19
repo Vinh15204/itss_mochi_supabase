@@ -19,6 +19,7 @@ const SurveyPage = () => {
   const [loadingList, setLoadingList] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterMajor, setFilterMajor] = useState('all');
+  const [isDemoMode, setIsDemoMode] = useState(true); // Bật mặc định khi demo để che tên & email
 
   // Form điền khảo sát
   const [formData, setFormData] = useState({
@@ -172,6 +173,41 @@ const SurveyPage = () => {
     });
   }, [surveyList, searchTerm, filterMajor]);
 
+  // Helper ẩn danh/che thông tin nhạy cảm khi thuyết trình Demo
+  const maskName = (name) => {
+    if (!name || typeof name !== 'string') return 'Người dùng ẩn danh';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) {
+      const w = parts[0];
+      return w.length > 2 ? `${w.slice(0, 1)}***${w.slice(-1)}` : `${w[0]}*`;
+    }
+    return parts
+      .map((p, idx) => {
+        if (idx === 0) return p; // Giữ họ đầu tiên
+        return `${p[0]}***`;
+      })
+      .join(' ');
+  };
+
+  const maskEmail = (email) => {
+    if (!email || typeof email !== 'string') return '***@***.com';
+    const atIdx = email.indexOf('@');
+    if (atIdx <= 0) return '***@***.com';
+    const local = email.slice(0, atIdx);
+    const domain = email.slice(atIdx + 1);
+
+    const maskedLocal = local.length > 3
+      ? `${local.slice(0, 2)}***${local.slice(-1)}`
+      : `${local.slice(0, 1)}***`;
+
+    const domainParts = domain.split('.');
+    const maskedDomain = domainParts.length > 1
+      ? `***.${domainParts.slice(1).join('.')}`
+      : '***.com';
+
+    return `${maskedLocal}@${maskedDomain}`;
+  };
+
   const exportAllSurveysCSV = () => {
     if (surveyList.length === 0) {
       addToast('Chưa có dữ liệu khảo sát trong DB để xuất file!', 'info');
@@ -188,8 +224,8 @@ const SurveyPage = () => {
 
     const rows = surveyList.map(r => [
       `"${r.created_at || ''}"`,
-      `"${r.full_name || ''}"`,
-      `"${r.email || ''}"`,
+      `"${isDemoMode ? maskName(r.full_name) : (r.full_name || '')}"`,
+      `"${isDemoMode ? maskEmail(r.email) : (r.email || '')}"`,
       `"${r.university || 'ĐHBK Hà Nội'}"`,
       `"${r.academic_year || ''}"`,
       `"${r.major || ''}"`,
@@ -386,13 +422,35 @@ const SurveyPage = () => {
                 📋 Danh Sách Phản Hồi Trong DB ({filteredSurveys.length})
               </h3>
 
-              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => setIsDemoMode(prev => !prev)}
+                  style={{
+                    padding: '0.45rem 0.85rem',
+                    fontSize: '0.8rem',
+                    borderRadius: '8px',
+                    border: isDemoMode ? '1px solid rgba(16, 185, 129, 0.5)' : '1px solid rgba(255, 255, 255, 0.2)',
+                    background: isDemoMode ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                    color: isDemoMode ? '#34d399' : 'var(--text-secondary)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    fontWeight: '600'
+                  }}
+                  title="Bật/tắt chế độ ẩn danh thông tin cá nhân (Tên và Email) khi thuyết trình demo"
+                >
+                  <span>{isDemoMode ? '🛡️ Chế Độ Demo: BẬT (Đã che Tên & Email)' : '👁️ Chế Độ Demo: TẮT'}</span>
+                </button>
+
                 <input
                   type="text"
-                  placeholder="🔍 Tìm tên, email, ngành..."
+                  placeholder="🔍 Tìm kiếm..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{ padding: '0.5rem 0.875rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff', fontSize: '0.875rem', minWidth: '220px' }}
+                  style={{ padding: '0.5rem 0.875rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff', fontSize: '0.875rem', minWidth: '180px' }}
                 />
 
                 <select
@@ -428,8 +486,15 @@ const SurveyPage = () => {
                   {filteredSurveys.map((item, idx) => (
                     <tr key={item.id || idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', transition: 'background 0.2s ease' }}>
                       <td style={{ padding: '0.75rem 0.5rem' }}>
-                        <div style={{ fontWeight: '600', color: '#fff' }}>{item.full_name || 'Khách vãng lai'}</div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{item.email}</div>
+                        <div style={{ fontWeight: '600', color: '#fff', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                          {isDemoMode ? maskName(item.full_name) : (item.full_name || 'Khách vãng lai')}
+                          {isDemoMode && (
+                            <span title="Đã ẩn danh cho Demo" style={{ fontSize: '0.7rem', opacity: 0.7 }}>🔒</span>
+                          )}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: isDemoMode ? '#a5b4fc' : 'var(--text-secondary)', fontFamily: isDemoMode ? 'monospace' : 'inherit' }}>
+                          {isDemoMode ? maskEmail(item.email) : (item.email || 'Chưa cung cấp')}
+                        </div>
                       </td>
                       <td style={{ padding: '0.75rem 0.5rem' }}>
                         <div>{item.major || 'Chưa cập nhật'}</div>
@@ -486,7 +551,7 @@ const SurveyPage = () => {
               Gửi Khảo Sát Thành Công!
             </h2>
             <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: '1.6' }}>
-              Cảm ơn bạn đã dành thời gian trải nghiệm Mochi (Siuuu Learn) và cung cấp phản hồi quan trọng.<br />
+              Cảm ơn bạn đã dành thời gian trải nghiệm Siuuu (Siuuu Learn) và cung cấp phản hồi quan trọng.<br />
               Dữ liệu của bạn đã được lưu trực tiếp vào cơ sở dữ liệu của dự án.
             </p>
 
@@ -598,7 +663,7 @@ const SurveyPage = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                    Sau khi trải nghiệm, bạn hiểu như thế nào về ứng dụng Mochi (Siuuu Learn)? <span style={{ color: '#ef4444' }}>*</span>
+                    Sau khi trải nghiệm, bạn hiểu như thế nào về ứng dụng Siuuu (Siuuu Learn)? <span style={{ color: '#ef4444' }}>*</span>
                   </label>
                   <textarea
                     required
@@ -740,13 +805,13 @@ const SurveyPage = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                    So với các công cụ tương tự (như Quizlet, Anki, Duolingo), Mochi vượt trội ở điểm nào?
+                    So với các công cụ tương tự (như Quizlet, Anki, Duolingo), Siuuu vượt trội ở điểm nào?
                   </label>
                   <textarea
                     rows={2}
                     value={formData.competitiveAdvantage}
                     onChange={(e) => handleChange('competitiveAdvantage', e.target.value)}
-                    placeholder="Ví dụ: Quizlet phải tự gõ từng từ rất mệt, còn Mochi dán văn bản là ra luôn thẻ; bài test ngắn tùy chỉnh câu hỏi linh hoạt hơn..."
+                    placeholder="Ví dụ: Quizlet phải tự gõ từng từ rất mệt, còn Siuuu dán văn bản là ra luôn thẻ; bài test ngắn tùy chỉnh câu hỏi linh hoạt hơn..."
                     style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fff' }}
                   />
                 </div>
@@ -818,7 +883,7 @@ const SurveyPage = () => {
 
                 <div>
                   <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                    Mức độ sẵn sàng giới thiệu Mochi cho bạn bè / nhóm học (Chỉ số NPS từ 1 đến 10 điểm):
+                    Mức độ sẵn sàng giới thiệu Siuuu cho bạn bè / nhóm học (Chỉ số NPS từ 1 đến 10 điểm):
                   </label>
                   <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
@@ -851,7 +916,7 @@ const SurveyPage = () => {
 
                 <div>
                   <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: '600' }}>
-                    Đánh giá tổng quan về trải nghiệm sản phẩm Mochi (MVP):
+                    Đánh giá tổng quan về trải nghiệm sản phẩm Siuuu (MVP):
                   </label>
                   <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                     {[1, 2, 3, 4, 5].map((star) => (
